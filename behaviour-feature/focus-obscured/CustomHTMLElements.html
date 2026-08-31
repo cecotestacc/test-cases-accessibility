@@ -65,9 +65,41 @@
     focusable-card a {
       color: #1a1a2e;
     }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
   </style>
 </head>
 <body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #01</span>
+    <span class="qa-rule-id">focus-obscured</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.11 Focus Not Obscured (Minimum) — AA &nbsp;·&nbsp; 2.4.12 Focus Not Obscured (Enhanced) — AAA</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>&lt;sticky-header&gt;</code> · <code>&lt;announce-banner&gt;</code> · <code>&lt;focusable-card&gt;</code> (cards 1 &amp; 2)</dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>&lt;sticky-header&gt;</code> is <code>position:fixed; height:80px; z-index:100</code> — when cards near the top of the page receive focus the header layer fully paints over the focused element.</li>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>&lt;announce-banner&gt;</code> is <code>position:sticky; top:80px; z-index:50</code> — creates a second opaque layer directly below the header, obscuring Card 1 when it receives focus.</li>
+      <li><span class="qa-error-tag">ERROR 2.4.12</span> Cards 1 &amp; 2: nine hit-test points on the focused element fall under higher-z-index layers — the element is entirely (2.4.11) or partially (2.4.12) covered.</li>
+    </ul></dd>
+  </dl>
+</div>
 
 <!-- Custom sticky header covering the top 80px -->
 <sticky-header>

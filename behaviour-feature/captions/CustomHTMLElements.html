@@ -30,9 +30,41 @@
     section { margin-bottom: 40px; }
     h2 { font-size: 1rem; color: #aaa; }
     p { color: #bbb; font-size: 0.9rem; }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
   </style>
 </head>
 <body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #13</span>
+    <span class="qa-rule-id">captions</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.2.2 Captions (Prerecorded) — A</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>&lt;video-player id="no-captions"&gt;</code> · <code>&lt;video-player id="bad-timing"&gt;</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR A</span> <code>#no-captions</code>: no <code>&lt;track kind="captions"&gt;</code> element present — captions are completely absent; deaf and hard-of-hearing users have no access to audio content.</li>
+      <li><span class="qa-error-tag">ERROR B</span> <code>#bad-timing</code>: all caption cues are offset by ~8 seconds — high median timing drift; speech playing during the offset gap has no covering cue (high uncovered-speech ratio).</li>
+      <li><span class="qa-pass-tag">PASS</span> <code>#good-captions</code>: <code>good-captions.vtt</code> track with cues aligned within acceptable tolerance and full speech coverage.</li>
+    </ul></dd>
+  </dl>
+</div>
 
 <h1>Caption Accuracy – Custom Elements</h1>
 

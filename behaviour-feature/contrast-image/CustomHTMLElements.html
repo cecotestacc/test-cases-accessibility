@@ -74,9 +74,42 @@
     }
 
     .cards { display: flex; flex-wrap: wrap; padding: 16px; }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
   </style>
 </head>
 <body>
+
+<div class="qa-panel" style="margin:16px 16px 24px;">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #06</span>
+    <span class="qa-rule-id">contrast-image</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.4.3 Contrast (Minimum) — AA</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>&lt;hero-banner&gt;</code> · <code>&lt;image-card&gt;</code> (both) · <code>&lt;video-overlay&gt;</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> <code>&lt;hero-banner&gt;</code>: white headline (<code>#fff</code>) on a gradient that fades from orange to white — contrast collapses to 1:1 at the right end of the gradient.</li>
+      <li><span class="qa-error-tag">ERROR</span> <code>&lt;image-card&gt;</code> (mountain): white caption text directly over a photo — actual contrast per glyph depends on the pixels beneath it; cannot meet 4.5:1 reliably.</li>
+      <li><span class="qa-error-tag">ERROR</span> <code>&lt;image-card&gt;</code> (city): <code>#888888</code> caption over a photo — mid-grey on a variable image background almost certainly falls below 4.5:1.</li>
+      <li><span class="qa-error-tag">ERROR</span> <code>&lt;video-overlay&gt;</code>: <code>#dddddd</code> text over a video frame — background luminance changes every frame, making a static check insufficient.</li>
+    </ul></dd>
+  </dl>
+</div>
 
 <h1 style="padding: 16px;">Contrast Over Images – Custom Elements</h1>
 

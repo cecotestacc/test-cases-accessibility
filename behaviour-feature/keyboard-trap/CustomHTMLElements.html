@@ -54,9 +54,41 @@
     }
 
     a { color: #1a73e8; }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
   </style>
 </head>
 <body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #04</span>
+    <span class="qa-rule-id">keyboard-trap</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.1.2 No Keyboard Trap — A</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>&lt;trap-widget&gt;</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> The <code>keydown</code> handler in <code>&lt;trap-widget&gt;</code> intercepts Tab and Shift+Tab and wraps focus within its own children — focus can never leave the widget via keyboard.</li>
+      <li><span class="qa-error-tag">ERROR</span> No standard escape mechanism exists (Escape key, arrow key, documented shortcut) to move focus out of the widget.</li>
+      <li><span class="qa-pass-tag">PASS</span> <code>&lt;safe-widget&gt;</code> has no Tab interception — the browser handles focus naturally; Tab moves freely in and out.</li>
+    </ul></dd>
+  </dl>
+</div>
 
 <h1>Keyboard Trap – Custom Elements</h1>
 
