@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>modal-lifecycle – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    /* Backdrop */
+    modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    modal-backdrop[open] {
+      display: flex;
+    }
+
+    /* Dialog panel */
+    modal-panel {
+      display: block;
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    modal-panel h2 { margin-top: 0; }
+
+    modal-panel .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    modal-panel button {
+      padding: 8px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid #aaa;
+    }
+
+    modal-panel button[data-variant="primary"] {
+      background: #1a73e8;
+      color: #fff;
+      border-color: #1a73e8;
+    }
+
+    button:focus, [tabindex]:focus { outline: 3px solid #f4b400; outline-offset: 2px; }
+
+    section { margin-bottom: 24px; }
+    h2 { font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Modal Lifecycle – Custom Elements</h1>
+
+<section>
+  <h2>Violation: broken modal (focus not trapped, background not inert, Escape ignored)</h2>
+  <button type="button" id="open-bad">Open broken modal</button>
+</section>
+
+<section>
+  <h2>Correct: full lifecycle (focus in → trapped → inert background → Escape → focus returns)</h2>
+  <button type="button" id="open-good">Open accessible modal</button>
+</section>
+
+<!-- ── Broken modal ── -->
+<modal-backdrop id="bad-modal">
+  <modal-panel>
+    <h2 id="bad-title">Broken Modal</h2>
+    <p>Focus is not trapped here. Tab will leave this dialog.
+       The page behind is not inert. Escape does nothing.</p>
+    <div class="actions">
+      <button type="button" id="bad-cancel">Cancel</button>
+      <button type="button" data-variant="primary" id="bad-confirm">Confirm</button>
+    </div>
+  </modal-panel>
+</modal-backdrop>
+
+<!-- ── Correct modal ── -->
+<modal-backdrop id="good-modal">
+  <modal-panel id="good-panel" aria-modal="true" role="dialog" aria-labelledby="good-title">
+    <h2 id="good-title">Accessible Modal</h2>
+    <p>This dialog correctly:</p>
+    <ul>
+      <li>Moves focus inside on open</li>
+      <li>Traps Tab and Shift+Tab within the panel</li>
+      <li>Marks the rest of the page <code>inert</code></li>
+      <li>Closes on Escape</li>
+      <li>Returns focus to the trigger on close</li>
+    </ul>
+    <div class="actions">
+      <button type="button" id="good-cancel">Cancel</button>
+      <button type="button" data-variant="primary" id="good-confirm">Confirm</button>
+    </div>
+  </modal-panel>
+</modal-backdrop>
+
+<script>
+  class ModalBackdrop extends HTMLElement {
+    connectedCallback() {
+      this.addEventListener('click', e => {
+        if (e.target === this) this.removeAttribute('open');
+      });
+    }
+  }
+
+  class ModalPanel extends HTMLElement {}
+
+  customElements.define('modal-backdrop', ModalBackdrop);
+  customElements.define('modal-panel', ModalPanel);
+
+  /* ── Broken modal: no focus management, no inert, no Escape ── */
+  const badModal  = document.getElementById('bad-modal');
+  const openBad   = document.getElementById('open-bad');
+  const badCancel = document.getElementById('bad-cancel');
+  const badConfirm = document.getElementById('bad-confirm');
+
+  openBad.addEventListener('click', () => {
+    badModal.setAttribute('open', '');
+    // Violation: focus is NOT moved into the dialog
+  });
+
+  [badCancel, badConfirm].forEach(btn => {
+    btn.addEventListener('click', () => badModal.removeAttribute('open'));
+  });
+  // Violation: no Escape handler, no inert, focus stays wherever it was
+
+  /* ── Correct modal ── */
+  const goodModal   = document.getElementById('good-modal');
+  const goodPanel   = document.getElementById('good-panel');
+  const openGood    = document.getElementById('open-good');
+  const goodCancel  = document.getElementById('good-cancel');
+  const goodConfirm = document.getElementById('good-confirm');
+
+  let lastFocus = null;
+
+  const getFocusable = () => Array.from(
+    goodPanel.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter(el => !el.disabled && !el.closest('[hidden]'));
+
+  const openGoodModal = () => {
+    lastFocus = document.activeElement;
+    goodModal.setAttribute('open', '');
+
+    // Make the rest of the page inert
+    document.body.querySelectorAll(':scope > *:not(modal-backdrop)').forEach(el => {
+      el.setAttribute('inert', '');
+      el.setAttribute('aria-hidden', 'true');
+    });
+
+    // Move focus to first focusable element
+    const focusable = getFocusable();
+    if (focusable.length) focusable[0].focus();
+  };
+
+  const closeGoodModal = () => {
+    goodModal.removeAttribute('open');
+
+    // Restore interactivity
+    document.body.querySelectorAll('[inert]').forEach(el => {
+      el.removeAttribute('inert');
+      el.removeAttribute('aria-hidden');
+    });
+
+    // Return focus to trigger
+    if (lastFocus) lastFocus.focus();
+  };
+
+  openGood.addEventListener('click', openGoodModal);
+  goodCancel.addEventListener('click', closeGoodModal);
+  goodConfirm.addEventListener('click', closeGoodModal);
+
+  // Escape closes dialog
+  goodModal.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); closeGoodModal(); }
+
+    // Trap Tab within panel
+    if (e.key === 'Tab') {
+      const focusable = getFocusable();
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    }
+  });
+</script>
+</body>
+</html>

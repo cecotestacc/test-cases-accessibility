@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>captions – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #111; color: #eee; }
+
+    video-player {
+      display: block;
+      max-width: 720px;
+      margin: 0 auto 32px;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    video-player video {
+      width: 100%;
+      display: block;
+    }
+
+    video-player .player-label {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      background: #222;
+      color: #ccc;
+    }
+
+    section { margin-bottom: 40px; }
+    h2 { font-size: 1rem; color: #aaa; }
+    p { color: #bbb; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<h1>Caption Accuracy – Custom Elements</h1>
+
+<!-- ── Violation A: no caption track at all ── -->
+<section>
+  <h2>Violation A: video with no captions (missing track element)</h2>
+  <p>No <code>&lt;track kind="captions"&gt;</code> is provided. SC 1.2.2 fails.</p>
+
+  <video-player id="no-captions">
+    <div class="player-label">Product demo — no captions</div>
+    <video controls
+           aria-label="Product demo video, no captions">
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </video-player>
+</section>
+
+<!-- ── Violation B: caption file present but severely mistimed ── -->
+<section>
+  <h2>Violation B: captions present but badly mistimed</h2>
+  <p>Cues are offset by several seconds, causing high median timing drift.
+     The tool measures drift across the full duration and reports the proportion
+     of speech not covered by any cue.</p>
+
+  <video-player id="bad-timing">
+    <div class="player-label">Tutorial — mistimed captions</div>
+    <video controls
+           aria-label="Tutorial video with mistimed captions">
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      <!--
+        The VTT below has all cues starting 8 seconds late,
+        so they do not match the audio they describe.
+      -->
+      <track kind="captions" src="bad-timing.vtt" srclang="en" label="English (mistimed)" default>
+    </video>
+  </video-player>
+</section>
+
+<!-- ── Correct: caption file with accurate timing ── -->
+<section>
+  <h2>Correct: video with accurate, synchronised captions</h2>
+  <p>Cues align with the audio within the acceptable tolerance.
+     Word error rate is low and every speech segment is covered.</p>
+
+  <video-player id="good-captions">
+    <div class="player-label">Tutorial — accurate captions</div>
+    <video controls
+           aria-label="Tutorial video with accurate captions">
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      <track kind="captions" src="good-captions.vtt" srclang="en" label="English" default>
+    </video>
+  </video-player>
+</section>
+
+<!-- Inline VTT content via data URLs would be ideal but browsers restrict data: in <track>.
+     The .vtt files are referenced here; place them alongside this HTML in a real deployment. -->
+
+<script>
+  class VideoPlayer extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'region');
+      const label = this.querySelector('.player-label');
+      if (label) {
+        const id = 'vp-label-' + Math.random().toString(36).slice(2, 7);
+        label.id = id;
+        this.setAttribute('aria-labelledby', id);
+      }
+
+      const video = this.querySelector('video');
+      if (!video) return;
+
+      // Surface caption availability as a data attribute for the tool to inspect
+      const tracks = Array.from(video.textTracks || []).filter(t => t.kind === 'captions');
+      this.dataset.hasCaptions = tracks.length > 0 ? 'true' : 'false';
+    }
+  }
+
+  customElements.define('video-player', VideoPlayer);
+</script>
+</body>
+</html>

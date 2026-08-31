@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>keyboard-trap – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    trap-widget {
+      display: block;
+      border: 2px solid #c0392b;
+      border-radius: 6px;
+      padding: 24px;
+      margin: 24px 0;
+      background: #fdf3f2;
+      max-width: 400px;
+    }
+
+    trap-widget h2 { margin-top: 0; color: #c0392b; }
+
+    trap-widget input,
+    trap-widget button {
+      display: block;
+      margin: 8px 0;
+      padding: 8px 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    trap-widget:focus-within {
+      outline: 3px solid #c0392b;
+    }
+
+    /* No-trap widget for comparison */
+    safe-widget {
+      display: block;
+      border: 2px solid #27ae60;
+      border-radius: 6px;
+      padding: 24px;
+      margin: 24px 0;
+      background: #f0faf4;
+      max-width: 400px;
+    }
+
+    safe-widget h2 { margin-top: 0; color: #27ae60; }
+
+    safe-widget input,
+    safe-widget button {
+      display: block;
+      margin: 8px 0;
+      padding: 8px 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    a { color: #1a73e8; }
+  </style>
+</head>
+<body>
+
+<h1>Keyboard Trap – Custom Elements</h1>
+
+<a href="#safe">Skip to safe widget</a>
+
+<!-- This widget intercepts Tab and Shift+Tab, preventing focus from leaving -->
+<trap-widget id="trap">
+  <h2>Trapping Widget (violation)</h2>
+  <p>Focus cannot leave this widget via keyboard.</p>
+  <input type="text" placeholder="Field A">
+  <input type="text" placeholder="Field B">
+  <button type="button">Action</button>
+</trap-widget>
+
+<p><a href="#content">A link outside the widgets</a></p>
+
+<!-- This widget correctly manages focus without trapping -->
+<safe-widget id="safe">
+  <h2>Safe Widget (no trap)</h2>
+  <p>Tab moves freely in and out.</p>
+  <input type="text" placeholder="Field X">
+  <input type="text" placeholder="Field Y">
+  <button type="button">Action</button>
+</safe-widget>
+
+<script>
+  class TrapWidget extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'group');
+      this.setAttribute('aria-label', 'Trapping widget');
+
+      // Intercept Tab and Shift+Tab to cycle focus within this widget only
+      this.addEventListener('keydown', e => {
+        if (e.key !== 'Tab') return;
+
+        const focusable = Array.from(
+          this.querySelectorAll('input, button, [tabindex]:not([tabindex="-1"])')
+        ).filter(el => !el.disabled);
+
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus(); // wraps back — never lets focus out
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus(); // wraps forward — never lets focus out
+          }
+        }
+      });
+    }
+  }
+
+  class SafeWidget extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'group');
+      this.setAttribute('aria-label', 'Safe widget');
+      // No Tab interception — browser handles focus naturally
+    }
+  }
+
+  customElements.define('trap-widget', TrapWidget);
+  customElements.define('safe-widget', SafeWidget);
+</script>
+</body>
+</html>

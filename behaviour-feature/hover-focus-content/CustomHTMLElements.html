@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>hover-focus-content – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; }
+
+    /* ── Tooltip custom element ── */
+    tooltip-trigger {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+    }
+
+    tooltip-trigger .trigger-label {
+      text-decoration: underline dotted;
+      color: #1a73e8;
+    }
+
+    tooltip-trigger .tooltip-popup {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #333;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      z-index: 10;
+      min-width: 200px;
+      pointer-events: none; /* violation: pointer can't move into tooltip to read it */
+    }
+
+    tooltip-trigger:hover .tooltip-popup,
+    tooltip-trigger:focus-within .tooltip-popup {
+      display: block;
+    }
+
+    /* ── Dismissible tooltip (correct) ── */
+    dismissible-tooltip {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+    }
+
+    dismissible-tooltip .trigger-label {
+      text-decoration: underline dotted;
+      color: #27ae60;
+    }
+
+    dismissible-tooltip .tooltip-popup {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #2d4a2d;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      z-index: 10;
+      min-width: 200px;
+      pointer-events: auto; /* pointer can enter and read the tooltip */
+    }
+
+    /* ── Hover-only popover (violation: keyboard cannot reveal it) ── */
+    hover-popover {
+      display: inline-block;
+      position: relative;
+    }
+
+    hover-popover .popover-content {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 12px;
+      z-index: 10;
+      min-width: 180px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+
+    hover-popover:hover .popover-content {
+      display: block; /* only hover reveals this — keyboard users cannot access */
+    }
+
+    section { margin-bottom: 40px; }
+    h2 { font-size: 1rem; }
+
+    button, [role="button"] {
+      padding: 8px 16px;
+      cursor: pointer;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      background: #f0f0f0;
+    }
+
+    button:focus, [role="button"]:focus { outline: 3px solid #f4b400; }
+  </style>
+</head>
+<body>
+
+<h1>Hover / Focus Content – Custom Elements</h1>
+
+<section>
+  <h2>Violation A: pointer-events:none tooltip — cannot be moused into (SC 1.4.13)</h2>
+  <tooltip-trigger tabindex="0" role="button" aria-describedby="tt1">
+    <span class="trigger-label">What is WCAG?</span>
+    <span class="tooltip-popup" id="tt1" role="tooltip">
+      Web Content Accessibility Guidelines published by the W3C.
+    </span>
+  </tooltip-trigger>
+</section>
+
+<section>
+  <h2>Violation B: hover-only popover — keyboard users cannot reveal it (SC 2.1.1)</h2>
+  <hover-popover>
+    <button type="button">Hover for options</button>
+    <div class="popover-content" role="menu" aria-label="Options">
+      <div role="menuitem" tabindex="-1">Edit</div>
+      <div role="menuitem" tabindex="-1">Duplicate</div>
+      <div role="menuitem" tabindex="-1">Delete</div>
+    </div>
+  </hover-popover>
+</section>
+
+<section>
+  <h2>Correct: dismissible tooltip with pointer access and Escape to close (SC 1.4.13)</h2>
+  <dismissible-tooltip id="good-tip">
+    <span class="trigger-label" tabindex="0" role="button"
+          aria-expanded="false" aria-controls="good-tip-popup">
+      What is ARIA?
+    </span>
+    <span class="tooltip-popup" id="good-tip-popup" role="tooltip">
+      Accessible Rich Internet Applications — a W3C spec for
+      adding semantics to custom widgets.
+    </span>
+  </dismissible-tooltip>
+</section>
+
+<script>
+  class TooltipTrigger extends HTMLElement {
+    connectedCallback() {
+      const popup = this.querySelector('.tooltip-popup');
+      if (!popup) return;
+
+      // Show on hover and focus — but pointer-events:none means user can't hover into it
+      this.addEventListener('mouseenter', () => popup.style.display = 'block');
+      this.addEventListener('mouseleave', () => popup.style.display = '');
+      this.addEventListener('focusin',   () => popup.style.display = 'block');
+      this.addEventListener('focusout',  () => popup.style.display = '');
+      // No Escape handler — violation: no persistent-dismiss mechanism
+    }
+  }
+
+  class HoverPopover extends HTMLElement {}
+
+  class DismissibleTooltip extends HTMLElement {
+    connectedCallback() {
+      const trigger = this.querySelector('[aria-expanded]');
+      const popup   = this.querySelector('.tooltip-popup');
+      if (!trigger || !popup) return;
+
+      const show = () => {
+        popup.style.display = 'block';
+        trigger.setAttribute('aria-expanded', 'true');
+      };
+      const hide = () => {
+        popup.style.display = '';
+        trigger.setAttribute('aria-expanded', 'false');
+      };
+
+      trigger.addEventListener('mouseenter', show);
+      trigger.addEventListener('focusin', show);
+
+      // SC 1.4.13: content stays when pointer moves into it
+      popup.addEventListener('mouseenter', show);
+
+      trigger.addEventListener('mouseleave', e => {
+        if (!popup.matches(':hover')) hide();
+      });
+      popup.addEventListener('mouseleave', e => {
+        if (!trigger.matches(':hover')) hide();
+      });
+      trigger.addEventListener('focusout', e => {
+        if (!this.contains(e.relatedTarget)) hide();
+      });
+
+      // SC 1.4.13: Escape dismisses without moving focus
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && popup.style.display === 'block') {
+          hide();
+        }
+      });
+    }
+  }
+
+  customElements.define('tooltip-trigger', TooltipTrigger);
+  customElements.define('hover-popover', HoverPopover);
+  customElements.define('dismissible-tooltip', DismissibleTooltip);
+</script>
+</body>
+</html>

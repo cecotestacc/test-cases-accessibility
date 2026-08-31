@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>flash-motion – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    /* ── Flashing banner — potential 2.3.1 violation ── */
+    @keyframes flash-red {
+      0%, 49%  { background: #e74c3c; }
+      50%, 100%{ background: #ffffff; }
+    }
+
+    flash-banner {
+      display: block;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      animation: flash-red 0.4s infinite; /* ~2.5 flashes per second — near threshold */
+      margin-bottom: 24px;
+      border-radius: 4px;
+    }
+
+    /* ── Infinite scrolling ticker — runs past 5 s without a pause control (2.2.2) ── */
+    @keyframes ticker-scroll {
+      from { transform: translateX(100%); }
+      to   { transform: translateX(-100%); }
+    }
+
+    news-ticker {
+      display: block;
+      overflow: hidden;
+      background: #1a1a2e;
+      color: #ffffff;
+      padding: 10px 0;
+      white-space: nowrap;
+      margin-bottom: 24px;
+    }
+
+    news-ticker .ticker-track {
+      display: inline-block;
+      animation: ticker-scroll 18s linear infinite;
+      /* No pause control provided — violates 2.2.2 */
+    }
+
+    /* ── Parallax hero — motion without prefers-reduced-motion guard ── */
+    @keyframes parallax-drift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    parallax-hero {
+      display: block;
+      height: 200px;
+      background: linear-gradient(270deg, #1a73e8, #e74c3c, #f4b400, #27ae60);
+      background-size: 400% 400%;
+      animation: parallax-drift 8s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 24px;
+      border-radius: 6px;
+      /* No @media (prefers-reduced-motion) guard */
+    }
+
+    /* ── Correct: respects prefers-reduced-motion ── */
+    @keyframes safe-pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.7; }
+    }
+
+    safe-animation {
+      display: block;
+      padding: 20px;
+      background: #27ae60;
+      color: #fff;
+      border-radius: 4px;
+      text-align: center;
+      animation: safe-pulse 2s ease-in-out infinite;
+      margin-bottom: 24px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      flash-banner      { animation: none; background: #e74c3c; }
+      news-ticker .ticker-track { animation: none; }
+      parallax-hero     { animation: none; background: #1a73e8; }
+      safe-animation    { animation: none; }
+    }
+
+    section { margin-bottom: 32px; }
+    h2 { font-size: 1rem; }
+
+    .pause-btn {
+      display: block;
+      margin: 8px 0;
+      padding: 6px 14px;
+      cursor: pointer;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      background: #f0f0f0;
+    }
+    .pause-btn:focus { outline: 3px solid #f4b400; }
+  </style>
+</head>
+<body>
+
+<h1>Flash &amp; Motion – Custom Elements</h1>
+
+<section>
+  <h2>Violation A: flashing element near 2.3.1 threshold (~2.5 Hz)</h2>
+  <flash-banner role="alert">
+    ⚠ FLASH SALE — 50% OFF TODAY ONLY ⚠
+  </flash-banner>
+</section>
+
+<section>
+  <h2>Violation B: auto-scrolling ticker with no pause mechanism (SC 2.2.2)</h2>
+  <!-- No pause/stop/hide button provided -->
+  <news-ticker aria-label="Breaking news ticker" role="marquee">
+    <span class="ticker-track">
+      Breaking: New accessibility guidelines published &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      Conference announced for September &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      Tool update released with improved motion detection &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      Study shows 98% of homepages have detectable barriers &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    </span>
+  </news-ticker>
+</section>
+
+<section>
+  <h2>Violation C: decorative parallax motion without prefers-reduced-motion guard</h2>
+  <parallax-hero>Our Platform</parallax-hero>
+</section>
+
+<section>
+  <h2>Correct: animation that respects prefers-reduced-motion + pause control</h2>
+  <safe-animation id="safe-anim" role="status" aria-live="polite">
+    System status: All services operational
+  </safe-animation>
+  <button class="pause-btn" id="pause-btn" type="button" aria-controls="safe-anim">
+    Pause animation
+  </button>
+</section>
+
+<script>
+  class FlashBanner extends HTMLElement {}
+  class NewsTicker extends HTMLElement {}
+  class ParallaxHero extends HTMLElement {}
+
+  class SafeAnimation extends HTMLElement {
+    connectedCallback() {
+      this._paused = false;
+    }
+
+    pause() {
+      this.style.animationPlayState = 'paused';
+      this._paused = true;
+    }
+
+    resume() {
+      this.style.animationPlayState = 'running';
+      this._paused = false;
+    }
+
+    toggle() {
+      this._paused ? this.resume() : this.pause();
+      return this._paused;
+    }
+  }
+
+  customElements.define('flash-banner', FlashBanner);
+  customElements.define('news-ticker', NewsTicker);
+  customElements.define('parallax-hero', ParallaxHero);
+  customElements.define('safe-animation', SafeAnimation);
+
+  const safeAnim = document.getElementById('safe-anim');
+  const pauseBtn = document.getElementById('pause-btn');
+
+  pauseBtn.addEventListener('click', () => {
+    const nowPaused = safeAnim.toggle();
+    pauseBtn.textContent = nowPaused ? 'Resume animation' : 'Pause animation';
+  });
+
+  // Honour system preference immediately on load
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (motionQuery.matches) safeAnim.pause();
+  motionQuery.addEventListener('change', e => {
+    e.matches ? safeAnim.pause() : safeAnim.resume();
+  });
+</script>
+</body>
+</html>

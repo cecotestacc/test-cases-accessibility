@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>forced-colors – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #f5f5f5; }
+
+    /*
+     * In Windows High Contrast / forced-colors mode the browser replaces most
+     * CSS colours with system keywords. Elements that rely on background-color,
+     * background-image, or box-shadow for their visual signal become invisible.
+     */
+
+    /* Icon drawn with a CSS mask + background-color — disappears in forced colors */
+    css-icon {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background-color: #e74c3c;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      margin: 4px;
+      vertical-align: middle;
+    }
+
+    /* Gradient progress bar — gradient disappears in forced colors */
+    progress-bar {
+      display: block;
+      width: 300px;
+      height: 20px;
+      background: linear-gradient(90deg, #1a73e8 0%, #34a853 100%);
+      border-radius: 10px;
+      margin: 12px 0;
+      position: relative;
+    }
+
+    progress-bar::after {
+      content: attr(aria-valuenow) '%';
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: #fff; /* white on gradient — invisible in forced-colors black background */
+    }
+
+    /* Button outline via box-shadow only — box-shadow removed in forced colors */
+    shadow-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      background: #fff;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 0 0 2px #1a73e8; /* the only visual border — stripped in forced-colors */
+      cursor: pointer;
+      margin: 4px;
+      font-size: 1rem;
+    }
+
+    shadow-button:focus { outline: 3px solid #f4b400; }
+
+    /* Correct: inline SVG icon that uses currentColor — survives forced colors */
+    svg-icon-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: ButtonFace;
+      color: ButtonText;
+      border: 2px solid ButtonText;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 4px;
+      font-size: 1rem;
+    }
+
+    svg-icon-button:focus { outline: 3px solid Highlight; }
+
+    svg-icon-button svg { fill: currentColor; }
+
+    section { margin-bottom: 32px; }
+    h2 { font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Forced Colors – Custom Elements</h1>
+<p>Enable Windows High Contrast mode or use
+   <code>@media (forced-colors: active)</code> to observe the violations.</p>
+
+<section>
+  <h2>CSS-mask icons (violation — disappear in forced colors)</h2>
+  <p>
+    <css-icon role="img" aria-label="Alert"></css-icon> Alert icon
+  </p>
+  <p>
+    <css-icon role="img" aria-label="Info" style="background-color:#1a73e8;"></css-icon> Info icon
+  </p>
+</section>
+
+<section>
+  <h2>Gradient progress bars (violation — gradient removed)</h2>
+  <label id="up-label">Upload progress</label>
+  <progress-bar
+    role="progressbar"
+    aria-labelledby="up-label"
+    aria-valuenow="65"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    style="background: linear-gradient(90deg, #1a73e8 65%, #e0e0e0 65%);">
+  </progress-bar>
+</section>
+
+<section>
+  <h2>Box-shadow-only border buttons (violation — border disappears)</h2>
+  <shadow-button tabindex="0" role="button">Confirm</shadow-button>
+  <shadow-button tabindex="0" role="button">Decline</shadow-button>
+</section>
+
+<section>
+  <h2>SVG with currentColor + system border (should pass)</h2>
+  <svg-icon-button tabindex="0" role="button" aria-label="Download file">
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-6 2h12v2H6v-2z"/>
+    </svg>
+    Download
+  </svg-icon-button>
+</section>
+
+<script>
+  class CssIcon extends HTMLElement {}
+
+  class ProgressBar extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'progressbar');
+    }
+  }
+
+  class ShadowButton extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
+      this.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') this.click();
+      });
+    }
+  }
+
+  class SvgIconButton extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
+      this.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') this.click();
+      });
+    }
+  }
+
+  customElements.define('css-icon', CssIcon);
+  customElements.define('progress-bar', ProgressBar);
+  customElements.define('shadow-button', ShadowButton);
+  customElements.define('svg-icon-button', SvgIconButton);
+</script>
+</body>
+</html>

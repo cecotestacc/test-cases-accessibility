@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>focus-visible – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    /* No outline on custom button – violates 2.4.7 */
+    custom-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      background: #4a90d9;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 8px;
+      user-select: none;
+    }
+
+    custom-button:focus {
+      outline: none; /* violation: no visible focus indicator */
+    }
+
+    /* Thin, low-contrast indicator – violates 2.4.13 */
+    custom-input {
+      display: inline-block;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      padding: 8px 12px;
+      margin: 8px;
+      min-width: 200px;
+      background: #fff;
+    }
+
+    custom-input:focus {
+      outline: 1px solid #c0c0c0; /* too thin and too low contrast for 2.4.13 */
+    }
+
+    /* Correct: custom element with adequate focus ring */
+    accessible-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      background: #2d6a2d;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 8px;
+    }
+
+    accessible-button:focus {
+      outline: 3px solid #ffbf47;
+      outline-offset: 2px;
+    }
+
+    section { margin-bottom: 32px; }
+    h2 { font-size: 1rem; color: #333; }
+  </style>
+</head>
+<body>
+
+<h1>Focus Visible – Custom Elements</h1>
+
+<section>
+  <h2>No focus indicator (violates 2.4.7)</h2>
+  <custom-button tabindex="0">Submit</custom-button>
+  <custom-button tabindex="0">Cancel</custom-button>
+</section>
+
+<section>
+  <h2>Low-contrast, thin focus indicator (violates 2.4.13)</h2>
+  <custom-input tabindex="0" role="textbox" aria-label="Search">Search…</custom-input>
+  <custom-input tabindex="0" role="textbox" aria-label="Email">Email…</custom-input>
+</section>
+
+<section>
+  <h2>Adequate focus indicator (should pass)</h2>
+  <accessible-button tabindex="0">Save</accessible-button>
+  <accessible-button tabindex="0">Next</accessible-button>
+</section>
+
+<script>
+  class CustomButton extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
+      this.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') this.click();
+      });
+    }
+  }
+
+  class CustomInput extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'textbox');
+    }
+  }
+
+  class AccessibleButton extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
+      this.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') this.click();
+      });
+    }
+  }
+
+  customElements.define('custom-button', CustomButton);
+  customElements.define('custom-input', CustomInput);
+  customElements.define('accessible-button', AccessibleButton);
+</script>
+</body>
+</html>

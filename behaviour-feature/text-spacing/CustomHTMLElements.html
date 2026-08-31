@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>text-spacing – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    /*
+     * The tool applies SC 1.4.12 overrides:
+     *   line-height: 1.5 × font-size
+     *   letter-spacing: 0.12 × font-size
+     *   word-spacing: 0.16 × font-size
+     * Elements with fixed heights or overflow:hidden will clip or collide.
+     */
+
+    /* Fixed-height card — text clips when line-height increases */
+    content-card {
+      display: block;
+      width: 280px;
+      height: 120px;          /* fixed — will clip with extra line-height */
+      overflow: hidden;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 12px;
+      box-sizing: border-box;
+      background: #fafafa;
+    }
+
+    content-card .card-title {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 0 0 4px;
+    }
+
+    content-card .card-body {
+      font-size: 0.875rem;
+      color: #444;
+      margin: 0;
+    }
+
+    /* Badge with fixed dimensions — text overflows when letter-spacing increases */
+    status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;             /* fixed width — letter-spacing will push text out */
+      height: 24px;            /* fixed height */
+      overflow: hidden;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 12px;
+      margin: 4px;
+    }
+
+    /* Button row where buttons may collide when word-spacing grows */
+    button-row {
+      display: flex;
+      gap: 4px;               /* minimal gap — word-spaced labels may collide */
+      margin: 16px 0;
+      flex-wrap: nowrap;      /* no wrapping allowed — collision happens */
+    }
+
+    action-btn {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      padding: 8px 10px;
+      background: #1a73e8;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    action-btn:focus { outline: 3px solid #f4b400; }
+
+    .cards { display: flex; flex-wrap: wrap; }
+    section { margin-bottom: 32px; }
+    h2 { font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Text Spacing – Custom Elements</h1>
+<p>Apply the 1.4.12 bookmarklet or DevTools override to see clipping and collisions.</p>
+
+<section>
+  <h2>Fixed-height cards — text clips (violation)</h2>
+  <div class="cards">
+    <content-card>
+      <p class="card-title">Quarterly Report</p>
+      <p class="card-body">Revenue increased by 14% compared to the same period last year.</p>
+    </content-card>
+    <content-card>
+      <p class="card-title">Team Update</p>
+      <p class="card-body">Three new engineers joined the platform team this month.</p>
+    </content-card>
+    <content-card>
+      <p class="card-title">Infrastructure</p>
+      <p class="card-body">Migration to the new region is scheduled for next weekend.</p>
+    </content-card>
+  </div>
+</section>
+
+<section>
+  <h2>Fixed-dimension badges — text overflows (violation)</h2>
+  <status-badge>Active</status-badge>
+  <status-badge>Pending</status-badge>
+  <status-badge>Closed</status-badge>
+</section>
+
+<section>
+  <h2>Tight button row — labels collide (violation)</h2>
+  <button-row>
+    <action-btn tabindex="0" role="button">Save draft</action-btn>
+    <action-btn tabindex="0" role="button">Publish now</action-btn>
+    <action-btn tabindex="0" role="button">Schedule</action-btn>
+  </button-row>
+</section>
+
+<script>
+  class ContentCard extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'article');
+    }
+  }
+
+  class StatusBadge extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'status');
+    }
+  }
+
+  class ButtonRow extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'group');
+      this.setAttribute('aria-label', 'Content actions');
+    }
+  }
+
+  class ActionBtn extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
+      this.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') this.click();
+      });
+    }
+  }
+
+  customElements.define('content-card', ContentCard);
+  customElements.define('status-badge', StatusBadge);
+  customElements.define('button-row', ButtonRow);
+  customElements.define('action-btn', ActionBtn);
+</script>
+</body>
+</html>

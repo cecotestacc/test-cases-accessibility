@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>tab-order – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    field-group label {
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    field-group input {
+      padding: 8px;
+      border: 1px solid #aaa;
+      border-radius: 3px;
+    }
+
+    action-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      /* Visually: Cancel is on the left, Submit on the right */
+      flex-direction: row;
+    }
+
+    action-button {
+      display: inline-flex;
+      padding: 10px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    action-button[variant="primary"] {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    action-button[variant="secondary"] {
+      background: #e8e8e8;
+      color: #333;
+    }
+
+    action-button:focus {
+      outline: 3px solid #f4b400;
+      outline-offset: 2px;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Tab Order – Custom Elements</h1>
+<p>The form below uses <code>tabindex</code> values that create a tab sequence
+   mismatched from both DOM order and visual reading order.</p>
+
+<form-row>
+  <!-- DOM order: First name → Last name → Email, but tabindex reverses it -->
+  <field-group>
+    <label for="fname">First Name</label>
+    <input id="fname" type="text" tabindex="3" placeholder="First name">
+    <span class="note">tabindex=3 (tab stop 3 in sequence)</span>
+  </field-group>
+
+  <field-group>
+    <label for="lname">Last Name</label>
+    <input id="lname" type="text" tabindex="1" placeholder="Last name">
+    <span class="note">tabindex=1 (tab stop 1 in sequence)</span>
+  </field-group>
+
+  <field-group>
+    <label for="email">Email</label>
+    <input id="email" type="email" tabindex="2" placeholder="Email">
+    <span class="note">tabindex=2 (tab stop 2 in sequence)</span>
+  </field-group>
+</form-row>
+
+<!-- Action bar: visually Cancel is left, Submit is right;
+     but tabindex makes Submit focused before Cancel -->
+<action-bar>
+  <action-button variant="secondary" tabindex="5" role="button">Cancel</action-button>
+  <action-button variant="primary"   tabindex="4" role="button">Submit</action-button>
+</action-bar>
+
+<script>
+  class FormRow extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'group');
+    }
+  }
+
+  class FieldGroup extends HTMLElement {}
+
+  class ActionBar extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'group');
+      this.setAttribute('aria-label', 'Form actions');
+    }
+  }
+
+  class ActionButton extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      this.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') this.click();
+      });
+    }
+  }
+
+  customElements.define('form-row', FormRow);
+  customElements.define('field-group', FieldGroup);
+  customElements.define('action-bar', ActionBar);
+  customElements.define('action-button', ActionButton);
+</script>
+</body>
+</html>

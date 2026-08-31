@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>contrast-image – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; }
+
+    /* Hero with gradient background — text contrast varies across the element */
+    hero-banner {
+      display: block;
+      position: relative;
+      width: 100%;
+      min-height: 300px;
+      background: linear-gradient(135deg, #ff9900 0%, #ffffff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    hero-banner .headline {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #ffffff; /* white on a gradient that fades to white — low contrast at right */
+    }
+
+    /* Card with a photo background and semi-transparent overlay */
+    image-card {
+      display: block;
+      position: relative;
+      width: 320px;
+      height: 200px;
+      overflow: hidden;
+      margin: 16px;
+      border-radius: 8px;
+      background-image: url('https://picsum.photos/seed/card/320/200');
+      background-size: cover;
+      background-position: center;
+    }
+
+    image-card .caption {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      font-size: 1rem;
+      color: #ffffff; /* white text directly over a photo — contrast unmeasurable statically */
+    }
+
+    /* Video-style element with text overlay */
+    video-overlay {
+      display: block;
+      position: relative;
+      width: 480px;
+      height: 270px;
+      background: #333;
+      margin: 16px;
+      border-radius: 4px;
+    }
+
+    video-overlay video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    video-overlay .overlay-text {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #dddddd; /* light grey over a dark but variable video frame */
+    }
+
+    .cards { display: flex; flex-wrap: wrap; padding: 16px; }
+  </style>
+</head>
+<body>
+
+<h1 style="padding: 16px;">Contrast Over Images – Custom Elements</h1>
+
+<!-- Hero: text colour blends into gradient end -->
+<hero-banner>
+  <span class="headline">Welcome to Our Platform</span>
+</hero-banner>
+
+<div class="cards">
+
+  <!-- Photo background card -->
+  <image-card>
+    <span class="caption">Mountain retreat package</span>
+  </image-card>
+
+  <image-card style="background-image: url('https://picsum.photos/seed/city/320/200');">
+    <span class="caption" style="color: #888888;">City tour special</span>
+    <!-- #888888 on a photo — likely fails contrast -->
+  </image-card>
+
+  <!-- Simulated video with overlay text -->
+  <video-overlay>
+    <video autoplay muted loop playsinline
+           src="https://www.w3schools.com/html/mov_bbb.mp4"
+           aria-label="Big Buck Bunny short clip">
+    </video>
+    <span class="overlay-text">Watch our story</span>
+  </video-overlay>
+
+</div>
+
+<script>
+  class HeroBanner extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'banner');
+    }
+  }
+
+  class ImageCard extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'img');
+      if (!this.hasAttribute('aria-label')) {
+        const caption = this.querySelector('.caption');
+        if (caption) this.setAttribute('aria-label', caption.textContent.trim());
+      }
+    }
+  }
+
+  class VideoOverlay extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'region');
+      this.setAttribute('aria-label', 'Video section');
+    }
+  }
+
+  customElements.define('hero-banner', HeroBanner);
+  customElements.define('image-card', ImageCard);
+  customElements.define('video-overlay', VideoOverlay);
+</script>
+</body>
+</html>

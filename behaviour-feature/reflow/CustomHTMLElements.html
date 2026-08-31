@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>reflow – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; margin: 0; }
+
+    /* Data table custom element with fixed column widths — will not reflow at 320px */
+    data-table {
+      display: block;
+      overflow-x: auto; /* intentional scrollable region — excluded by rule */
+    }
+
+    data-table table {
+      border-collapse: collapse;
+      /* Fixed width wider than 320px — forces horizontal scroll on the outer page */
+      width: 900px;
+    }
+
+    data-table th,
+    data-table td {
+      border: 1px solid #ccc;
+      padding: 8px 16px;
+      white-space: nowrap;
+    }
+
+    data-table th { background: #f0f0f0; }
+
+    /* Dashboard row: side-by-side stat cards with fixed widths */
+    stats-row {
+      display: flex;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    stat-card {
+      display: block;
+      min-width: 200px; /* does not shrink below 200px — overflows at 320px */
+      padding: 16px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fafafa;
+      flex-shrink: 0;
+    }
+
+    stat-card .value { font-size: 2rem; font-weight: bold; color: #1a73e8; }
+    stat-card .label { font-size: 0.85rem; color: #666; }
+
+    /* Code block that forces overflow */
+    code-block {
+      display: block;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 16px;
+      border-radius: 4px;
+      margin: 16px 0;
+      /* Fixed width — will not reflow */
+      width: 700px;
+      white-space: pre;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Reflow at 320 CSS px – Custom Elements</h1>
+<p>Resize the browser to 320 px wide (or use DevTools) to observe horizontal overflow.</p>
+
+<!-- Fixed-width data table (inside a scrollable region — excluded from violation) -->
+<h2>Data table (scrollable region — excluded)</h2>
+<data-table role="region" aria-label="Sales data">
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Total</th><th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Widget A</td><td>1,200</td><td>1,450</td><td>980</td><td>2,100</td><td>5,730</td><td>+12%</td></tr>
+      <tr><td>Widget B</td><td>800</td><td>760</td><td>910</td><td>870</td><td>3,340</td><td>-3%</td></tr>
+    </tbody>
+  </table>
+</data-table>
+
+<!-- Stat cards that don't reflow — causes page-level horizontal scroll -->
+<h2>Stats row (forces overflow — violation)</h2>
+<stats-row>
+  <stat-card>
+    <div class="value">4,821</div>
+    <div class="label">Total Users</div>
+  </stat-card>
+  <stat-card>
+    <div class="value">98.2%</div>
+    <div class="label">Uptime</div>
+  </stat-card>
+  <stat-card>
+    <div class="value">$12.4k</div>
+    <div class="label">Revenue</div>
+  </stat-card>
+</stats-row>
+
+<!-- Fixed-width code block — causes page-level horizontal scroll -->
+<h2>Code block (forces overflow — violation)</h2>
+<code-block>
+function processOrder(order) {
+  const { id, items, customer, shippingAddress, paymentMethod } = order;
+  return items.map(item => ({ ...item, orderId: id, customer }));
+}
+</code-block>
+
+<script>
+  class DataTable extends HTMLElement {}
+  class StatsRow extends HTMLElement {}
+  class StatCard extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'article');
+    }
+  }
+  class CodeBlock extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'region');
+      this.setAttribute('aria-label', 'Code example');
+    }
+  }
+
+  customElements.define('data-table', DataTable);
+  customElements.define('stats-row', StatsRow);
+  customElements.define('stat-card', StatCard);
+  customElements.define('code-block', CodeBlock);
+</script>
+</body>
+</html>

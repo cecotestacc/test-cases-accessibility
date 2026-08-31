@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>focus-obscured – Custom Elements Test</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+
+    sticky-header {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: #1a1a2e;
+      color: #fff;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    page-content {
+      display: block;
+      margin-top: 80px;
+      padding: 16px;
+    }
+
+    nav-link {
+      display: inline-block;
+      margin: 8px 4px;
+      padding: 8px 16px;
+      background: #e94560;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    nav-link:focus {
+      outline: 3px solid yellow;
+    }
+
+    /* The fixed banner that obscures focused elements near the top of page-content */
+    announce-banner {
+      display: block;
+      position: sticky;
+      top: 80px;
+      background: rgba(255, 165, 0, 0.95);
+      padding: 12px 24px;
+      z-index: 50;
+      font-weight: bold;
+    }
+
+    focusable-card {
+      display: block;
+      margin: 8px 0;
+      padding: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #f9f9f9;
+    }
+
+    focusable-card a {
+      color: #1a1a2e;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom sticky header covering the top 80px -->
+<sticky-header>
+  <span>My App Header</span>
+  <nav-link tabindex="0">Home</nav-link>
+  <nav-link tabindex="0">About</nav-link>
+</sticky-header>
+
+<page-content>
+  <!-- Sticky sub-banner sits just below the header and may obscure the first focusable card -->
+  <announce-banner>Important notice: this banner stays sticky below the header.</announce-banner>
+
+  <!-- Cards near the top will be obscured by the header or banner when focused -->
+  <focusable-card>
+    <a href="#" tabindex="0">Card 1 – likely obscured by the sticky header</a>
+  </focusable-card>
+  <focusable-card>
+    <a href="#" tabindex="0">Card 2 – potentially obscured by the announce banner</a>
+  </focusable-card>
+  <focusable-card>
+    <a href="#" tabindex="0">Card 3 – further down, visible when focused</a>
+  </focusable-card>
+  <focusable-card>
+    <a href="#" tabindex="0">Card 4</a>
+  </focusable-card>
+  <focusable-card>
+    <a href="#" tabindex="0">Card 5</a>
+  </focusable-card>
+</page-content>
+
+<script>
+  class StickyHeader extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'banner');
+    }
+  }
+
+  class NavLink extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'link');
+    }
+  }
+
+  class AnnounceBanner extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'note');
+    }
+  }
+
+  class FocusableCard extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'region');
+    }
+  }
+
+  class PageContent extends HTMLElement {}
+
+  customElements.define('sticky-header', StickyHeader);
+  customElements.define('nav-link', NavLink);
+  customElements.define('announce-banner', AnnounceBanner);
+  customElements.define('focusable-card', FocusableCard);
+  customElements.define('page-content', PageContent);
+</script>
+</body>
+</html>

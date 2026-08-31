@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>live-region – Custom Elements Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+
+    notification-toast {
+      display: block;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 8px 0;
+      font-size: 0.95rem;
+      max-width: 400px;
+    }
+
+    notification-toast[type="error"]   { background: #fdecea; border-left: 4px solid #e74c3c; }
+    notification-toast[type="success"] { background: #eafaf1; border-left: 4px solid #27ae60; }
+    notification-toast[type="info"]    { background: #eaf4fb; border-left: 4px solid #1a73e8; }
+
+    update-feed {
+      display: block;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px;
+      max-width: 400px;
+      min-height: 80px;
+      background: #fafafa;
+      margin: 12px 0;
+    }
+
+    update-feed .entry {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+
+    announce-widget {
+      display: block;
+      max-width: 400px;
+      margin: 24px 0;
+    }
+
+    announce-widget button {
+      padding: 8px 16px;
+      margin: 4px;
+      cursor: pointer;
+    }
+
+    section { margin-bottom: 32px; border-bottom: 1px solid #eee; padding-bottom: 16px; }
+    h2 { font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Live Region – Custom Elements</h1>
+
+<section>
+  <h2>Violation A: live region injected with content already inside it</h2>
+  <p>The <code>notification-toast</code> below is added to the DOM already containing
+     its message, so a screen reader will not announce the update.</p>
+  <div id="toast-container-bad"></div>
+</section>
+
+<section>
+  <h2>Violation B: live region created after page load — content inserted simultaneously</h2>
+  <update-feed id="bad-feed" role="log" aria-live="polite" aria-label="Activity feed">
+    <!-- Content will be injected together with aria-live in JS — AT may miss it -->
+  </update-feed>
+</section>
+
+<section>
+  <h2>Correct: pre-existing live region — content injected after region is established</h2>
+  <announce-widget>
+    <div id="good-region" aria-live="assertive" aria-atomic="true" role="status"
+         style="min-height:1.5em;"></div>
+    <button type="button" id="trigger-good">Trigger announcement</button>
+  </announce-widget>
+</section>
+
+<script>
+  /* ── Custom Elements ── */
+
+  class NotificationToast extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'alert');
+    }
+  }
+
+  class UpdateFeed extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'log');
+    }
+  }
+
+  class AnnounceWidget extends HTMLElement {}
+
+  customElements.define('notification-toast', NotificationToast);
+  customElements.define('update-feed', UpdateFeed);
+  customElements.define('announce-widget', AnnounceWidget);
+
+  /* ── Violation A: inject toast with content pre-filled ── */
+  window.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('toast-container-bad');
+
+    // Bad: the element already contains text when inserted — AT misses the announcement
+    const toast = document.createElement('notification-toast');
+    toast.setAttribute('type', 'error');
+    toast.textContent = 'Your session has expired. Please log in again.';
+    container.appendChild(toast);
+  });
+
+  /* ── Violation B: live region and content inserted at the same time ── */
+  window.addEventListener('DOMContentLoaded', () => {
+    const feed = document.getElementById('bad-feed');
+    // Wrong: setting aria-live and adding content simultaneously after page load
+    feed.setAttribute('aria-live', 'polite');
+    const entry = document.createElement('div');
+    entry.className = 'entry';
+    entry.textContent = 'User alice joined the channel.';
+    feed.appendChild(entry); // AT may not announce because region was just created
+  });
+
+  /* ── Correct: region exists at load; only content changes later ── */
+  document.getElementById('trigger-good').addEventListener('click', () => {
+    const region = document.getElementById('good-region');
+    region.textContent = 'Form saved successfully at ' + new Date().toLocaleTimeString();
+  });
+</script>
+</body>
+</html>
