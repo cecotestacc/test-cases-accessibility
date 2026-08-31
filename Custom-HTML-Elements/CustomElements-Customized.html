@@ -1,0 +1,43 @@
+ <!DOCTYPE html>
+ <html lang = "en">
+     <head>
+ <script>
+        class CustomLink extends HTMLAnchorElement {
+            constructor() {
+                super();
+                this.addEventListener('click', this.onClick);
+            }
+
+            connectedCallback() {
+                this.style.color = "red"; // Style the custom link
+				this.setAttribute('aria-label', "labelfora");
+            }
+
+            onClick(event) {
+                event.preventDefault(); // Prevent default link behavior
+                alert(`You clicked on: ${this.href}`); // Custom behavior
+                // You can add any additional behavior here
+            }
+        }
+
+        // Define the custom element
+        customElements.define('custom-link', CustomLink, { extends: 'a' });
+    </script>
+    
+	<script type="text/javascript">
+  window.__qualiboothOrganizationId = "a0f273d0-9765-403e-98dc-7bbb59c70c60"
+</script>
+<script defer src="https://portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+	
+
+
+
+
+	</head>
+     <body>
+			 BS should find "color-contrast" issue because of style.color='red'
+		     <a is="custom-link" href="https://www.example.com">aa</a>
+
+	</body>
+</html>
+
