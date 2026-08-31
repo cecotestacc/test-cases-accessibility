@@ -1,0 +1,15 @@
+/* styles2.css */
+button[is="my-button"]{
+  padding: 10px;
+  font-size: 16px;
+  color: #E6E6E6;
+  border: 2px solid red;
+  cursor: pointer;
+  content: "click me";  
+}
+
+
+
+button[is="my-button"]:hover {
+  background-color: darkred;
+}
