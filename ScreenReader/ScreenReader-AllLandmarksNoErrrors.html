@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Landmark Roles Example</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; }
+    header, nav, main, aside, footer, section, form { padding: 1rem; border: 1px solid #ccc; margin: .5rem; }
+    h1 { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER landmark -->
+  <header>
+    <h1>Site Name</h1>
+    <p>This <code>&lt;header&gt;</code> element is a banner by default (role="banner").</p>
+  </header>
+
+  <!-- NAVIGATION landmark -->
+  <nav aria-label="Primary">
+    <p>This <code>&lt;nav&gt;</code> element is a navigation landmark by default.</p>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN landmark -->
+  <main>
+    <h2>Main Content</h2>
+    <p><code>&lt;main&gt;</code> is automatically a <strong>main</strong> landmark.</p>
+
+    <!-- REGION landmark with aria-label -->
+    <section aria-label="Featured Articles">
+      <h3>Featured Articles</h3>
+      <p>This <code>&lt;section&gt;</code> becomes a <strong>region</strong> landmark because of the <code>aria-label</code>.</p>
+    </section>
+
+    <!-- COMPLEMENTARY landmark -->
+    <aside>
+      <h3>Related Info</h3>
+      <p><code>&lt;aside&gt;</code> is a complementary landmark by default.</p>
+    </aside>
+
+    <!-- FORM landmark (search) -->
+    <form role="search" action="#">
+      <label for="q">Search the site:</label>
+      <input id="q" name="q" type="search">
+      <button>Search</button>
+      <p>Using <code>role="search"</code> makes this a <strong>search</strong> landmark.</p>
+    </form>
+
+    <!-- FORM landmark (explicit form) -->
+    <form role="form" aria-label="Feedback">
+      <label for="feedback">Feedback:</label><br>
+      <textarea id="feedback"></textarea>
+      <button>Submit</button>
+      <p>This <code>form</code> explicitly uses <code>role="form"</code> to be a <strong>form</strong> landmark.</p>
+    </form>
+
+    <!-- APPLICATION landmark -->
+    <section role="application" aria-label="Interactive Widget">
+      <p>This section demonstrates <code>role="application"</code>, typically for custom widgets.</p>
+    </section>
+
+  </main>
+
+  <!-- CONTENTINFO landmark -->
+  <footer>
+    <p>&copy; 2025 Example Company — <code>&lt;footer&gt;</code> is a <strong>contentinfo</strong> landmark by default.</p>
+  </footer>
+
+</body>
+</html>

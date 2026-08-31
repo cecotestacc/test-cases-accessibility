@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <script src="node_modules/axe-core/axe.min.js"></script>
+
+	<title> </title>
+  <script src="assets/javascript/jquery-1.12.0.min.js"></script>
+  <script src="node_modules/axe-core/axe.min.js"></script>
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .focusable {
+            margin: 10px 0;
+        }
+    </style>
+<script type="text/javascript">
+  window.__qualiboothOrganizationId = "a0f273d0-9765-403e-98dc-7bbb59c70c60"
+</script>
+<script defer src="https://cdn.portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+
+
+</head>
+WHat elements?
+media player control
+	https://www.smashingmagazine.com/2022/11/guide-keyboard-accessibility-html-css-part1/
+<body>
+        <h1>Tabindex Test</h1>
+<h1 tabindex="0">asd</h1>
+<a href="#" class="focusable" tabindex="6">Link 1 (tabindex 6)</a>
+
+<br> 
+<br> 
+<br> 
+
+<button class="focusable" tabindex="5">Button 1 (tabindex 5)</button>
+
+<br> 
+<br> 
+<br> 
+
+<input type="text" class="focusable" tabindex="4" placeholder="Input 1 (tabindex 4)">
+<br> 
+<br> 
+<br> 
+
+<select class="focusable" tabindex="3">
+    <option>Option 1</option>
+    <option>Option 2</option>
+</select>
+<br> 
+<br> 
+
+<select class="focusable" tabindex="3">
+    <option>Option 1</option>
+    <option>Option 2</option>
+</select>
+<br> 
+<br> 
+<br> 
+	<textarea class="focusable"  placeholder="Textarea 1 (tabindex 2)"></textarea>
+<br> 
+<br> 
+<br> 
+
+
+<label class="focusable" tabindex="1">Label 1 (tabindex 1)</label>
+<br> 
+<br> 
+
+<option class="focusable" tabindex="0">Option 1 (tabindex 0)</option>
+<br> 
+<br> 
+
+
+<iframe class="focusable" src="https://example.com" tabindex="0" width="300" height="200"></iframe>
+<audio controls class="focusable" tabindex="0">
+    <source src="sample.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+<video controls class="focusable" tabindex="0" width="300">
+    <source src="sample.mp4" type="video/mp4">
+    Your browser does not support the video element.
+</video>
+
+</body>
+
+
+
+</html>

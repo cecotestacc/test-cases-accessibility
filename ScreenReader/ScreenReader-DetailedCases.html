@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <script src="node_modules/axe-core/axe.min.js"></script>
+
+	<title> </title>
+  <script src="assets/javascript/jquery-1.12.0.min.js"></script>
+  <script src="node_modules/axe-core/axe.min.js"></script>
+<script type="text/javascript">
+  window.__qualiboothOrganizationId = "a0f273d0-9765-403e-98dc-7bbb59c70c60"
+</script>
+<script defer src="https://cdn.portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+<a class="skip-main" href="#main">Skip to main content</a>
+<nav>Navigation</nav>
+
+</head>
+<body>
+<form role="search">
+
+  <input type="search" aria-label="search text" size="20">
+
+  <input type="submit" value="Search">
+
+</form>
+<main id="main" tabindex="-1">Main content</main>
+<div role="button" tabindex="0" onclick="alert('Hi, I am a non-native button!')">
+    Click me
+</div>
+<div> https://www.powermapper.com/tests/</div>
+		<div>TestCase: Click Here link with aria-describedby attribute</div>
+		<div>NavigationType: Links</div>
+<a href='4567.html' aria-describedby='a-aria-describedby-clickhere'>Click Here</a>
+		<span id='a-aria-describedby-clickhere'>this is an aria described by</span>
+		<div>TestCase: Click Here link with title attribute</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html' title='this is a link title'>Click Here</a>
+
+		<div>TestCase: Link containing img with alt</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html'><img src='1234.png' alt='this is a link alt'></a>
+
+		<div>TestCase: Link containing img with title</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html'><img src='1234.png' title='this is an image title'></a>
+
+		<div>TestCase: Link text replaced by aria-label attribute</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html' aria-label='this is an aria label'>Click Here</a>
+
+		<div>TestCase: Link text replaced by aria-labelledby attribute</div>
+		<div>NavigationType: Links</div>
+<a href='4567.html' aria-labelledby='a-aria-labelledby-clickhere'>Click Here</a>
+		<span id='a-aria-labelledby-clickhere'>this is an aria labelled by</span>
+		<div>TestCase: a element placeholder link with no event handler or href attribute</div>
+		<div>NavigationType: Links</div>
+		<a>Placeholder text</a>
+
+		<div>TestCase: fieldset containing links</div>
+		<div>NavigationType: Links</div>
+<fieldset>
+			<legend>Legend for enclosed links</legend>
+			<a href='/'>Home</a>
+			<a href='/about'>About</a>
+			<a href='/contact'>Contact</a>
+		</fieldset>
+	
+		<div>TestCase: A link with empty label</div>
+		<div>NavigationType: Links</div>
+		<p>Preceding content</p>
+		<a href='javascript:void(0);'></a>
+		
+		<div>TestCase: Link containing img with null alt
+</div>
+		<div>NavigationType: Links</div>
+				<a href='4567.html'><img src='1234.png' alt=''></a>
+
+
+		<div>TestCase: Link containing img without alt
+</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html'><img src='1234.png'></a>
+
+		<div>TestCase: Link with aria-label containing img with no alt
+</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html' aria-label='this is an aria label'><img src='1234.png'></a>
+
+		<div>TestCase: Link with aria-labelledby containing img with no alt
+</div>
+		<div>NavigationType: Links</div>
+	<a href='4567.html' aria-labelledby='a-aria-labelledby-span'><img src='1234.png'></a>
+		<span id='a-aria-labelledby-span'>this is an aria labelled by</span>
+		
+		<div>TestCase: Link with onclick but no href NO
+</div>
+		<div>NavigationType: Links</div>
+		<a onclick='alert(&apos;hello&apos;);'>Hello</a>
+
+		<div>TestCase: Link with title containing img with no alt Y
+</div>
+		<div>NavigationType: Links</div>
+		<a href='4567.html' title='this is a link title'><img src='1234.png'></a>
+
+		<br> 
+<br> 
+<br> 
+
+		<div>TestCase: area and img with alt attributes</div>
+		<div>NavigationType: Links</div>
+		<img alt='this is alt text' src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solar_system.jpg/482px-Solar_system.jpg" alt="Workplace" usemap="#image-map1">
+<map name="image-map1" >
+  <area alt='this is left alt text' shape="rect" coords="10,20,100,80" href="page1.html" >
+  <area alt='this is right alt text' shape="circle" coords="150,100,30" href="page2.html"> 
+</map>
+		<div>TestCase: area with alt attribute and img with null alt</div>
+		<div>NavigationType: Links</div>
+		<img alt='' src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solar_system.jpg/482px-Solar_system.jpg" alt="Workplace" usemap="#image-map2">
+<map name="image-map2">
+  <area alt='this is left alt text' shape="rect" coords="10,20,100,80" href="page1.html" >
+  <area alt='this is right alt text' shape="circle" coords="150,100,30" href="page2.html"> 
+</map>
+
+		<div>TestCase: area with aria-label attribute</div>
+		<div>NavigationType: Links</div>
+		<img alt='' src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solar_system.jpg/482px-Solar_system.jpg" alt="Workplace" usemap="#image-map3">
+<map name="image-map3">
+  <area aria-label='this is left alt text' shape="rect" coords="10,20,100,80" href="page1.html" >
+  <area aria-label='this is right alt text' shape="circle" coords="150,100,30" href="page2.html"> 
+</map>
+
+		<div>TestCase:  area with aria-labelledby attribute</div>
+		<div>NavigationType: Links</div>
+		<img alt='' src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solar_system.jpg/482px-Solar_system.jpg" alt="Workplace" usemap="#image-map4">
+<map name="image-map4">
+  <area aria-labelledby='left_caption22' shape="rect" coords="10,20,100,80" href="page1.html" >
+  <area aria-labelledby='right_caption22' shape="circle" coords="150,100,30" href="page2.html"> 
+</map>
+		<span id='left_caption22'>this is left aria labelled by text</span>
+		<span id='right_caption22'>this is right aria labelled by text</span>
+		
+		<div>TestCase: area with title attribute</div>
+		<div>NavigationType: Links</div>
+		<img alt='' src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solar_system.jpg/482px-Solar_system.jpg" alt="Workplace" usemap="#image-map5">
+<map name="image-map5">
+  <area aria='this is left title text' shape="rect" coords="10,20,100,80" href="page1.html" >
+  <area aria='this is right title text' shape="circle" coords="150,100,30" href="page2.html"> 
+</map>
+
+		<div>TestCase: button containing img with alt</div>
+		<div>NavigationType: Form</div>
+		<button><img src='1234.png' alt='This is image alt'></button>
+
+		<div>TestCase:button containing img with aria-label
+</div>
+		<div>NavigationType: Form</div>
+		<button><img src='1234.png' aria-label='This is image aria label'></button>
+
+		<div>TestCase:button containing img with aria-labelledby</div>
+		<div>NavigationType:</div>
+
+		<button><img src='1234.png' aria-labelledby='button_img_aria_labelledby'></button>
+		<span id='button_img_aria_labelledby'>This is an aria labelled by</span>
+		<div>TestCase:button containing img with title attribute</div>
+		<div>NavigationType: Form</div>
+		<button><img src='1234.png' title='This is image title'></button>
+
+		<div>TestCase:button with aria-label containing img with null alt</div>
+		<div>NavigationType: Form</div>
+
+		<h1>Preceding heading</h1>
+		<button aria-label='This is button aria label'><img src='1234.png' alt=''></button>
+		<div>TestCase:button with title containing img with null alt</div>
+		<div>NavigationType: Form</div>
+		<button title='This is button title'><img src='1234.png' alt=''></button>
+
+		
+		<div>TestCase: Yes/No radio buttons inside fieldset element</div>
+		<div>NavigationType: Forms</div>
+<fieldset>
+			<legend>I agree to terms and conditions</legend>
+			<label><input name='radio_with_legend1' type='radio' checked='checked'>Yes</label>
+			<label><input name='radio_with_legend1' type='radio'>No</label>
+		</fieldset>
+		<fieldset>
+			<legend>Sign me up to the newsletter</legend>
+			<label><input name='radio_with_legend2' type='radio' checked='checked'>Yes</label>
+			<label><input name='radio_with_legend2' type='radio'>No</label>
+		</fieldset>
+	
+	
+		<div>TestCase: fieldset containing links</div>
+		<div>NavigationType: Links</div>
+
+		<fieldset>
+			<legend>Legend for enclosed links</legend>
+			<a href='/'>Home</a>
+			<a href='/about'>About</a>
+			<a href='/contact'>Contact</a>
+		</fieldset>
+		
+
+	
+		<div>TestCase: Interactive iframe with role=presentation and aria-label attribute</div>
+		<div>NavigationType:</div>
+		<iframe src='1234.html' width='400' height='100' role='presentation' aria-label='This is aria-label'> </iframe>
+
+		<div>TestCase: Interactive iframe with role=presentation and title attribute
+</div>
+		<div>NavigationType:</div>
+		<iframe src='1234.html' width='400' height='100' role='presentation' title='This is frame title'> </iframe>
+
+		<div>TestCase:Interactive iframe with role=presentation and negative tabindex and no accessible name
+</div>
+		<div>NavigationType: </div>
+		<iframe src='1234.html' width='400' height='100' role='presentation' tabindex='-1'> </iframe>
+
+		<div>TestCase: Interactive iframe with role=presentation and no accessible name
+</div>
+		<div>NavigationType:</div>
+		<iframe src='1234.html' width='400' height='100' role='presentation'> </iframe>
+
+		<div>TestCase: iframe with title attribute
+</div>
+		<div>NavigationType:</div>
+		<iframe title='This is an IFRAME title' src='1234.html' width='400' height='100'> </iframe>
+
+		<div>TestCase: iframe with fallback content
+</div>
+		<div>NavigationType:</div>
+<iframe src='1234.html' width='400' height='100'>
+			This is iframe text
+		</iframe>
+		
+		<div>TestCase: Heading is img with alt
+</div>
+		<div>NavigationType:</div>
+Heading is img with alt
+
+		<div>TestCase:Link containing img with alt
+</div>
+		<div>NavigationType:</div>
+		<a href='4567.html'><img src='1234.png' alt='this is a link alt'></a>
+
+		<div>TestCase: Link containing img with title
+</div>
+		<div>NavigationType:</div>
+		<a href='4567.html'><img src='1234.png' title='this is an image title'></a>
+
+
+
+		<div>TestCase: input type=image with alt
+</div>
+		<div>NavigationType:</div>
+		<input type='image' src='1234.png' alt='this is image button alt text'>
+
+		<div>TestCase: input type=image with aria-label attribute
+</div>
+		<div>NavigationType:</div>
+		<input type='image' src='1234.png' aria-label='this is image button aria label text'>
+
+		<div>TestCase: input type=image with aria-labelledby attribute
+</div>
+		<div>NavigationType:</div>
+<input type='image' src='1234.png' aria-labelledby='input_img_aria_labelledby'>
+		<span id='input_img_aria_labelledby'>this is image button aria labelled by text</span>
+		
+		<div>TestCase: input type=image with title attribute
+</div>
+		<div>NavigationType:</div>
+		<input type='image' src='1234.png' title='this is image button title text'>
+
+		<div>TestCase: input type=text inside label with text after control
+</div>
+		<div>NavigationType:</div>
+<label>
+		<input type='text'>
+		Enter search text
+		</label>
+		
+		<div>TestCase: input type=text inside label with text before and after control
+</div>
+		<div>NavigationType:</div>
+<label>Enter search text
+		<input type='text'>
+		blanks not allowed
+		</label>
+	
+		<div>TestCase: input type=text inside label with text before control
+</div>
+		<div>NavigationType:</div>
+<label>Enter search text
+		<input type='text'>
+		</label>
+		<div>TestCase: input type=text with aria-describedby attribute
+</div>
+		<div>NavigationType:</div>
+<label for='fname'>First name</label>
+		<input name='' type='text' id='fname' aria-describedby='int2'>
+		<span id='int2'>A bit of instructions for this field linked with aria describedby. </span>
+		
+		<div>TestCase: input type=text with aria-label attribute
+</div>
+		<div>NavigationType:</div>
+		<input type='text' aria-label='Enter search text'>
+
+		<div>TestCase: input type=text with aria-labelledby attribute
+</div>
+		<div>NavigationType:</div>
+
+		<span id='labelledby'>Enter search text </span>
+		<input type='text' aria-labelledby='labelledby'>
+		<div>TestCase: input type=text with label for
+</div>
+		<div>NavigationType:</div>
+<label for='label_for'>Enter search text </label>
+		<input type='text' id='label_for'>
+	
+		<div>TestCase: input type=text with title attribute
+</div>
+		<div>NavigationType:</div>
+		<input type='text' title='Enter search text'>
+
+		<div>TestCase: input type=text inside label with text after control
+</div>
+		<div>NavigationType:</div>
+<label>
+		<input type='text'>
+		Enter search text
+		</label>
+	
+		<div>TestCase: input type=text inside label with text before and after control
+</div>
+		<div>NavigationType:</div>
+	<label>Enter search text
+		<input type='text'>
+		blanks not allowed
+		</label>
+		<div>TestCase: input type=text inside label with text before control
+</div>
+		<div>NavigationType:</div>
+<label>Enter search text
+		<input type='text'>
+		</label>
+		<div>TestCase: input type=text with label for
+</div>
+		<div>NavigationType:</div>
+<label for='label_for'>Enter search text </label>
+		<input type='text' id='label_for'>
+		
+		<div>TestCase: input type=text with aria-labelledby attribute
+</div>
+		<div>NavigationType:</div>
+<span id='labelledby'>Enter search text </span>
+		<input type='text' aria-labelledby='labelledby'>
+		
+		<div>TestCase:Address element</div>
+		<div>NavigationType:</div>
+<p>Contact the author of this page:</p>
+
+<address >	
+  <a href="mailto:jim@example.com">jim@example.com</a><br />
+  <a href="tel:+14155550132">+1 (415) 555‑0132</a>
+</address>
+
+
+		<div>TestCase: <object> element</div>
+		<div>NavigationType:</div>
+<object type="application/pdf" data="https://interactive-examples.mdn.mozilla.net/media/examples/In-CC0.pdf" width="250" height="200"></object>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+		<div>TestCase:</div>
+		<div>NavigationType:</div>
+
+
+	
+</main>
+</body>
+
+
+
+</html>
