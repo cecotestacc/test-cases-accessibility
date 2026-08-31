@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reflow – Fixed-width table with white-space:nowrap (F102)</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; margin: 0; }
+
+    table {
+      width: 800px;           /* fixed — will not shrink */
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px 12px;
+      white-space: nowrap;   /* prevents cell content wrapping — compounds overflow */
+    }
+
+    th { background: #e2e8f0; }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 16px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #03</span>
+    <span class="qa-rule-id">reflow</span>
+    <span class="qa-source-tag">W3C F102 — Example B</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.4.10 Reflow — AA</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/failures/F102" style="color:#93c5fd;">F102: Failure due to content disappearing when viewport is resized to 320 CSS pixels</a></dd>
+    <dt>Elements with errors</dt>
+    <dd><code>table</code> with <code>width:800px; white-space:nowrap</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> <code>table</code> is <code>width:800px</code> — far wider than the 320px test viewport. <code>white-space:nowrap</code> on cells prevents any wrapping that might otherwise reduce the table width. The rule identifies the table as the outermost element causing horizontal overflow.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<h1>Reflow — Fixed-Width Table, No-Wrap Cells (F102)</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Last Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Widget Alpha</td>
+      <td>Electronics</td>
+      <td>$49.99</td>
+      <td>142 units</td>
+      <td>2026-08-30</td>
+    </tr>
+    <tr>
+      <td>Widget Beta</td>
+      <td>Accessories</td>
+      <td>$19.99</td>
+      <td>58 units</td>
+      <td>2026-08-28</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

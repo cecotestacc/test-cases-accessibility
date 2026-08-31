@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>contrast-image – White text on photo-like multi-layer background (SC 1.4.3)</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+
+    /* Simulates a busy photograph using overlapping gradients.
+       White text over the light-toned diagonal stripe areas
+       falls below the 4.5:1 threshold.                      */
+    .photo-section {
+      padding: 64px 32px;
+      background:
+        linear-gradient(to right, rgba(255,180,0,0.55) 0%, rgba(0,120,200,0.55) 100%),
+        repeating-linear-gradient(
+          45deg,
+          rgba(255,255,255,0.2) 0px, rgba(255,255,255,0.2) 5px,
+          transparent 5px, transparent 10px
+        ),
+        #5a7d9a;
+    }
+
+    .photo-section p {
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 400;   /* normal weight — threshold is 4.5:1, not 3:1 */
+      margin: 0;
+    }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #03</span>
+    <span class="qa-rule-id">contrast-image</span>
+    <span class="qa-source-tag">W3C G18 — Example B</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.4.3 Contrast (Minimum) — AA (4.5:1 for normal text)</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/general/G18" style="color:#93c5fd;">G18: Ensuring a contrast ratio of at least 4.5:1 between text and background</a> (shown as failure — non-flat backdrop)</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>.photo-section p</code> (color <code>#ffffff</code>, normal weight)</dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> White (<code>#ffffff</code>) normal-weight text sits on a multi-layer gradient that simulates a photograph. Over the near-white diagonal stripe regions individual glyph pixels have contrast as low as 1.2:1. The rule captures the text, makes glyphs transparent to expose the background pixel, and compares each glyph pixel against the background pixel behind it.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<div class="photo-section">
+  <p>Accessibility is not a feature — it is a fundamental right for all users of the web.</p>
+</div>
+
+</body>
+</html>

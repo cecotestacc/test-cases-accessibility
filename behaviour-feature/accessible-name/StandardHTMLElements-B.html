@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>accessible-name – label present but not linked to input (F68)</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+    form { max-width: 360px; }
+    label { font-weight: 600; display: inline-block; margin-right: 6px; }
+    input[type="text"] { padding: 8px; font-size: 1rem; }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #03</span>
+    <span class="qa-rule-id">accessible-name</span>
+    <span class="qa-source-tag">W3C F68 — Example B</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>4.1.2 Name, Role, Value — A &nbsp;·&nbsp; 2.5.3 Label in Name — A</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/failures/F68" style="color:#93c5fd;">F68: Failure of 4.1.2 — the user interface component does not have a programmatically determined name</a></dd>
+    <dt>Elements with errors</dt>
+    <dd><code>input[name="firstname"]</code> · <code>input[name="lastname"]</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> <code>&lt;label&gt;</code> elements are present but have no <code>for</code> attribute, and the inputs have no <code>id</code> attribute — the label and input are adjacent siblings but are not programmatically associated. Chrome's accessible-name computation reports an empty name for both fields.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<h1>Accessible Name — &lt;label&gt; Not Linked to Input (missing for/id) (F68)</h1>
+
+<form>
+  <p>
+    <label>First Name</label>
+    <input type="text" name="firstname">
+    <label>Last Name</label>
+    <input type="text" name="lastname">
+  </p>
+</form>
+
+</body>
+</html>

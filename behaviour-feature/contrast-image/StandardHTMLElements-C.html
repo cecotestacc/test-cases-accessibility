@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>contrast-image – Near-white text on semi-transparent dark overlay (SC 1.4.3)</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+
+    /* Simulates text layered over a video frame via a semi-transparent gradient.
+       The overlay fades from 25% black at the top to nearly transparent at the bottom;
+       the effective background approaches white at the lower edge.
+       Near-white text (#e0e0e0) over that near-white effective background
+       produces contrast ratios below 1.5:1 at the bottom.                    */
+    .video-overlay {
+      padding: 48px 32px;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.28) 0%,
+        rgba(0,0,0,0.04) 100%
+      );
+    }
+
+    .video-overlay p {
+      color: #e0e0e0;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #04</span>
+    <span class="qa-rule-id">contrast-image</span>
+    <span class="qa-source-tag">W3C G18 — Example C</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.4.3 Contrast (Minimum) — AA (4.5:1 for normal text)</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/general/G18" style="color:#93c5fd;">G18: Ensuring a contrast ratio of at least 4.5:1 between text and background</a> (shown as failure — non-flat backdrop)</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>.video-overlay p</code> (color <code>#e0e0e0</code>)</dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> <code>#e0e0e0</code> text on a gradient overlay that fades to near-transparent at the bottom. The effective background behind the lower glyph pixels approaches white (<code>#f9f9f9</code> equivalent), making the contrast ratio approximately 1.4:1 — well below 4.5:1. A static checker cannot measure this because the backdrop changes across the element height.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<div class="video-overlay">
+  <p>Auto-play video would appear behind this text layer. The overlay is too light at the bottom to provide adequate contrast for the text placed here.</p>
+</div>
+
+</body>
+</html>

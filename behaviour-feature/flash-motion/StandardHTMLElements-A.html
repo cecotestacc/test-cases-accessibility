@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>flash-motion – Luminance flash at 4 Hz, no pause (SC 2.3.1)</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #fff; }
+
+    /* Cycles background luminance between near-white and near-black at 4 Hz
+       (250ms per full cycle × steps(1) = 8 hard flips/s → 4 full cycles/s).
+       Exceeds the 2.3.1 threshold of 3 Hz for the covered area.
+       No pause/stop/hide control is provided.                                */
+    @keyframes luminance-flash {
+      0%   { background-color: #ffffff; }
+      50%  { background-color: #111111; }
+      100% { background-color: #ffffff; }
+    }
+
+    #flash-box {
+      width: 340px;
+      height: 220px;
+      animation: luminance-flash 0.25s steps(1) infinite;
+      /* MISSING: no @media (prefers-reduced-motion) rule
+         MISSING: no pause/stop/hide button                */
+    }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #02</span>
+    <span class="qa-rule-id">flash-motion</span>
+    <span class="qa-source-tag">W3C G176 / SC 2.3.1 — Example A</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.3.1 Three Flashes or Below Threshold — A</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/general/G176" style="color:#93c5fd;">G176: Keeping the flashing area small enough</a> (shown as failure — area exceeds threshold and frequency is above 3 Hz)</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>#flash-box</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR 2.3.1</span> Luminance oscillates between <code>#ffffff</code> and <code>#111111</code> (high relative luminance difference) at 4 Hz — exceeds the 3 Hz flash threshold. The rule records the viewport frame-by-frame, measures luminance over time, and applies the 2.3.1 arithmetic to the flash area.</li>
+      <li><span class="qa-error-tag">ERROR</span> No pause, stop, or hide control is present and no <code>@media (prefers-reduced-motion)</code> rule silences the animation.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<p><strong>Warning:</strong> the box below flashes rapidly. If you are sensitive to flashing lights, close this page immediately.</p>
+
+<div id="flash-box" role="img" aria-label="Flashing accessibility test element"></div>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>modal-lifecycle – Standard HTML Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+    button { padding: 8px 16px; font-size: 1rem; margin: 4px; cursor: pointer; }
+
+    /* ── Broken modal styles ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+      position: relative;
+    }
+
+    .modal-box h2 { margin-top: 0; }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #02</span>
+    <span class="qa-rule-id">modal-lifecycle</span>
+    <span class="qa-source-tag">W3C ARIA dialog pattern</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.1.2 No Keyboard Trap — A &nbsp;·&nbsp; 2.4.3 Focus Order — A &nbsp;·&nbsp; 4.1.2 Name, Role, Value — A</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/" style="color:#93c5fd;">WCAG 2.2 Techniques — dialog role and focus management</a></dd>
+    <dt>Elements with errors</dt>
+    <dd><code>#broken-modal</code> (all five contract steps fail)</dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR focus-in</span> Opening the dialog does not move keyboard focus inside it — focus stays on the trigger button in the page. The rule's "focus moves in" assertion fails.</li>
+      <li><span class="qa-error-tag">ERROR tab-contained</span> No Tab/Shift+Tab wrapping is implemented — Tab walks freely out of the modal into the page behind. The rule's "Tab stays contained" assertion fails.</li>
+      <li><span class="qa-error-tag">ERROR aria-modal</span> The overlay <code>div</code> has no <code>role="dialog"</code> and no <code>aria-modal="true"</code> — background content is not removed from the accessibility tree. The rule's tree-isolation check fails.</li>
+      <li><span class="qa-error-tag">ERROR escape</span> No <code>keydown</code> Escape handler is present — pressing Escape does nothing. The rule's "Escape closes dialog" assertion fails.</li>
+      <li><span class="qa-error-tag">ERROR focus-return</span> The close button does <code>display:none</code> on the overlay but never returns focus to the trigger. The rule's "focus returns to opener" assertion fails.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<h1>Modal Lifecycle Failures — Broken Dialog (Standard HTML)</h1>
+
+<button id="open-btn" type="button">Open dialog (broken)</button>
+
+<!-- Broken modal: no role=dialog, no aria-modal, no focus management, no Escape -->
+<div id="broken-modal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-box">
+    <!-- Missing: role="dialog" aria-modal="true" aria-labelledby -->
+    <h2>Broken Dialog</h2>
+    <p>This dialog has no proper ARIA role, no focus management, and no Escape handler.</p>
+    <input type="text" placeholder="Some field">
+    <br><br>
+    <a href="#link-in-modal">A link inside the modal</a>
+    <br><br>
+    <button id="close-btn" type="button">Close</button>
+    <!-- Tab will escape to page buttons — no containment -->
+  </div>
+</div>
+
+<p>Other focusable content behind the modal:</p>
+<button type="button">Page button A (reachable while modal is open)</button>
+<button type="button">Page button B (reachable while modal is open)</button>
+
+<script>
+  const openBtn  = document.getElementById('open-btn');
+  const modal    = document.getElementById('broken-modal');
+  const closeBtn = document.getElementById('close-btn');
+
+  openBtn.addEventListener('click', () => {
+    modal.classList.add('open');
+    modal.removeAttribute('aria-hidden');
+    // MISSING: focus not moved inside dialog
+    // MISSING: page content not inert / aria-hidden
+    // MISSING: Escape handler
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    // MISSING: openBtn.focus() — focus not returned to trigger
+  });
+</script>
+</body>
+</html>

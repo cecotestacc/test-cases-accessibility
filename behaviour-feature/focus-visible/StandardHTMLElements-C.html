@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>focus-visible – Anchor conditionally blurs on focus (F55)</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; }
+    a { color: #1a73e8; font-size: 1rem; }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #04</span>
+    <span class="qa-rule-id">focus-visible</span>
+    <span class="qa-source-tag">W3C F55 — Example C</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.7 Focus Visible — AA &nbsp;·&nbsp; 2.4.13 Focus Appearance — AAA</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/failures/F55" style="color:#93c5fd;">F55: Failure due to using script to remove focus when focus is received</a></dd>
+    <dt>Elements with errors</dt>
+    <dd><code>a#blur-anchor</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>onfocus="if(this.blur)this.blur();"</code> — the guard condition <code>if(this.blur)</code> is always truthy in modern browsers; this is functionally identical to an unconditional <code>this.blur()</code>. Focus is removed every time the link is reached by Tab, making it invisible to keyboard users.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<h1>Focus Visible — Anchor with Conditional Blur on Focus (F55)</h1>
+
+<p>Read more about
+  <a id="blur-anchor" href="#link"
+     onfocus="if(this.blur)this.blur();">accessibility guidelines</a>
+  on the W3C website.
+</p>
+
+</body>
+</html>

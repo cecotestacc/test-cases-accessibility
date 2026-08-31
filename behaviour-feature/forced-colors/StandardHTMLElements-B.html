@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>forced-colors – Box-shadow-only button boundary disappears in High Contrast (SC 1.4.11)</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #fff; }
+
+    /* Button boundary is defined only by box-shadow.
+       box-shadow is suppressed in forced-colors mode,
+       making the button indistinguishable from the page. */
+    .shadow-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: none;
+      box-shadow: 0 0 0 2px #6d28d9;   /* sole visible boundary — removed in forced-colors */
+      border-radius: 6px;
+      background: #f5f3ff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #03</span>
+    <span class="qa-rule-id">forced-colors</span>
+    <span class="qa-source-tag">W3C G209 — Example B</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.4.11 Non-text Contrast — AA</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/general/G209" style="color:#93c5fd;">G209: Provide sufficient contrast at the boundaries of adjoining colors</a> (shown as failure in Windows High Contrast mode)</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>button.shadow-button</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> The button has <code>border:none</code> — its only visible boundary is <code>box-shadow: 0 0 0 2px #6d28d9</code>. In forced-colors mode <code>box-shadow</code> is suppressed; the button background (<code>#f5f3ff</code>) becomes the system Canvas colour, identical to the page background — the button boundary completely disappears.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<h1>Forced Colors — Box-Shadow-Only Button Boundary (disappears in High Contrast)</h1>
+<p>Enable Windows High Contrast mode or DevTools emulation (<code>forced-colors: active</code>) to see this failure.</p>
+
+<button class="shadow-button" type="button">Save changes</button>
+
+</body>
+</html>

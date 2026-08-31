@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>focus-obscured – Standard HTML Test (F110)</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+
+    /* ── Failing: fixed header + sticky sub-bar both obscure focused links ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 72px;
+      background: #1e3a5f;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 24px;
+      z-index: 200;
+      box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    }
+
+    header a {
+      color: #93c5fd;
+      font-weight: 600;
+    }
+
+    /* Sticky filter bar: a second opaque layer just below the header */
+    .filter-bar {
+      position: sticky;
+      top: 72px;                /* sits flush below the fixed header */
+      background: #fffbeb;
+      border-bottom: 2px solid #fbbf24;
+      padding: 10px 24px;
+      z-index: 100;
+      font-size: 0.9rem;
+    }
+
+    main {
+      margin-top: 72px;        /* offset for fixed header */
+      padding: 16px 24px;
+    }
+
+    .card {
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 10px 0;
+      background: #f9fafb;
+    }
+
+    .card a { color: #1d4ed8; }
+
+    .card a:focus {
+      outline: 3px solid #f59e0b;
+      outline-offset: 2px;
+    }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- QA panel is placed before the fixed header so it scrolls with the page -->
+<div style="position:relative; z-index:300; padding:72px 24px 0;">
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #02</span>
+    <span class="qa-rule-id">focus-obscured</span>
+    <span class="qa-source-tag">W3C F110</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.11 Focus Not Obscured (Minimum) — AA &nbsp;·&nbsp; 2.4.12 Focus Not Obscured (Enhanced) — AAA</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/failures/F110" style="color:#93c5fd;">F110: Failure of SC 2.4.11 due to a sticky header or footer obscuring focused content</a></dd>
+    <dt>Elements with errors</dt>
+    <dd><code>&lt;header&gt;</code> (position:fixed; height:72px; z-index:200) · <code>.filter-bar</code> (position:sticky; top:72px; z-index:100) · Card 1 and Card 2 links</dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>&lt;header&gt;</code> is <code>position:fixed; z-index:200</code> — when Card 1's link receives Tab focus it sits near the top of the content area and the header fully paints over it. Nine hit-test points on the focused element all fall under the header layer.</li>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>.filter-bar</code> is <code>position:sticky; top:72px; z-index:100</code> — creates a second opaque band immediately below the header, partially or fully covering Card 2's link when it receives focus.</li>
+      <li><span class="qa-error-tag">ERROR 2.4.12</span> Even partial coverage by either layer causes the AAA criterion to fail for the affected cards.</li>
+    </ul></dd>
+  </dl>
+</div>
+</div>
+
+<header role="banner">
+  <span style="font-weight:700; font-size:1.1rem;">MySite</span>
+  <nav>
+    <a href="#section-a">Section A</a>
+    <a href="#section-b">Section B</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <!-- Sticky filter bar: second obscuring layer -->
+  <div class="filter-bar" role="search" aria-label="Filters">
+    Filter: <label><input type="checkbox"> Published</label>
+    &nbsp; <label><input type="checkbox"> Drafts</label>
+    &nbsp; <label><input type="checkbox"> Archived</label>
+  </div>
+
+  <h1 id="section-a" style="margin-top:16px;">Article List</h1>
+
+  <!-- Cards near the top will be covered by the fixed header and/or sticky bar -->
+  <div class="card">
+    <a href="#article-1">Card 1 — Link likely fully obscured by the fixed header</a>
+    <p>This card sits just below the sticky filter bar. When Tab focuses its link the
+       fixed header (72px, z-index 200) paints over it.</p>
+  </div>
+
+  <div class="card">
+    <a href="#article-2">Card 2 — Link may be partially covered by the filter bar</a>
+    <p>Depending on scroll position the sticky filter bar overlaps the focus ring on this link.</p>
+  </div>
+
+  <div class="card">
+    <a href="#article-3">Card 3 — Further down, not obscured when focused</a>
+  </div>
+
+  <div class="card">
+    <a href="#article-4">Card 4 — Visible on focus</a>
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>forced-colors – CSS mask icon disappears in High Contrast (SC 1.4.11)</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #fff; }
+
+    /* Icon drawn by applying an SVG alpha mask to a background-color.
+       In forced-colors mode background-color is replaced by the Canvas
+       system colour — the icon shape becomes invisible against the page. */
+    .icon-mask {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background-color: #e11d48;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/%3E%3C/svg%3E");
+              mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/%3E%3C/svg%3E");
+      -webkit-mask-size: contain;
+              mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+      vertical-align: middle;
+    }
+
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: start; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #02</span>
+    <span class="qa-rule-id">forced-colors</span>
+    <span class="qa-source-tag">W3C G209 — Example A</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>1.4.11 Non-text Contrast — AA</dd>
+    <dt>W3C technique</dt>
+    <dd><a href="https://www.w3.org/WAI/WCAG22/Techniques/general/G209" style="color:#93c5fd;">G209: Provide sufficient contrast at the boundaries of adjoining colors</a> (shown as failure in Windows High Contrast mode)</dd>
+    <dt>Elements with errors</dt>
+    <dd><code>span.icon-mask</code></dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR</span> The icon is drawn using an SVG alpha mask applied to <code>background-color:#e11d48</code>. In forced-colors mode the browser replaces <code>background-color</code> with the <code>Canvas</code> system colour — the icon shape becomes invisible against the identical page background (contrast ratio ≈ 1:1). The rule re-renders under <code>forced-colors:active</code> and measures each graphic against its surroundings.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<h1>Forced Colors — CSS Mask Icon (disappears in High Contrast)</h1>
+<p>Enable Windows High Contrast mode or DevTools emulation (<code>forced-colors: active</code>) to see this failure.</p>
+
+<p>
+  <span class="icon-mask" role="img" aria-label="Pause"></span>
+  Pause media
+</p>
+
+</body>
+</html>
