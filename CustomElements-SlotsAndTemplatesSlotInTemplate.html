@@ -1,0 +1,63 @@
+ <!DOCTYPE html>
+ <html lang = "en">
+     <head>
+<template id="custom-paragraph">
+  <style>
+	    slot {
+      color: red;
+      background-color: #666;
+      padding: 5px;
+    }
+  </style>
+<slot name="my-text">My default text</slot>
+</template>
+
+
+<script>customElements.define(
+  "my-paragraph",
+  class extends HTMLElement {
+    constructor() {
+      super();
+      let template = document.getElementById("custom-paragraph");
+      let templateContent = template.content;
+
+      const shadowRoot = this.attachShadow({ mode: "open" });
+      shadowRoot.appendChild(templateContent.cloneNode(true));
+    }
+  },
+);
+</script>
+	<script type="text/javascript">
+  window.__qualiboothOrganizationId = "a0f273d0-9765-403e-98dc-7bbb59c70c60"
+</script>
+<script defer src="https://portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+	
+
+
+	</head>
+     <body>
+
+		 // BS should detect 3 color contrast issues because of slot {color: red;}
+
+		 
+<my-paragraph>
+  <span slot="my-text">Let's have some different text!</span>
+
+
+
+</my-paragraph>
+
+<my-paragraph>
+  <ul slot="my-text">
+    <li>Let's have some different text!</li>
+    <li>In a list!</li>
+  </ul>
+
+
+</my-paragraph>
+
+
+
+	</body>
+</html>
+

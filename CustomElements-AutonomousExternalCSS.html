@@ -1,0 +1,51 @@
+ <!DOCTYPE html>
+ <html lang = "en">
+     <head>
+    <script>
+class MyButton extends HTMLButtonElement {
+      constructor() {
+        super();
+      }
+		connectedCallback() {
+        
+        // Dynamically load the stylesheet from the 'data-style' attribute
+        const styleHref = this.getAttribute('data-style');
+        if (styleHref) {
+          this.loadStyle(styleHref);
+        }
+
+}
+      // Method to load an external stylesheet dynamically
+      loadStyle(href) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        document.head.appendChild(link);
+      }
+    }
+
+    // Register the custom element
+
+    customElements.define('my-button', MyButton, { extends: 'button' });
+    </script>
+
+    
+
+	<script type="text/javascript">
+  window.__qualiboothOrganizationId = "a0f273d0-9765-403e-98dc-7bbb59c70c60"
+</script>
+<script defer src="https://portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+	
+
+
+
+
+	</head>
+     <body>
+	 in my button class the external sheet is converted to link>. The css in the sheet will set font-color to gray.
+		 BS should find error for color-contrast in the button
+  <button style ="  background-color: white;" is="my-button" data-style="assets/stylesheets/externalStylesheetforCustomComponent.css">clickME</button>
+
+	</body>
+</html>
+

@@ -1,0 +1,67 @@
+ <!DOCTYPE html>
+ <html lang = "en">
+     <head>
+
+<script>
+class PopupInfo extends HTMLElement {
+  constructor() {
+    super();
+  }
+  // Element functionality written in here
+   connectedCallback() {
+    // Create a shadow root
+    const shadow = this.attachShadow({ mode: "open" });
+
+
+   
+
+    // Create some CSS to apply to the shadow dom
+    const style = document.createElement("style");
+    console.log(style.isConnected);
+
+    style.textContent = `
+
+	  button {
+	    background: blue;
+		color: red
+	  
+	  }
+    `;
+
+	  
+	  var b = document.createElement('button');
+	  b.innerText = "buttonInsideShadowDom"
+    // Attach the created elements to the shadow dom
+    shadow.appendChild(style);
+    console.log(style.isConnected);
+	
+	shadow.appendChild(b);
+
+  }
+}
+
+customElements.define("popup-info", PopupInfo);
+
+</script>
+
+		<script type="text/javascript">
+  window.__qualiboothOrganizationId = "a0f273d0-9765-403e-98dc-7bbb59c70c60"
+</script>
+<script defer src="https://portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+	
+
+	</head>
+     <body>
+
+		 // BS should detect ONLY 1 color contrast issue in the button in the shadow dom tree. IF 2 are detected the style from
+		 shadow dom will be applied to all elements(bug)
+
+		 
+		 <popup-info>
+
+		 </popup-info>
+		 
+		 <button> buttonOutsideShadowDom</button>
+	</body>
+</html>
+

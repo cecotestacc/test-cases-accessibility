@@ -1,0 +1,48 @@
+ <!DOCTYPE html>
+ <html lang = "en">
+     <head>
+    <script>
+        class CustomButton extends HTMLElement {
+            constructor() {
+                super();
+                this.addEventListener('click', this.onClick);
+                this.addEventListener('keydown', this.onKeydown);
+            }
+
+            connectedCallback() {
+                this.setAttribute('tabindex', '0');
+                this.setAttribute('role', 'button');
+				this.innerText = 'someText';
+            }
+
+            disconnectedCallback() {
+                this.removeEventListener('click', this.onClick);
+                this.removeEventListener('keydown', this.onKeydown);
+            }
+
+            onClick(event) {
+                alert('Custom button clicked!'); // Custom behavior on click
+            }
+
+            onKeydown(event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    this.click();
+                }
+            }
+        }
+
+        customElements.define('custom-button', CustomButton);
+    </script>
+
+    
+
+<script defer src="https://cdn.portal-backend.dev.qualibooth.com/script/599b68b1-35f9-4578-9545-b12b64522594/assets/qualibooth.js" type="module" id="qualiboothScript"></script>
+	</head>
+     <body>
+		 BS should not find aria-command-name error because innertext property is set in the webcomponent Class
+	     <custom-button></custom-button>
+
+	</body>
+</html>
+
