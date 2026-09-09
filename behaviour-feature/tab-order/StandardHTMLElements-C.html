@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>tab-order – Multi-column footer, column-by-column order (no error)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: sans-serif; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    /* ── Header ── */
+    header { background: #1a1a2e; padding: 0 32px; display: flex; align-items: center; gap: 32px; height: 56px; }
+    header a { color: #fff; text-decoration: none; font-size: 0.95rem; }
+    header a:focus { outline: 2px solid #f4b400; outline-offset: 3px; }
+    .site-logo { font-weight: 700; font-size: 1.1rem; }
+    nav { display: flex; gap: 24px; }
+    /* ── Main content ── */
+    main { flex: 1; padding: 40px 32px; }
+    /* ── Footer ── */
+    footer { background: #1a1a1a; color: #ccc; padding: 40px 32px 24px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+    .footer-col h4 { color: #fff; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+    .footer-col ul { list-style: none; margin: 0; padding: 0; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
+    .footer-col a:hover { color: #fff; }
+    .footer-col a:focus { outline: 2px solid #f4b400; outline-offset: 2px; color: #fff; }
+    .footer-bottom { border-top: 1px solid #333; padding-top: 16px; font-size: 0.8rem; color: #777; text-align: center; }
+    /* ── QA Info Panel ── */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
+    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel" style="margin: 16px; border-radius: 4px;">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #04</span>
+    <span class="qa-rule-id">tab-order</span>
+    <span class="qa-fp-tag">FALSE POSITIVE</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.3 Focus Order — A</dd>
+    <dt>Elements under test</dt>
+    <dd>Footer links across four columns: SHOP · COMPANY · HELP · FOLLOW</dd>
+    <dt>Expected result</dt>
+    <dd><span class="qa-pass-tag">PASS</span> No tab-order violation should be reported. The tab sequence follows DOM order, which matches the visual column-by-column layout exactly.</dd>
+    <dt>Why a scanner may false-positive</dt>
+    <dd><ul>
+      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> A reading-order heuristic that models a 2-D grid left-to-right row-by-row (e.g. row 1: col1-item1, col2-item1, col3-item1, col4-item1 — then row 2…) will observe that the second link in column 2 (Contact) receives focus before the first link in column 3 (My Account) when both are in the same row. The scanner interprets this as an out-of-sequence jump and reports a <em>likely</em> reading-order mismatch.</li>
+      <li>This is incorrect: the DOM is authored column-by-column (<code>&lt;ul&gt;</code> per column, columns in source order SHOP → COMPANY → HELP → FOLLOW). The tab sequence follows DOM order precisely, and column-by-column navigation is the conventional and expected pattern for multi-column footer menus. No reordering is present.</li>
+      <li>The false positive is amplified when the page is dynamically mutating (e.g. lazy-loaded images, JS-driven content) during the tab walk — the scanner's snapshot of DOM order can diverge from what it actually walked, producing phantom mismatches.</li>
+    </ul></dd>
+    <dt>Root cause of real issue (separate)</dt>
+    <dd>The only genuine tab-order problem in this pattern would be a <code>tabindex</code> value greater than 0 on a heading or other non-link element, which pulls it out of the natural sequence. That is a distinct, independently-flagged violation and not related to the footer column order.</dd>
+  </dl>
+</div>
+
+<header>
+  <a href="#" class="site-logo">Fashion Demo</a>
+  <nav aria-label="Main">
+    <a href="#">Home</a>
+    <a href="#">Blog</a>
+    <a href="#">Our Best Seller</a>
+  </nav>
+  <a href="#" style="margin-left: auto; background:#1a73e8; color:#fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem;">Start Free Trial</a>
+</header>
+
+<main>
+  <h1>404 — Page not found</h1>
+  <p>The page you are looking for is missing.</p>
+  <a href="#">Go to Homepage</a>
+</main>
+
+<!--
+  FOOTER — four columns, DOM order matches visual left-to-right column order.
+  Tab sequence: All Products → Blog → Contact → My Account → Checkout → Wishlist → Instagram → Facebook → Pinterest
+  This is column-by-column and matches DOM source order exactly. No tabindex attributes are used.
+-->
+<footer>
+  <div class="footer-grid">
+
+    <!-- Column 1: SHOP -->
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">All Products</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 2: COMPANY -->
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 3: HELP -->
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">My Account</a></li>
+        <li><a href="#">Checkout</a></li>
+        <li><a href="#">Wishlist</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 4: FOLLOW -->
+    <div class="footer-col">
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Pinterest</a></li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="footer-bottom">© 2026 Fashion Demo. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
