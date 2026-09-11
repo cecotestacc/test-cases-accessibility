@@ -181,6 +181,66 @@ Documents a pattern the scanner may incorrectly flag despite being accessible.
 
 ---
 
+## QualiBooth scan config sync
+
+Every HTML test file has a live GitHub Pages URL that must be kept in sync with the QualiBooth dev scan configs. This applies on **add**, **rename**, and **delete** — do it in the same operation as the file change, before committing.
+
+### Reference IDs (dev environment)
+
+| Key | Value |
+|---|---|
+| Environment | QualiBooth **dev** (`qbooth-dev` MCP) |
+| Org | `ceco` |
+| Org UUID | `a0f273d0-9765-403e-98dc-7bbb59c70c60` |
+| Project | `cecotestacc.github.io` |
+| Project UUID | `7bd2f8f7-66da-4b74-9f4d-bf15eb2b3050` |
+| Base URL | `https://cecotestacc.github.io/test-cases-accessibility/` |
+
+### Scan config routing
+
+| Folder | Scan config name | Scan config UUID |
+|---|---|---|
+| `behaviour-feature/` | `BehaviorFeature-tests[from w3 & custom-fromAI]` | `5e3ce39d-16ca-4cec-ba0b-4f2623bc0724` |
+| `ScreenReader/` | `BehaviorFeature-tests[from w3 & custom-fromAI]` | `5e3ce39d-16ca-4cec-ba0b-4f2623bc0724` |
+| `Custom-HTML-Elements/` | `Custom elements-tests` | `07727068-221a-48b7-8149-3dd5bc380607` |
+
+### URL construction
+
+Prepend the base URL to the file's path relative to the repo root:
+
+```
+behaviour-feature/tab-order/StandardHTMLElements-C.html
+→ https://cecotestacc.github.io/test-cases-accessibility/behaviour-feature/tab-order/StandardHTMLElements-C.html
+
+Custom-HTML-Elements/CustomHTMLElements-A.html
+→ https://cecotestacc.github.io/test-cases-accessibility/Custom-HTML-Elements/CustomHTMLElements-A.html
+```
+
+### Actions
+
+**File added** — call `mcp__qbooth-dev__add_scan_config_urls` with the new URL:
+```
+scanConfigUuid: <uuid from routing table above>
+urls: ["https://cecotestacc.github.io/test-cases-accessibility/<file-path>"]
+confirmed: true   ← all configs are ON_DEMAND, no scheduled impact
+```
+
+**File renamed** — two steps, in order:
+1. `mcp__qbooth-dev__list_scan_config_urls` — search for the old URL to get its UUID
+2. `mcp__qbooth-dev__delete_scan_config_urls` — delete by that UUID
+3. `mcp__qbooth-dev__add_scan_config_urls` — add the new URL
+
+**File deleted** — call `mcp__qbooth-dev__list_scan_config_urls` to find the URL UUID, then `mcp__qbooth-dev__delete_scan_config_urls` to remove it.
+
+### Rules
+
+- Always use the **dev** MCP (`mcp__qbooth-dev__*`), never prod.
+- All four scan configs are `ON_DEMAND` — `confirmed: true` is always safe to pass.
+- Do not add non-HTML files (assets, `.md`, `.json`) to any scan config.
+- If a file moves between folders (e.g. `behaviour-feature/` → `Custom-HTML-Elements/`), delete from the old scan config and add to the new one.
+
+---
+
 ## What NOT to do
 
 - Do not modify the QA panel CSS — not even whitespace.
