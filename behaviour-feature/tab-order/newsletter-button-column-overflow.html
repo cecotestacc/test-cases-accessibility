@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>tab-order – submit button overflows newsletter column erasing catalogue column gap (no error)</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+
+    main {
+      padding: 24px 40px;
+      min-height: 200px;
+    }
+
+    /* ── Site footer ── */
+    .site-footer {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      gap: 0;           /* no gap — newsletter-col right edge abuts catalogue-panel left edge */
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Newsletter column: 285px wide ── */
+    .newsletter-col {
+      width: 285px;
+      flex-shrink: 0;
+      padding-right: 0;
+    }
+
+    .newsletter-col h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #f1f5f9;
+    }
+
+    .newsletter-col p {
+      margin: 0 0 16px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    #newsletterOnlyEmail {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    #newsletterOnlyButton {
+      /*
+       * Column is 285px. Button is 289px — centred, so 2px overflows on each side.
+       * At viewport 1280 this reproduces:
+       *   button.right  = 812.797 px
+       *   catalogue.left = 810.797 px   ← same as email.right
+       * The 2px right-side overlap means leadingSeparator (geometry.ts) never
+       * sees a gap > 0 between the button and the catalogue panel, so no column
+       * cut is made and readingOrder falls back to top-edge sort.
+       */
+      display: block;
+      width: 289px;
+      margin-left: -2px; /* centres 289px button in 285px column */
+      padding: 10px 0;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ── Catalogue panel: starts exactly at newsletter-col right edge ── */
+    .catalogue-panel {
+      flex: 1;
+      padding-left: 40px;
+      border-left: 1px solid #334155;
+    }
+
+    .catalogue-link {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      color: #e2e8f0;
+      text-decoration: none;
+    }
+
+    .catalogue-img-placeholder {
+      width: 100px;
+      height: 140px;
+      background: #334155;
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    .catalogue-text h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #f1f5f9;
+    }
+
+    .catalogue-text p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* ── QA Info Panel ── (copy verbatim, do not modify) */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
+    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #16</span>
+    <span class="qa-rule-id">tab-order</span>
+    <span class="qa-fp-tag">FALSE POSITIVE</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.3 Focus Order — A</dd>
+    <dt>Elements under test</dt>
+    <dd>
+      <code>#newsletterOnlyEmail</code> · <code>#newsletterOnlyButton.klaviyo_form_trigger_footer</code> · <code>.catalogue-panel a</code><br>
+      DOM tab order: email input → submit button → catalogue link (left-to-right, correct)
+    </dd>
+    <dt>Expected result</dt>
+    <dd><ul>
+      <li><span class="qa-pass-tag">PASS</span> 0 tab-order violations — the DOM order matches the correct visual reading order for a two-column footer (left column first, then right column)</li>
+    </ul></dd>
+    <dt>Why a scanner may false-positive</dt>
+    <dd><ul>
+      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> <code>#newsletterOnlyButton</code> is 289px wide in a 285px column, centred → its right edge is 2px past the catalogue panel's left edge (e.g. button.right = 812.797 px, catalogue.left = 810.797 px). <code>leadingSeparator</code> requires a gap &gt; 0 against the running maximum trailing edge, so those 2px erase the only column gutter in the footer — no column cut is made.</li>
+      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> Without a column cut, <code>readingOrder</code> falls through to its last resort: sort by top edge. The catalogue link sits at the top of its panel with no heading above it, so its top-y is smaller (higher on the page) than the email input, which is pushed down by the newsletter heading and intro paragraph. Top-edge sort places the catalogue link before the newsletter items — the opposite of DOM order — and the scanner reports "Focus jumps backwards through the visual reading order 1 time(s)" naming <code>.klaviyo_form_trigger_footer</code>.</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<main>
+  <h1>Submit Button Overflow Erases Footer Column Gap</h1>
+  <p>Scroll down to the footer. The newsletter "Sign me up!" button is 289 px wide inside a 285 px column. Its 2 px right-side overflow abuts the catalogue panel's left edge, preventing the geometry engine from detecting a column separator and triggering a false backwards-jump report.</p>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- Left column: newsletter signup (285px).
+         The heading and intro paragraph push the focusable email input down,
+         making its top-y greater than the catalogue link's top-y. -->
+    <div class="newsletter-col">
+      <h2>Stay in the loop</h2>
+      <p>Get the latest offers and new arrivals straight to your inbox.</p>
+      <label for="newsletterOnlyEmail" class="sr-only">Email address</label>
+      <input
+        type="email"
+        id="newsletterOnlyEmail"
+        name="email"
+        placeholder="your@email.com"
+        autocomplete="email">
+      <!-- 289px button centred in 285px column: overflows 2px on each side.
+           Right edge reaches 2px into the catalogue panel, erasing the gap
+           that leadingSeparator needs to detect a column boundary. -->
+      <button
+        type="submit"
+        id="newsletterOnlyButton"
+        class="klaviyo_form_trigger_footer">
+        Sign me up!
+      </button>
+    </div>
+
+    <!-- Right column: catalogue panel. Starts at the exact x-coordinate where
+         the newsletter column ends (no gap). The catalogue link is the first
+         element — no heading above it — so its top-y is smaller than the email
+         input's top-y. After the column cut fails, top-edge sort places this
+         link before the newsletter items. -->
+    <div class="catalogue-panel">
+      <a href="#catalogue" class="catalogue-link">
+        <div class="catalogue-img-placeholder" aria-hidden="true">cover</div>
+        <div class="catalogue-text">
+          <h3>Request your free catalogue</h3>
+          <p>Browse our full product range — 200+ items, delivered free.</p>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>
