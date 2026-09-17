@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>tab-order – two-column footer with proper column gap preserves reading order (no error)</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+
+    main {
+      padding: 24px 40px;
+      min-height: 200px;
+    }
+
+    /* ── Site footer ── */
+    .site-footer {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      /*
+       * gap: 20px ensures catalogue.left > max(email.right, button.right).
+       * leadingSeparator requires gap > 0 against the running maximum trailing
+       * edge. With a 20px column gap that invariant holds even when the button
+       * fills the full column width, so the column cut is made and readingOrder
+       * produces the correct left-to-right sequence.
+       *
+       * Contrast with footer-newsletter-button-column-overflow.html (Case #16)
+       * where gap: 0 AND a 289px button in a 285px column causes button.right
+       * to reach 2px into the catalogue panel, erasing the gap entirely.
+       */
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Newsletter column ── */
+    .newsletter-col {
+      width: 285px;
+      flex-shrink: 0;
+    }
+
+    .newsletter-col h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #f1f5f9;
+    }
+
+    .newsletter-col p {
+      margin: 0 0 16px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    #newsletterOnlyEmail {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    #newsletterOnlyButton {
+      /*
+       * width: 100%; box-sizing: border-box → button fills exactly the 285px
+       * column. button.right = email.right.
+       * catalogue.left = email.right + 20px gap.
+       * Gap seen by leadingSeparator = 20px > 0 → column cut is made. ✓
+       */
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 0;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ── Catalogue panel ── */
+    .catalogue-panel {
+      flex: 1;
+      padding-left: 20px;
+      border-left: 1px solid #334155;
+    }
+
+    .catalogue-link {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      color: #e2e8f0;
+      text-decoration: none;
+    }
+
+    .catalogue-img-placeholder {
+      width: 100px;
+      height: 140px;
+      background: #334155;
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    .catalogue-text h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #f1f5f9;
+    }
+
+    .catalogue-text p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* ── QA Info Panel ── (copy verbatim, do not modify) */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
+    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #17</span>
+    <span class="qa-rule-id">tab-order</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.3 Focus Order — A</dd>
+    <dt>Elements under test</dt>
+    <dd>
+      <code>#newsletterOnlyEmail</code> · <code>#newsletterOnlyButton.klaviyo_form_trigger_footer</code> · <code>.catalogue-panel a</code><br>
+      DOM tab order: email input → submit button → catalogue link (left-to-right)
+    </dd>
+    <dt>Expected result</dt>
+    <dd><ul>
+      <li><span class="qa-pass-tag">PASS</span> 0 tab-order violations — the 20 px column gap between newsletter and catalogue ensures <code>catalogue.left &gt; button.right</code>, so <code>leadingSeparator</code> finds a gap &gt; 0, makes the column cut, and <code>readingOrder</code> produces the correct left-to-right sequence matching DOM order</li>
+    </ul></dd>
+  </dl>
+</div>
+
+<main>
+  <h1>Two-Column Footer — Proper Column Gap Preserves Tab Order</h1>
+  <p>
+    The newsletter submit button fills its column exactly (<code>width: 100%; box-sizing: border-box</code>).
+    A 20 px flex gap separates the newsletter column from the catalogue panel, so
+    <code>button.right</code> is always 20 px to the left of <code>catalogue.left</code>.
+    The geometry engine detects the column boundary and reports no tab-order issue.
+  </p>
+  <p>
+    See <strong>Case #16</strong> (<code>newsletter-button-column-overflow.html</code>) for the false
+    positive triggered when <code>gap: 0</code> and the button is 4 px wider than the column.
+  </p>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- Left column: newsletter signup (285px wide).
+         Button is width: 100% / box-sizing: border-box, so button.right = email.right.
+         The 20px flex gap ensures catalogue.left = email.right + 20px,
+         giving leadingSeparator a gap of 20px — well above the > 0 threshold. -->
+    <div class="newsletter-col">
+      <h2>Stay in the loop</h2>
+      <p>Get the latest offers and new arrivals straight to your inbox.</p>
+      <label for="newsletterOnlyEmail" class="sr-only">Email address</label>
+      <input
+        type="email"
+        id="newsletterOnlyEmail"
+        name="email"
+        placeholder="your@email.com"
+        autocomplete="email">
+      <button
+        type="submit"
+        id="newsletterOnlyButton"
+        class="klaviyo_form_trigger_footer">
+        Sign me up!
+      </button>
+    </div>
+
+    <!-- Right column: catalogue panel. Starts 20px to the right of the
+         newsletter column's right edge (flex gap). Column cut is detected. -->
+    <div class="catalogue-panel">
+      <a href="#catalogue" class="catalogue-link">
+        <div class="catalogue-img-placeholder" aria-hidden="true">cover</div>
+        <div class="catalogue-text">
+          <h3>Request your free catalogue</h3>
+          <p>Browse our full product range — 200+ items, delivered free.</p>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>
