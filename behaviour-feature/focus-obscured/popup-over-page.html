@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>focus-obscured – background controls covered by open modal overlay (no error)</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 20px;
+      z-index: 50;
+    }
+
+    header a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    main {
+      margin-top: 60px;
+      padding: 24px;
+    }
+
+    /* Klaviyo-style popup: hand-rolled dialog, NOT a <dialog> element, so page is not inert */
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-dialog {
+      background: #fff;
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 440px;
+      width: 90%;
+      position: relative;
+    }
+
+    .popup-dialog h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .popup-dialog p {
+      margin: 0 0 16px;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 10px; right: 14px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .popup-dialog label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .popup-dialog input[type="email"] {
+      display: block;
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+
+    .popup-submit {
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    /* ── QA Info Panel ── (copy verbatim, do not modify) */
+    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
+    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
+    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
+    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
+    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
+    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
+    .qa-panel dd { margin: 0; }
+    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
+    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
+    .qa-panel li { margin-bottom: 3px; }
+    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<!-- Panel wraps in a positioned container so it remains readable above the fixed popup -->
+<div style="position: relative; z-index: 300; padding: 60px 0 0;">
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #15</span>
+    <span class="qa-rule-id">focus-obscured</span>
+    <span class="qa-fp-tag">FALSE POSITIVE</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>2.4.11 Focus Not Obscured (Minimum) — AA</dd>
+    <dt>Elements under test</dt>
+    <dd>Header navigation links (<code>&lt;a href="#home"&gt;</code> … <code>&lt;a href="#cart"&gt;</code>) sitting behind the open <code>div[role="dialog"][aria-modal="true"]</code> backdrop (<code>position:fixed; inset:0; z-index:200</code>)</dd>
+    <dt>Expected result</dt>
+    <dd><ul>
+      <li><span class="qa-pass-tag">PASS</span> 0 focus-obscured violations — a scanner that recognises the obscurer is an open <code>aria-modal="true"</code> dialog not containing the focused element should emit one <code>focus-obscured/behind-open-modal</code> incomplete, not a per-control finding</li>
+    </ul></dd>
+    <dt>Why a scanner may false-positive</dt>
+    <dd><ul>
+      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> The traversal sweep programmatically moves focus to background elements outside the modal (via <code>blurActive</code> + direct <code>element.focus()</code>), bypassing the JS focus trap. Each stop is hit-tested as fully covered by the backdrop and reported as "The focused control is entirely covered by fixed html &gt; body &gt; div…". Real keyboard users cannot reach these elements while the modal is open — only the harness traversal can.</li>
+      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> The dialog is a hand-rolled <code>div[role="dialog"][aria-modal="true"]</code>, not a top-layer <code>&lt;dialog&gt;</code>, so the browser does not mark background content inert. The sweep sees all background focusables in the DOM and includes them in its domOrder pass.</li>
+    </ul></dd>
+    <dt>Root cause of real issue (separate)</dt>
+    <dd>Background content is not marked <code>inert</code>. Assistive technologies that do not honour <code>aria-modal="true"</code> for virtual-cursor containment can browse behind the overlay. This is a <code>modal-lifecycle</code> / <code>keyboard-trap</code> concern, not a <code>focus-obscured</code> finding.</dd>
+  </dl>
+</div>
+</div>
+
+<header role="banner">
+  <span style="font-weight: 700; letter-spacing: .02em;">MySite</span>
+  <nav aria-label="Primary">
+    <!-- These links are entirely covered by the popup backdrop (z-index 200 vs header z-index 50).
+         A traversal sweep that programmatically focuses them records them as focus-obscured,
+         but real keyboard users cannot reach them while the modal is open. -->
+    <a href="#home">Home</a>
+    <a href="#products">Products</a>
+    <a href="#collections">Collections</a>
+    <a href="#about">About</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact</a>
+    <a href="#cart">Cart (0)</a>
+  </nav>
+</header>
+
+<!-- Hand-rolled Klaviyo-style email-capture popup.
+     Uses div[role="dialog"][aria-modal="true"] rather than <dialog>, so page is NOT inert.
+     A JS focus trap keeps Tab cycling within the popup for keyboard users,
+     but the traversal sweep bypasses it by calling element.focus() directly. -->
+<div class="popup-backdrop" id="popup-backdrop">
+  <div role="dialog"
+       aria-modal="true"
+       aria-labelledby="popup-title"
+       id="popup"
+       class="popup-dialog">
+    <button class="popup-close" id="popup-close" aria-label="Close newsletter popup">&#x2715;</button>
+    <h2 id="popup-title">Get 10% off your first order</h2>
+    <p>Join our list for exclusive deals and new arrivals.</p>
+    <label for="popup-email">Email address</label>
+    <input type="email" id="popup-email" placeholder="you@example.com" autocomplete="email">
+    <button class="popup-submit" id="popup-submit">Subscribe</button>
+  </div>
+</div>
+
+<main>
+  <h1>Background Content Behind Email-Capture Popup</h1>
+  <p>This area, and all header links above, are keyboard-unreachable while the popup is open.</p>
+  <p><a href="#more">Read more about our story</a></p>
+</main>
+
+<script>
+  // Minimal focus trap: keep Tab and Shift+Tab cycling inside the open dialog.
+  // This is the only mechanism that prevents keyboard users from reaching background links.
+  // The traversal sweep bypasses it by calling element.focus() directly.
+  const popup = document.getElementById('popup');
+  const FOCUSABLE = 'button, input, [href], [tabindex]:not([tabindex="-1"])';
+
+  function trapFocus(e) {
+    if (e.key !== 'Tab') return;
+    const nodes = Array.from(popup.querySelectorAll(FOCUSABLE));
+    const first = nodes[0];
+    const last = nodes[nodes.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+
+  popup.addEventListener('keydown', trapFocus);
+  document.getElementById('popup-email').focus();
+</script>
+
+</body>
+</html>

@@ -10,9 +10,7 @@ Follow every rule here when creating or editing test cases.
 ```
 behaviour-feature/
   {rule-id}/
-    StandardHTMLElements-A.html   ← first standard-HTML case for this rule
-    StandardHTMLElements-B.html   ← second standard-HTML case
-    StandardHTMLElements-C.html   ← third, and so on
+    {descriptive-name}.html       ← one file per scenario; name = what it tests
     CustomHTMLElements.html       ← custom-element variant (one per rule)
 Custom-HTML-Elements/             ← standalone custom-element demos
 ScreenReader/                     ← screen-reader focused cases
@@ -23,11 +21,9 @@ ScreenReader/                     ← screen-reader focused cases
 ## Filename rules
 
 - **One concept per file.** Each file covers exactly one scenario (one failure mode, one pass, or one false positive).
-- **Filename = the test case subject.** Name the file so that reading the filename alone tells you what the case tests. Use the standard series naming:
-  - `StandardHTMLElements-A.html`, `StandardHTMLElements-B.html`, … — for standard HTML element cases, lettered sequentially within the rule folder.
-  - `CustomHTMLElements.html` — for the custom-element variant of the same rule.
-- **Letter assignment** — check the highest letter already present in the folder and use the next one. Never reuse a letter.
-- **No other filename formats.** Do not invent names like `footer-false-positive.html` or `test1.html`.
+- **Filename = the test case subject.** Use `kebab-case.html`. The name must describe the specific scenario so that reading the filename alone tells you what is being tested — e.g. `popup-over-page.html`, `sticky-header-obscures-link.html`, `missing-label-on-search-input.html`.
+  - `CustomHTMLElements.html` — reserved for the custom-element variant of the same rule (one per rule folder).
+- **No generic names.** Do not use names like `test1.html`, `case-a.html`, `standard-elements.html`, or any `StandardHTMLElements-*.html` pattern.
 
 ---
 
@@ -209,32 +205,32 @@ Every HTML test file has a live GitHub Pages URL that must be kept in sync with 
 Prepend the base URL to the file's path relative to the repo root:
 
 ```
-behaviour-feature/tab-order/StandardHTMLElements-C.html
-→ https://cecotestacc.github.io/test-cases-accessibility/behaviour-feature/tab-order/StandardHTMLElements-C.html
+behaviour-feature/tab-order/positive-tabindex-breaks-order.html
+→ https://cecotestacc.github.io/test-cases-accessibility/behaviour-feature/tab-order/positive-tabindex-breaks-order.html
 
-Custom-HTML-Elements/CustomHTMLElements-A.html
-→ https://cecotestacc.github.io/test-cases-accessibility/Custom-HTML-Elements/CustomHTMLElements-A.html
+Custom-HTML-Elements/CustomHTMLElements.html
+→ https://cecotestacc.github.io/test-cases-accessibility/Custom-HTML-Elements/CustomHTMLElements.html
 ```
 
 ### Actions
 
-**File added** — call `mcp__qbooth-dev__add_scan_config_urls` with the new URL:
+**File added** — call `mcp__claude_ai_QualiBooth__add_scan_config_urls` with the new URL:
 ```
 scanConfigUuid: <uuid from routing table above>
 urls: ["https://cecotestacc.github.io/test-cases-accessibility/<file-path>"]
 confirmed: true   ← all configs are ON_DEMAND, no scheduled impact
 ```
 
-**File renamed** — two steps, in order:
-1. `mcp__qbooth-dev__list_scan_config_urls` — search for the old URL to get its UUID
-2. `mcp__qbooth-dev__delete_scan_config_urls` — delete by that UUID
-3. `mcp__qbooth-dev__add_scan_config_urls` — add the new URL
+**File renamed** — three steps, in order:
+1. `mcp__claude_ai_QualiBooth__list_scan_config_urls` — search for the old URL to get its UUID
+2. `mcp__claude_ai_QualiBooth__delete_scan_config_urls` — delete by that UUID
+3. `mcp__claude_ai_QualiBooth__add_scan_config_urls` — add the new URL
 
-**File deleted** — call `mcp__qbooth-dev__list_scan_config_urls` to find the URL UUID, then `mcp__qbooth-dev__delete_scan_config_urls` to remove it.
+**File deleted** — call `mcp__claude_ai_QualiBooth__list_scan_config_urls` to find the URL UUID, then `mcp__claude_ai_QualiBooth__delete_scan_config_urls` to remove it.
 
 ### Rules
 
-- Always use the **dev** MCP (`mcp__qbooth-dev__*`), never prod.
+- Always use the **dev** MCP (`mcp__claude_ai_QualiBooth__*`), never prod.
 - All four scan configs are `ON_DEMAND` — `confirmed: true` is always safe to pass.
 - Do not add non-HTML files (assets, `.md`, `.json`) to any scan config.
 - If a file moves between folders (e.g. `behaviour-feature/` → `Custom-HTML-Elements/`), delete from the old scan config and add to the new one.
