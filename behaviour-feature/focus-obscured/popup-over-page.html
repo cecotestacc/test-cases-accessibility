@@ -123,34 +123,6 @@
 </head>
 <body>
 
-<!-- Panel wraps in a positioned container so it remains readable above the fixed popup -->
-<div style="position: relative; z-index: 300; padding: 60px 0 0;">
-<div class="qa-panel">
-  <div class="qa-panel-header">
-    <span class="qa-case-num">Case #15</span>
-    <span class="qa-rule-id">focus-obscured</span>
-    <span class="qa-fp-tag">FALSE POSITIVE</span>
-  </div>
-  <dl>
-    <dt>WCAG criteria</dt>
-    <dd>2.4.11 Focus Not Obscured (Minimum) — AA</dd>
-    <dt>Elements under test</dt>
-    <dd>Header navigation links (<code>&lt;a href="#home"&gt;</code> … <code>&lt;a href="#cart"&gt;</code>) sitting behind the open <code>div[role="dialog"][aria-modal="true"]</code> backdrop (<code>position:fixed; inset:0; z-index:200</code>)</dd>
-    <dt>Expected result</dt>
-    <dd><ul>
-      <li><span class="qa-pass-tag">PASS</span> 0 focus-obscured violations — a scanner that recognises the obscurer is an open <code>aria-modal="true"</code> dialog not containing the focused element should emit one <code>focus-obscured/behind-open-modal</code> incomplete, not a per-control finding</li>
-    </ul></dd>
-    <dt>Why a scanner may false-positive</dt>
-    <dd><ul>
-      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> The traversal sweep programmatically moves focus to background elements outside the modal (via <code>blurActive</code> + direct <code>element.focus()</code>), bypassing the JS focus trap. Each stop is hit-tested as fully covered by the backdrop and reported as "The focused control is entirely covered by fixed html &gt; body &gt; div…". Real keyboard users cannot reach these elements while the modal is open — only the harness traversal can.</li>
-      <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> The dialog is a hand-rolled <code>div[role="dialog"][aria-modal="true"]</code>, not a top-layer <code>&lt;dialog&gt;</code>, so the browser does not mark background content inert. The sweep sees all background focusables in the DOM and includes them in its domOrder pass.</li>
-    </ul></dd>
-    <dt>Root cause of real issue (separate)</dt>
-    <dd>Background content is not marked <code>inert</code>. Assistive technologies that do not honour <code>aria-modal="true"</code> for virtual-cursor containment can browse behind the overlay. This is a <code>modal-lifecycle</code> / <code>keyboard-trap</code> concern, not a <code>focus-obscured</code> finding.</dd>
-  </dl>
-</div>
-</div>
-
 <header role="banner">
   <span style="font-weight: 700; letter-spacing: .02em;">MySite</span>
   <nav aria-label="Primary">
@@ -187,6 +159,37 @@
 </div>
 
 <main>
+  <!--
+    QA panel is first in <main> (margin-top: 60px clears the header).
+    No z-index wrapper — the popup overlay (z-index: 200) sits above it in the
+    stacking order, so popup controls are never covered by the panel.
+    Dismiss the popup with the ✕ button or Escape to read the panel.
+  -->
+  <div class="qa-panel">
+    <div class="qa-panel-header">
+      <span class="qa-case-num">Case #15</span>
+      <span class="qa-rule-id">focus-obscured</span>
+      <span class="qa-fp-tag">FALSE POSITIVE</span>
+    </div>
+    <dl>
+      <dt>WCAG criteria</dt>
+      <dd>2.4.11 Focus Not Obscured (Minimum) — AA</dd>
+      <dt>Elements under test</dt>
+      <dd>Header navigation links (<code>&lt;a href="#home"&gt;</code> … <code>&lt;a href="#cart"&gt;</code>) sitting behind the open <code>div[role="dialog"][aria-modal="true"]</code> backdrop (<code>position:fixed; inset:0; z-index:200</code>)</dd>
+      <dt>Expected result</dt>
+      <dd><ul>
+        <li><span class="qa-pass-tag">PASS</span> 0 focus-obscured violations — a scanner that recognises the obscurer is an open <code>aria-modal="true"</code> dialog not containing the focused element should emit one <code>focus-obscured/behind-open-modal</code> incomplete, not a per-control finding</li>
+      </ul></dd>
+      <dt>Why a scanner may false-positive</dt>
+      <dd><ul>
+        <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> The traversal sweep programmatically moves focus to background elements outside the modal (via <code>blurActive</code> + direct <code>element.focus()</code>), bypassing the JS focus trap. Each stop is hit-tested as fully covered by the backdrop and reported as "The focused control is entirely covered by fixed html &gt; body &gt; div…". Real keyboard users cannot reach these elements while the modal is open — only the harness traversal can.</li>
+        <li><span class="qa-fp-tag">FALSE POSITIVE RISK</span> The dialog is a hand-rolled <code>div[role="dialog"][aria-modal="true"]</code>, not a top-layer <code>&lt;dialog&gt;</code>, so the browser does not mark background content inert. The sweep sees all background focusables in the DOM and includes them in its domOrder pass.</li>
+      </ul></dd>
+      <dt>Root cause of real issue (separate)</dt>
+      <dd>Background content is not marked <code>inert</code>. Assistive technologies that do not honour <code>aria-modal="true"</code> for virtual-cursor containment can browse behind the overlay. This is a <code>modal-lifecycle</code> / <code>keyboard-trap</code> concern, not a <code>focus-obscured</code> finding.</dd>
+    </dl>
+  </div>
+
   <h1>Background Content Behind Email-Capture Popup</h1>
   <p>This area, and all header links above, are keyboard-unreachable while the popup is open.</p>
   <p><a href="#more">Read more about our story</a></p>
@@ -212,6 +215,21 @@
   }
 
   popup.addEventListener('keydown', trapFocus);
+
+  function closePopup() {
+    document.getElementById('popup-backdrop').style.display = 'none';
+    // Return focus to first header link so the background is now navigable
+    const firstHeaderLink = document.querySelector('header nav a');
+    if (firstHeaderLink) firstHeaderLink.focus();
+  }
+
+  document.getElementById('popup-close').addEventListener('click', closePopup);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('popup-backdrop').style.display !== 'none') {
+      closePopup();
+    }
+  });
+
   document.getElementById('popup-email').focus();
 </script>
 

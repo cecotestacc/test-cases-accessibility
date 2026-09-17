@@ -110,6 +110,8 @@
 </sticky-header>
 
 <page-content>
+  <h1>Focusable Cards Behind Fixed Sticky Header</h1>
+
   <!-- Sticky sub-banner sits just below the header and may obscure the first focusable card -->
   <announce-banner>Important notice: this banner stays sticky below the header.</announce-banner>
 
@@ -153,10 +155,19 @@
   class FocusableCard extends HTMLElement {
     connectedCallback() {
       this.setAttribute('role', 'region');
+      // Each card must have a unique accessible name so landmark-unique passes.
+      if (!this.hasAttribute('aria-label')) {
+        const link = this.querySelector('a');
+        if (link) this.setAttribute('aria-label', link.textContent.trim());
+      }
     }
   }
 
-  class PageContent extends HTMLElement {}
+  class PageContent extends HTMLElement {
+    connectedCallback() {
+      this.setAttribute('role', 'main');
+    }
+  }
 
   customElements.define('sticky-header', StickyHeader);
   customElements.define('nav-link', NavLink);
