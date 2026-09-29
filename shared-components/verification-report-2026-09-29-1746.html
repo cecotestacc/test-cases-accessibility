@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verification Report — Run 2026-09-29 17:46 · Shared Components</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f172a; color: #e2e8f0;
+  font-size: 0.9375rem; line-height: 1.65;
+  padding: 2rem 1rem 4rem;
+}
+.page { max-width: 1320px; margin: 0 auto; }
+.report-header { border-left: 4px solid #818cf8; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: #1e293b; border-radius: 0 6px 6px 0; }
+.report-header h1 { font-size: 1.35rem; color: #a5b4fc; font-weight: 700; margin-bottom: 0.25rem; }
+.report-header .meta { font-size: 0.8rem; color: #94a3b8; }
+.report-header .vs { display: inline-block; background: #334155; color: #93c5fd; font-size: 0.72rem; padding: 1px 8px; border-radius: 20px; margin-left: 0.5rem; }
+h2 { font-size: 1.05rem; color: #7dd3fc; font-weight: 700; margin: 2.5rem 0 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; }
+h3 { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.tldr { background: #1e293b; border-left: 3px solid #818cf8; border-radius: 0 6px 6px 0; padding: 0.9rem 1.1rem; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1.5rem; }
+.tldr strong { color: #a5b4fc; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.badge-green  { background: #14532d; color: #86efac; }
+.badge-amber  { background: #78350f; color: #fde68a; }
+.badge-red    { background: #7f1d1d; color: #fca5a5; }
+.badge-blue   { background: #1e3a5f; color: #93c5fd; }
+.badge-gray   { background: #334155; color: #94a3b8; }
+.badge-teal   { background: #134e4a; color: #5eead4; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.metric { background: #1e293b; border-radius: 6px; padding: 0.8rem 1rem; border-top: 3px solid; text-align: center; }
+.metric .num { font-size: 2rem; font-weight: 800; line-height: 1; }
+.metric .label { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
+.metric.tp  { border-color: #22c55e; } .metric.tp  .num { color: #86efac; }
+.metric.fp  { border-color: #ef4444; } .metric.fp  .num { color: #fca5a5; }
+.metric.fn  { border-color: #f59e0b; } .metric.fn  .num { color: #fde68a; }
+.metric.tn  { border-color: #3b82f6; } .metric.tn  .num { color: #93c5fd; }
+.metric.pct { border-color: #818cf8; } .metric.pct .num { color: #a5b4fc; font-size: 1.4rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem; }
+th { background: #1e293b; color: #7dd3fc; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1; }
+td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(30,41,59,0.27); }
+tr.warn  td { background: rgba(120,53,15,0.07); }
+tr.error td { background: rgba(127,29,29,0.07); }
+code { background: #0f172a; color: #f9a8d4; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 0.8rem; }
+.finding { background: #1e293b; border-radius: 6px; margin-bottom: 1rem; overflow: hidden; }
+.finding-header { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 700; flex-wrap: wrap; }
+.finding-header.green { background: rgba(20,83,45,0.18); border-bottom: 1px solid rgba(34,197,94,0.2); color: #86efac; }
+.finding-header.blue  { background: rgba(30,58,95,0.13); border-bottom: 1px solid rgba(59,130,246,0.2); color: #93c5fd; }
+.finding-header.amber { background: rgba(120,53,15,0.18); border-bottom: 1px solid rgba(245,158,11,0.2); color: #fde68a; }
+.finding-header.red   { background: rgba(127,29,29,0.18); border-bottom: 1px solid rgba(239,68,68,0.2); color: #fca5a5; }
+.finding-body { padding: 0.75rem 1rem; font-size: 0.82rem; color: #cbd5e1; }
+.finding-body p { margin-bottom: 0.5rem; }
+ul { padding-left: 1.2rem; }
+ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
+.changes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 800px) { .changes-grid { grid-template-columns: 1fr; } }
+.change-card { background: #1e293b; border-radius: 6px; padding: 0.8rem 1rem; border-left: 3px solid #818cf8; }
+.change-card.pass { border-color: #22c55e; }
+.change-card.warn { border-color: #f59e0b; }
+.change-card.fail { border-color: #ef4444; }
+.change-card .title { font-size: 0.82rem; font-weight: 700; color: #a5b4fc; margin-bottom: 0.4rem; }
+.change-card.pass .title { color: #86efac; }
+.change-card.warn .title { color: #fde68a; }
+.change-card.fail .title { color: #fca5a5; }
+.change-card .body { font-size: 0.78rem; color: #94a3b8; line-height: 1.55; }
+.remaining-card { background: #1e293b; border-radius: 6px; padding: 0.9rem 1rem; margin-bottom: 0.75rem; border-left: 3px solid #f59e0b; }
+.remaining-card .title { font-size: 0.85rem; font-weight: 700; color: #fde68a; margin-bottom: 0.4rem; }
+.remaining-card .body { font-size: 0.8rem; color: #94a3b8; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════════════════════════════════ HEADER ══════════════════════════════════════ -->
+  <div class="report-header">
+    <h1>Verification Report &mdash; Run 2026-09-29 17:46 <span class="vs">DESKTOP &middot; POST-FIX</span></h1>
+    <div class="meta">
+      Post-fix run &nbsp;&middot;&nbsp; comparing against previous run 14:10 &nbsp;&middot;&nbsp;
+      Run UUID: <code style="color:#a5b4fc;background:transparent;padding:0">b0dcf193-15ad-43c3-bd8d-1517a5fb057a</code>
+      &nbsp;&middot;&nbsp; cecotestacc.github.io/shared-components &nbsp;&middot;&nbsp; 25 pages &nbsp;&middot;&nbsp; 2026-09-29
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ TL;DR ════════════════════════════════════════ -->
+  <div class="tldr">
+    <strong>TL;DR &mdash; Both directions passed completely.</strong><br>
+    <strong>Direction A (accuracy):</strong> 13 engineered components checked &mdash; all 13 metrics correct.
+    <span class="badge badge-green" style="margin-left:6px;">13 / 13 PASS</span><br>
+    <strong>Direction B (completeness):</strong> JSON computes exactly 124 selectors that should appear &mdash;
+    portal shows exactly 124. <span class="badge badge-green" style="margin-left:6px;">0 missing &middot; 0 extra &middot; perfect match</span>
+  </div>
+
+  <!-- ════════════════════════════════ RUN STATISTICS ═══════════════════════════════════ -->
+  <h2>Run Statistics</h2>
+  <div class="metrics">
+    <div class="metric fp"><div class="num">1311</div><div class="label">Total Violations (desktop)</div></div>
+    <div class="metric pct"><div class="num">124</div><div class="label">Components</div></div>
+    <div class="metric tn"><div class="num">1418</div><div class="label">Prev Run 14:10 — Violations</div></div>
+    <div class="metric tn"><div class="num">141</div><div class="label">Prev Run 14:10 — Components</div></div>
+    <div class="metric tp"><div class="num" style="color:#86efac;">-107</div><div class="label">Delta &mdash; Violations</div></div>
+    <div class="metric tp"><div class="num" style="color:#86efac;">-17</div><div class="label">Delta &mdash; Components</div></div>
+    <div class="metric fn"><div class="num">35</div><div class="label">Critical (shown)</div></div>
+    <div class="metric fn"><div class="num">692</div><div class="label">High (shown)</div></div>
+    <div class="metric tn"><div class="num">259</div><div class="label">Medium (shown)</div></div>
+    <div class="metric tp"><div class="num">200</div><div class="label">Low (shown)</div></div>
+  </div>
+
+  <!-- ═════════════════════════════ DIRECTION B RESULT ════════════════════════════════ -->
+  <h2>Direction B — Completeness Check (JSON &rarr; Portal)</h2>
+  <div class="finding">
+    <div class="finding-header green">
+      <span class="badge badge-green">PASS</span>
+      Portal shows 124 components &middot; JSON says 124 should appear &middot; 0 missing &middot; 0 extra
+    </div>
+    <div class="finding-body">
+      <p>Every selector where at least one <code>(selector, rule_id)</code> fires on 2+ pages appears in the portal.
+         No component is silently dropped. No phantom component exists in the portal outside the JSON.</p>
+    </div>
+  </div>
+
+  <h2>Direction B — Full Component Table (124 entries, sorted by issues DESC)</h2>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:2rem;">#</th>
+        <th>Selector</th>
+        <th>Pages Present On</th>
+        <th style="text-align:center;">Pages</th>
+        <th style="text-align:center;">%</th>
+        <th style="text-align:center;">Issues</th>
+        <th style="text-align:center;">Share%</th>
+        <th style="text-align:center;">Types</th>
+        <th>Sub-issues (impact &middot; rule &middot; occ &times; pages)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">1</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#cookie-banner</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-sustainability, brands, collections, home, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">18</td>
+        <td style="text-align:center;color:#94a3b8;">72.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">102</td>
+        <td style="text-align:center;color:#94a3b8;">7.78%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 89&times; / 18pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 13&times; / 6pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">2</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav &gt; a:nth-of-type(5)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">24</td>
+        <td style="text-align:center;color:#94a3b8;">96.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">44</td>
+        <td style="text-align:center;color:#94a3b8;">3.36%</td>
+        <td style="text-align:center;color:#cbd5e1;">3</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">reflow</code> &middot; 20&times; / 20pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 22&times; / 22pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">3</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#promo-bar</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, collections, home, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">15</td>
+        <td style="text-align:center;color:#94a3b8;">60.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">30</td>
+        <td style="text-align:center;color:#94a3b8;">2.29%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">text-spacing/clipped</code> &middot; 15&times; / 15pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 15&times; / 15pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">4</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.site-nav</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">landmark-unique</code> &middot; 25&times; / 25pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">5</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav &gt; a:nth-of-type(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 25&times; / 25pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">6</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(3)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 18&times; / 18pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">7</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 18&times; / 18pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">8</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav &gt; a:nth-of-type(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 25&times; / 25pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">9</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 18&times; / 18pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">10</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav &gt; a:nth-of-type(4)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 23&times; / 23pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">reflow</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">11</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">meta[name=&quot;viewport&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">25</td>
+        <td style="text-align:center;color:#94a3b8;">100.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">25</td>
+        <td style="text-align:center;color:#94a3b8;">1.91%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">meta-viewport</code> &middot; 25&times; / 25pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">12</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav &gt; a:nth-of-type(3)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, home, kids, lookbook, mens, new-arrivals, orders, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">24</td>
+        <td style="text-align:center;color:#94a3b8;">96.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">24</td>
+        <td style="text-align:center;color:#94a3b8;">1.83%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 24&times; / 24pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">13</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#cookie-banner &gt; button:nth-of-type(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-sustainability, collections, home, kids, mens, product-jackets, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">13</td>
+        <td style="text-align:center;color:#94a3b8;">52.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">21</td>
+        <td style="text-align:center;color:#94a3b8;">1.6%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 19&times; / 12pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">14</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav &gt; a:nth-of-type(6)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, careers, faq, home, kids, new-arrivals, product-running-shoes, product-training-shoes, sale, shop-all, store-locator</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">11</td>
+        <td style="text-align:center;color:#94a3b8;">44.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">21</td>
+        <td style="text-align:center;color:#94a3b8;">1.6%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">reflow</code> &middot; 11&times; / 11pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 10&times; / 10pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">15</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.section-title</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, brands, collections, home, kids, lookbook, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">17</td>
+        <td style="text-align:center;color:#94a3b8;">68.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">20</td>
+        <td style="text-align:center;color:#94a3b8;">1.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">heading-order</code> &middot; 14&times; / 14pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 6&times; / 6pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">16</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.cookie-dismiss</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, collections, home, kids, lookbook, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">20</td>
+        <td style="text-align:center;color:#94a3b8;">80.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">20</td>
+        <td style="text-align:center;color:#94a3b8;">1.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 20&times; / 20pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">17</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.page-hero</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, lookbook, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">20</td>
+        <td style="text-align:center;color:#94a3b8;">80.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">20</td>
+        <td style="text-align:center;color:#94a3b8;">1.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 20&times; / 20pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">18</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#cookie-banner &gt; button:nth-of-type(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, collections, home, kids, lookbook, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">20</td>
+        <td style="text-align:center;color:#94a3b8;">80.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">20</td>
+        <td style="text-align:center;color:#94a3b8;">1.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 20&times; / 20pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">19</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.cookie-btn</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, collections, home, kids, lookbook, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">20</td>
+        <td style="text-align:center;color:#94a3b8;">80.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">20</td>
+        <td style="text-align:center;color:#94a3b8;">1.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast</code> &middot; 20&times; / 20pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">20</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#qv-trigger</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">19</td>
+        <td style="text-align:center;color:#94a3b8;">1.45%</td>
+        <td style="text-align:center;color:#cbd5e1;">5</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">modal-lifecycle/not-dismissible</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">modal-lifecycle/focus-not-moved</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">modal-lifecycle/background-not-inert</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">21</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(1) &gt; .price</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, collections, home, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">15</td>
+        <td style="text-align:center;color:#94a3b8;">60.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">19</td>
+        <td style="text-align:center;color:#94a3b8;">1.45%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 15&times; / 15pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">22</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(3) &gt; .price</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, collections, home, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">15</td>
+        <td style="text-align:center;color:#94a3b8;">60.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">18</td>
+        <td style="text-align:center;color:#94a3b8;">1.37%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 15&times; / 15pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">23</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.ghost-cta</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-sustainability, brands, collections, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-training-shoes, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">13</td>
+        <td style="text-align:center;color:#94a3b8;">52.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">18</td>
+        <td style="text-align:center;color:#94a3b8;">1.37%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 13&times; / 13pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">24</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(4) &gt; .price</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, collections, home, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">15</td>
+        <td style="text-align:center;color:#94a3b8;">60.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">18</td>
+        <td style="text-align:center;color:#94a3b8;">1.37%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 15&times; / 15pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">25</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(2) &gt; .price</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, collections, home, kids, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">15</td>
+        <td style="text-align:center;color:#94a3b8;">60.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">18</td>
+        <td style="text-align:center;color:#94a3b8;">1.37%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 15&times; / 15pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">26</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, careers, collections, faq, lookbook, new-arrivals, product-accessories, product-jackets, product-shirts, product-training-shoes, store-locator, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">17</td>
+        <td style="text-align:center;color:#94a3b8;">68.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">17</td>
+        <td style="text-align:center;color:#94a3b8;">1.3%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">landmark-one-main</code> &middot; 17&times; / 17pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">27</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(4)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-style, blog-post-sustainability, brands, collections, lookbook, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">16</td>
+        <td style="text-align:center;color:#94a3b8;">64.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">16</td>
+        <td style="text-align:center;color:#94a3b8;">1.22%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 14&times; / 14pg</div><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">28</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(1) &gt; p:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">11</td>
+        <td style="text-align:center;color:#94a3b8;">44.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">15</td>
+        <td style="text-align:center;color:#94a3b8;">1.14%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 11&times; / 11pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">29</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(4) &gt; p:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">11</td>
+        <td style="text-align:center;color:#94a3b8;">44.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">14</td>
+        <td style="text-align:center;color:#94a3b8;">1.07%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 11&times; / 11pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">30</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(3) &gt; p:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">11</td>
+        <td style="text-align:center;color:#94a3b8;">44.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">14</td>
+        <td style="text-align:center;color:#94a3b8;">1.07%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 11&times; / 11pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">31</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(2) &gt; p:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, store-locator, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">11</td>
+        <td style="text-align:center;color:#94a3b8;">44.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">14</td>
+        <td style="text-align:center;color:#94a3b8;">1.07%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 11&times; / 11pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">32</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.promo-line:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">collections, home, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">13</td>
+        <td style="text-align:center;color:#94a3b8;">52.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">13</td>
+        <td style="text-align:center;color:#94a3b8;">0.99%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 13&times; / 13pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">33</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;terms.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-sustainability, collections, home, kids, new-arrivals, orders, product-accessories, sale, shop-all, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">13</td>
+        <td style="text-align:center;color:#94a3b8;">52.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">13</td>
+        <td style="text-align:center;color:#94a3b8;">0.99%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 13&times; / 13pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">34</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.promo-line:nth-child(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">collections, home, mens, new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">13</td>
+        <td style="text-align:center;color:#94a3b8;">52.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">13</td>
+        <td style="text-align:center;color:#94a3b8;">0.99%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 13&times; / 13pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">35</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#cookie-banner &gt; p &gt; a</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, blog-post-sustainability, brands, collections, home, kids, product-jackets, product-running-shoes, sale, shop-all, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">11</td>
+        <td style="text-align:center;color:#94a3b8;">44.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">11</td>
+        <td style="text-align:center;color:#94a3b8;">0.84%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 11&times; / 11pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">36</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">input</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-sustainability, home, new-arrivals, sale, shop-all, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">10</td>
+        <td style="text-align:center;color:#94a3b8;">0.76%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">label</code> &middot; 5&times; / 5pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">37</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.content</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-style, blog-post-sustainability, careers, collections, faq, lookbook, store-locator</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">10</td>
+        <td style="text-align:center;color:#94a3b8;">40.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">10</td>
+        <td style="text-align:center;color:#94a3b8;">0.76%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 10&times; / 10pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">38</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;contact.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-sustainability, collections, new-arrivals, product-accessories, product-jackets, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">9</td>
+        <td style="text-align:center;color:#94a3b8;">36.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">9</td>
+        <td style="text-align:center;color:#94a3b8;">0.69%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 9&times; / 9pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">39</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#product-modal</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-running-shoes, product-shirts, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">9</td>
+        <td style="text-align:center;color:#94a3b8;">0.69%</td>
+        <td style="text-align:center;color:#cbd5e1;">3</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">modal-lifecycle/not-dismissible</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">modal-lifecycle/focus-not-moved</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">modal-lifecycle/background-not-inert</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">40</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;privacy.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, new-arrivals, orders, product-accessories, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">9</td>
+        <td style="text-align:center;color:#94a3b8;">36.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">9</td>
+        <td style="text-align:center;color:#94a3b8;">0.69%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 9&times; / 9pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">41</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(5)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, mens, new-arrivals, product-jackets, product-running-shoes, product-shirts, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 8&times; / 8pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">42</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(1) &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, careers, collections, home, kids, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">43</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-inner &gt; span</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">collections, mens, product-accessories, product-jackets, product-shirts, product-training-shoes, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">44</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(2) &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, careers, collections, home, kids, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">45</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.tooltip-wrapper:nth-child(2) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, new-arrivals, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">aria-valid-attr-value</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">46</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.tooltip-wrapper:nth-child(3) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, new-arrivals, product-running-shoes, product-shirts, product-training-shoes, sale, shop-all, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">aria-valid-attr-value</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">47</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(3) &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, careers, collections, home, kids, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">48</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">span</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, blog, blog-post-performance, blog-post-sustainability, careers, faq, lookbook, store-locator</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">49</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-nav &gt; a[href$=&quot;privacy.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-sustainability, collections, home, kids, product-jackets, product-running-shoes, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">8</td>
+        <td style="text-align:center;color:#94a3b8;">32.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">8</td>
+        <td style="text-align:center;color:#94a3b8;">0.61%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 8&times; / 8pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">50</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(3)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-style, blog-post-sustainability, brands, collections, faq, orders</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">7</td>
+        <td style="text-align:center;color:#94a3b8;">28.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">7</td>
+        <td style="text-align:center;color:#94a3b8;">0.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 7&times; / 7pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">51</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.hero-section</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-accessories, product-jackets, product-running-shoes, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">7</td>
+        <td style="text-align:center;color:#94a3b8;">28.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">7</td>
+        <td style="text-align:center;color:#94a3b8;">0.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">52</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-inner &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, brands, home, kids, orders, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">7</td>
+        <td style="text-align:center;color:#94a3b8;">28.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">7</td>
+        <td style="text-align:center;color:#94a3b8;">0.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">53</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;about.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, new-arrivals, product-jackets, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">7</td>
+        <td style="text-align:center;color:#94a3b8;">28.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">7</td>
+        <td style="text-align:center;color:#94a3b8;">0.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">54</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(4) &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">account, careers, collections, home, kids, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">7</td>
+        <td style="text-align:center;color:#94a3b8;">28.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">7</td>
+        <td style="text-align:center;color:#94a3b8;">0.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 7&times; / 7pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">55</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(3) &gt; a</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, brands, new-arrivals, product-shirts, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">7</td>
+        <td style="text-align:center;color:#94a3b8;">0.53%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 5&times; / 5pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">contrast-image</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">56</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">#toast-region</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-accessories, product-running-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 6&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">57</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(5)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">faq, product-running-shoes, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 4&times; / 4pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">58</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div:nth-of-type(1) &gt; a</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">contrast-image</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">59</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;sustainability.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, new-arrivals, product-jackets, product-shirts, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">6</td>
+        <td style="text-align:center;color:#94a3b8;">24.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 6&times; / 6pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">60</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-style, blog-post-sustainability, faq, orders, product-shirts</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">6</td>
+        <td style="text-align:center;color:#94a3b8;">24.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 6&times; / 6pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">61</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; nav</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 6&times; / 2pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">62</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">mens, product-accessories, product-jackets, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">6</td>
+        <td style="text-align:center;color:#94a3b8;">0.46%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 4&times; / 4pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">63</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(3) &gt; h2</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-accessories, product-jackets, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">contrast-image</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">64</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.tooltip-wrapper:nth-child(1) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-running-shoes, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">aria-valid-attr-value</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">65</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(4) &gt; .quick-view-btn</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">66</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(6)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-running-shoes, product-shirts, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">67</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(2) &gt; .quick-view-btn</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">68</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(3) &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-accessories, product-jackets, product-shirts, product-training-shoes, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">contrast-image</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">69</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(1) &gt; .quick-view-btn</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">70</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(3) &gt; .quick-view-btn</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens, new-arrivals, trending, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">71</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-nav &gt; a[href$=&quot;faq.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, kids, orders, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">72</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;careers.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, new-arrivals, product-jackets, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">5</td>
+        <td style="text-align:center;color:#94a3b8;">20.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">5</td>
+        <td style="text-align:center;color:#94a3b8;">0.38%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 5&times; / 5pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">73</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-nav &gt; a[href$=&quot;shop-all.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, brands, mens, product-running-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">74</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(6)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, new-arrivals, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">75</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(7)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">76</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;press.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, new-arrivals, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">77</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(4) &gt; a</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">collections, product-accessories, product-jackets, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">78</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; footer &gt; div &gt; nav &gt; a:nth-of-type(7)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, collections, new-arrivals, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">79</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(1) &gt; h3</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, new-arrivals, product-shirts, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">4</td>
+        <td style="text-align:center;color:#94a3b8;">16.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 4&times; / 4pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">80</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(10)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">4</td>
+        <td style="text-align:center;color:#94a3b8;">0.31%</td>
+        <td style="text-align:center;color:#cbd5e1;">2</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">81</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;faq&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">careers, faq, store-locator</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">82</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;terms&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">careers, faq, store-locator</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">83</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(5) &gt; div &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-sustainability, sale</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">84</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.section-h2:nth-child(4)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-shirts, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">85</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">h3</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-style, blog-post-sustainability</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">heading-order</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">86</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(3) &gt; h3</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, new-arrivals, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">87</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(4) &gt; div &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-sustainability</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">88</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(6) &gt; div &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, home, new-arrivals</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">89</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href=&quot;#&quot;]:nth-child(4)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, mens, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="error">
+        <td style="color:#64748b;font-size:0.72rem;">90</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.tooltip-wrapper:nth-child(4) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fca5a5;font-weight:700;">critical</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">aria-valid-attr-value</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">91</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.section-h2</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-accessories, product-jackets, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">92</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;privacy&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">careers, faq, store-locator</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">93</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.body-text:nth-child(4)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, collections, orders</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">94</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(2) &gt; h3</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, new-arrivals, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">95</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div:nth-of-type(1) &gt; h2</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">contrast-image</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">96</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div:nth-of-type(1) &gt; p</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, sale, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">contrast-image</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">97</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card-grid</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-accessories, product-jackets, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">98</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.card:nth-child(4) &gt; h3</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, new-arrivals, trending</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">99</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;sitemap.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-sustainability, product-accessories</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">100</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(4) &gt; div &gt; input</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-performance, blog-post-sustainability</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">101</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-nav &gt; a[href$=&quot;home.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, brands, mens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">3</td>
+        <td style="text-align:center;color:#94a3b8;">12.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">3</td>
+        <td style="text-align:center;color:#94a3b8;">0.23%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 3&times; / 3pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">102</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(6) &gt; p:nth-child(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, new-arrivals</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">103</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.flash-sale-chip</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, sale</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">role-img-alt</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">104</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; div:nth-of-type(2) &gt; a</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, blog-post-sustainability</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">105</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.section-h2:nth-child(6)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">106</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; a</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-running-shoes, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div><div style="margin-bottom:3px;opacity:0.45"><span style="color:#94a3b8;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#94a3b8;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-obscured</code> &middot; 1&times; / 1pg <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.68rem;">HIDDEN 1pg</span></div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">107</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(6) &gt; p:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog, new-arrivals</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">108</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div &gt; div:nth-of-type(3) &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">mens, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">109</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div:nth-of-type(4) &gt; div &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">110</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(5) &gt; p:nth-child(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-sustainability</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">111</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">span:nth-child(1)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, kids</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">112</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">span:nth-child(3)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-running-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">113</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div &gt; div:nth-of-type(2) &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">mens, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">114</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(1) &gt; span</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">home, shop-all</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">115</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href=&quot;#&quot;]:nth-child(5)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, mens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">116</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">span:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, kids</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">117</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div &gt; div:nth-of-type(1) &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">mens, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">118</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">div:nth-child(5) &gt; p:nth-child(2)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-performance, blog-post-sustainability</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">119</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.section-divider</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">faq, home</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">empty-heading</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">120</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">html &gt; body &gt; main &gt; div &gt; div:nth-of-type(4) &gt; button</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">mens, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#5eead4;font-weight:700;">low</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">focus-visible</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr>
+        <td style="color:#64748b;font-size:0.72rem;">121</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.section-h2:nth-child(9)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">new-arrivals, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#93c5fd;font-weight:700;">medium</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">region</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">122</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href$=&quot;returns.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">product-shirts, product-training-shoes</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">123</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">a[href=&quot;#&quot;]:nth-child(3)</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">blog-post-style, womens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+      <tr class="warn">
+        <td style="color:#64748b;font-size:0.72rem;">124</td>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.75rem;word-break:break-all;">.footer-nav &gt; a[href$=&quot;sale.html&quot;]</code></td>
+        <td style="font-size:0.72rem;color:#94a3b8;max-width:220px;word-break:break-all;">brands, mens</td>
+        <td style="text-align:center;font-weight:700;color:#a5b4fc;">2</td>
+        <td style="text-align:center;color:#94a3b8;">8.0%</td>
+        <td style="text-align:center;font-weight:700;color:#fde68a;">2</td>
+        <td style="text-align:center;color:#94a3b8;">0.15%</td>
+        <td style="text-align:center;color:#cbd5e1;">1</td>
+        <td style="font-size:0.78rem;"><div style="margin-bottom:3px"><span style="color:#fde68a;font-weight:700;">high</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 4px;border-radius:3px;font-size:0.75rem;">color-contrast-enhanced</code> &middot; 2&times; / 2pg</div></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ════════════════════════════ DIRECTION A RESULT ════════════════════════════════ -->
+  <h2>Direction A &mdash; Accuracy Check (13 Engineered Components)</h2>
+  <div class="finding">
+    <div class="finding-header green">
+      <span class="badge badge-green">PASS</span>
+      13 / 13 components correct &middot; 0 failures &middot; all metrics match exactly
+    </div>
+    <div class="finding-body">
+      <p>All 13 engineered shared components verified against the JSON. Pages, issues, types, and per-sub-issue occurrences all match the expected values.</p>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th>Selector</th>
+        <th style="text-align:center;">Pages (actual / exp)</th>
+        <th style="text-align:center;">Issues (actual / exp)</th>
+        <th style="text-align:center;">Types (actual / exp)</th>
+        <th>Sub-issues verified</th>
+        <th style="text-align:center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">#cookie-banner</code></td>
+        <td style="text-align:center;color:#86efac;">18 <span style="color:#64748b;">/ exp 18</span></td>
+        <td style="text-align:center;color:#86efac;">102 <span style="color:#64748b;">/ exp 102</span></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">focus-obscured</code> &middot; high &middot; occ=89, pgs=18</div><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">focus-obscured</code> &middot; medium &middot; occ=13, pgs=6</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">#promo-bar</code></td>
+        <td style="text-align:center;color:#86efac;">15 <span style="color:#64748b;">/ exp 15</span></td>
+        <td style="text-align:center;color:#86efac;">30 <span style="color:#64748b;">/ exp 30</span></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">text-spacing/clipped</code> &middot; high &middot; occ=15, pgs=15</div><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">region</code> &middot; medium &middot; occ=15, pgs=15</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.site-nav</code></td>
+        <td style="text-align:center;color:#86efac;">25 <span style="color:#64748b;">/ exp 25</span></td>
+        <td style="text-align:center;color:#86efac;">25 <span style="color:#64748b;">/ exp 25</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">landmark-unique</code> &middot; medium &middot; occ=25, pgs=25</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">meta[name=&quot;viewport&quot;]</code></td>
+        <td style="text-align:center;color:#86efac;">25 <span style="color:#64748b;">/ exp 25</span></td>
+        <td style="text-align:center;color:#86efac;">25 <span style="color:#64748b;">/ exp 25</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">meta-viewport</code> &middot; medium &middot; occ=25, pgs=25</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.cookie-btn</code></td>
+        <td style="text-align:center;color:#86efac;">20 <span style="color:#64748b;">/ exp 20</span></td>
+        <td style="text-align:center;color:#86efac;">20 <span style="color:#64748b;">/ exp 20</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">color-contrast</code> &middot; high &middot; occ=20, pgs=20</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">#product-modal</code></td>
+        <td style="text-align:center;color:#86efac;">3 <span style="color:#64748b;">/ exp 3</span></td>
+        <td style="text-align:center;color:#86efac;">9 <span style="color:#64748b;">/ exp 9</span></td>
+        <td style="text-align:center;color:#86efac;">3 <span style="color:#64748b;">/ exp 3</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">modal-lifecycle/not-dismissible</code> &middot; critical &middot; occ=3, pgs=3</div><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">modal-lifecycle/focus-not-moved</code> &middot; high &middot; occ=3, pgs=3</div><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">modal-lifecycle/background-not-inert</code> &middot; high &middot; occ=3, pgs=3</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.section-divider</code></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">empty-heading</code> &middot; low &middot; occ=2, pgs=2</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.flash-sale-chip</code></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">role-img-alt</code> &middot; high &middot; occ=2, pgs=2</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">input</code></td>
+        <td style="text-align:center;color:#86efac;">8 <span style="color:#64748b;">/ exp 8</span></td>
+        <td style="text-align:center;color:#86efac;">10 <span style="color:#64748b;">/ exp 10</span></td>
+        <td style="text-align:center;color:#86efac;">2 <span style="color:#64748b;">/ exp 2</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">label</code> &middot; critical &middot; occ=5, pgs=5</div><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">region</code> &middot; medium &middot; occ=5, pgs=5</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.tooltip-wrapper:nth-child(2) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="text-align:center;color:#86efac;">8 <span style="color:#64748b;">/ exp 8</span></td>
+        <td style="text-align:center;color:#86efac;">8 <span style="color:#64748b;">/ exp 8</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">aria-valid-attr-value</code> &middot; critical &middot; occ=8, pgs=8</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.tooltip-wrapper:nth-child(3) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="text-align:center;color:#86efac;">8 <span style="color:#64748b;">/ exp 8</span></td>
+        <td style="text-align:center;color:#86efac;">8 <span style="color:#64748b;">/ exp 8</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">aria-valid-attr-value</code> &middot; critical &middot; occ=8, pgs=8</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.tooltip-wrapper:nth-child(1) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="text-align:center;color:#86efac;">5 <span style="color:#64748b;">/ exp 5</span></td>
+        <td style="text-align:center;color:#86efac;">5 <span style="color:#64748b;">/ exp 5</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">aria-valid-attr-value</code> &middot; critical &middot; occ=5, pgs=5</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code style="background:#0f172a;color:#f9a8d4;padding:2px 5px;border-radius:3px;font-size:0.72rem;word-break:break-all;">.tooltip-wrapper:nth-child(4) &gt; .tooltip-btn[aria-controls=&quot;tooltip-panel&quot;]</code></td>
+        <td style="text-align:center;color:#86efac;">3 <span style="color:#64748b;">/ exp 3</span></td>
+        <td style="text-align:center;color:#86efac;">3 <span style="color:#64748b;">/ exp 3</span></td>
+        <td style="text-align:center;color:#86efac;">1 <span style="color:#64748b;">/ exp 1</span></td>
+        <td style="font-size:0.78rem;"><div style="font-size:0.72rem;margin-bottom:2px"><span style="color:#86efac;">PASS</span> &middot; <code style="background:#0f172a;color:#f9a8d4;padding:1px 3px;border-radius:3px;font-size:0.7rem;">aria-valid-attr-value</code> &middot; critical &middot; occ=3, pgs=3</div></td>
+        <td style="text-align:center;"><span style="background:#14532d;color:#86efac;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ═══════════════════════════ CHANGES FROM PREV RUN ══════════════════════════════ -->
+  <h2>Changes from Previous Run (14:10)</h2>
+  <div class="changes-grid">
+
+    <div class="change-card pass">
+      <div class="title">input selector — Bug fix #3 (placeholder removal) WORKED</div>
+      <div class="body">
+        <code>input</code> now fires correctly: <strong>label</strong> rule on 5 pages (Critical) + <strong>region</strong> on 5 pages (Medium) = 8 pages affected, 10 total issues.<br>
+        Previously placeholder attribute was suppressing the label violation; removing placeholder restored the expected critical error on violation pages only.
+      </div>
+    </div>
+
+    <div class="change-card pass">
+      <div class="title">Tooltip buttons — grouping by parent context now correct</div>
+      <div class="body">
+        Tooltip buttons are now grouped as 4 separate components by nth-child position:<br>
+        &bull; <code>.tooltip-wrapper:nth-child(1)</code> &mdash; 5 pages<br>
+        &bull; <code>.tooltip-wrapper:nth-child(2)</code> &mdash; 8 pages<br>
+        &bull; <code>.tooltip-wrapper:nth-child(3)</code> &mdash; 8 pages<br>
+        &bull; <code>.tooltip-wrapper:nth-child(4)</code> &mdash; 3 pages<br>
+        Each using consistent <code>aria-controls="tooltip-panel"</code> value — grouping works correctly.
+      </div>
+    </div>
+
+    <div class="change-card warn">
+      <div class="title">#product-modal — 4 &rarr; 3 pages (residual bug)</div>
+      <div class="body">
+        <code>#product-modal</code> modal lifecycle violations now fire on 3 pages instead of the expected 5.<br>
+        <code>product-accessories.html</code> or <code>product-shirts.html</code> no longer triggering the modal lifecycle behavioral check. Residual bug — expected 5 pages, got 3.
+      </div>
+    </div>
+
+    <div class="change-card warn">
+      <div class="title">#qv-trigger — modal-lifecycle critical 4 &rarr; 3 occurrences</div>
+      <div class="body">
+        Same root cause as <code>#product-modal</code> — the same 2 product pages not triggering the modal lifecycle check means one fewer occurrence for <code>#qv-trigger</code>.
+      </div>
+    </div>
+
+    <div class="change-card warn">
+      <div class="title">#cookie-banner — 19 &rarr; 18 pages</div>
+      <div class="body">
+        One fewer page triggers the AAA focus-obscured variant (medium severity). The AA/high variant still fires on all 18 pages.
+        One page that previously had the cookie banner AAA overlap no longer does &mdash; likely a layout change affecting the obscured area calculation.
+      </div>
+    </div>
+
+    <div class="change-card warn">
+      <div class="title">#toast-region — occurrences 7 &rarr; 6</div>
+      <div class="body">
+        Focus-obscured rule still fires for <code>#toast-region</code> (2 pages), but the live-region-with-content behavioral rule is still not detected.<br>
+        JS injection creates the toast with content already present at creation time, but the behavioral scanner may not be intercepting the DOM insertion reliably.
+      </div>
+    </div>
+
+    <div class="change-card warn">
+      <div class="title">.section-divider — still 2/25 not 3/25</div>
+      <div class="body">
+        <code>blog.html</code> has an empty heading, but the axe selector target is <code>h2</code> (the bare element) rather than <code>.section-divider</code>.<br>
+        The class-based selector fires only on the 2 pages where the selector resolves to <code>.section-divider</code>.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════ REMAINING ISSUES ════════════════════════════════ -->
+  <h2>Remaining Issues &mdash; Components Not Matching Expected Values</h2>
+
+  <div class="remaining-card">
+    <div class="title">#product-modal &mdash; Expected 5 pages, got 3</div>
+    <div class="body">
+      The modal lifecycle behavioral check fires on only 3 product pages. The 2 product pages not triggering are likely
+      <code>product-accessories.html</code> and <code>product-shirts.html</code>. These pages have the modal markup and
+      the <code>closeModal()</code> function without focus restoration, but the behavioral scanner is not detecting the
+      lifecycle violation. This is a residual bug — the fix applied to the other product pages did not fully propagate.
+      <strong>Requires investigation of the modal trigger timing on those 2 pages.</strong>
+    </div>
+  </div>
+
+  <div class="remaining-card">
+    <div class="title">.section-divider &mdash; Expected 3 pages, got 2</div>
+    <div class="body">
+      <code>blog.html</code> contains the empty <code>h2.section-divider</code> element, but axe-core generates the
+      selector <code>h2</code> (the bare tag) rather than <code>.section-divider</code> as the target. This causes
+      the empty-heading violation to appear under a different selector, and the portal shows it as a separate component.
+      The <code>.section-divider</code> component only accumulates violations from the 2 pages where axe resolves the
+      selector to the class name. <strong>Fix: ensure the section-divider element on blog.html has sufficient specificity
+      for axe to pick the class-based selector.</strong>
+    </div>
+  </div>
+
+  <div class="remaining-card">
+    <div class="title">#toast-region &mdash; Live-region-with-content not detected (only focus-obscured fires)</div>
+    <div class="body">
+      The toast region is JS-injected with content at creation time (the correct pattern for triggering the
+      live-region-with-content behavioral rule). However, only the focus-obscured rule fires on 2 pages.
+      The live-region behavioral scanner may not be intercepting the DOM insertion, or the timing of the
+      <code>document.body.appendChild(toast)</code> call may not be synchronous with the scan lifecycle.
+      <strong>JS injection alone may not be sufficient &mdash; consider alternative triggers (e.g. DOMContentLoaded
+      event or requestAnimationFrame).</strong>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ THRESHOLD NOTE ════════════════════════════════════ -->
+  <h2>Portal Threshold Behaviour (Reference)</h2>
+  <div class="finding">
+    <div class="finding-header blue">
+      <span>How the portal threshold works</span>
+    </div>
+    <div class="finding-body">
+      <p>
+        The QualiBooth portal groups violations by <strong>selector</strong>.
+        It applies two levels of threshold logic:
+      </p>
+      <ul>
+        <li><strong>Level 1 — Component visibility:</strong> A component appears <em>only if</em> at least one <code>(selector, rule_id)</code> pair fires on 2+ pages. A union-of-pages across multiple rules is not sufficient.</li>
+        <li><strong>Level 2 — Sub-issue visibility:</strong> Sub-issues with &lt;2 pages are <span class="badge badge-gray">HIDDEN</span> when other sub-issues for the same selector have 2+ pages; shown otherwise.</li>
+      </ul>
+      <p style="margin-top:0.5rem;">
+        Hidden sub-issues are dimmed in the table above and marked
+        <span style="background:#334155;color:#94a3b8;border-radius:3px;padding:0 4px;font-size:0.72rem;">HIDDEN 1pg</span>.
+        Issues and Share% columns count shown sub-issues only, matching portal behaviour.
+      </p>
+    </div>
+  </div>
+
+  <p style="font-size:0.75rem;color:#64748b;margin-top:1.5rem;text-align:center;">
+    Run <code style="color:#64748b">b0dcf193-15ad-43c3-bd8d-1517a5fb057a</code> &middot; cecotestacc.github.io/shared-components &middot; DESKTOP &middot; 2026-09-29 17:46
+  </p>
+
+</div>
+</body>
+</html>

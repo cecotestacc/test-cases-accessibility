@@ -8,8 +8,8 @@ Usage: python3 generate_verification_report.py
 import json
 from collections import defaultdict
 
-INPUT_JSON = r"C:\Users\TsvetomirTsanov\Downloads\scan-run-raw-2026-09-29_14-10-12.json"
-OUTPUT_HTML = r"C:\newgithubaccountfolder\test-cases-accessibility\shared-components\verification-report-2026-09-29.html"
+INPUT_JSON = r"C:\Users\TsvetomirTsanov\Downloads\scan-run-raw-2026-09-29_17-46-57.json"
+OUTPUT_HTML = r"C:\newgithubaccountfolder\test-cases-accessibility\shared-components\verification-report-2026-09-29-1746.html"
 
 TOTAL_PAGES = 25
 

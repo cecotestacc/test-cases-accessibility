@@ -81,29 +81,45 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
 <div class="page">
 
   <div class="report-header">
-    <h1>Expected Results <span class="vs">Regression Baseline v2</span></h1>
-    <div class="meta">Feature: Shared Components grouping &nbsp;·&nbsp; Scan config: SharedComponents-tests &nbsp;·&nbsp; Org: ceco (dev) &nbsp;·&nbsp; 25 pages · 12 components · ~231 violations &nbsp;·&nbsp; 2025-09-29</div>
+    <h1>Expected Results <span class="vs">Regression Baseline v3 · Run 2026-09-29 17:46</span></h1>
+    <div class="meta">Feature: Shared Components grouping &nbsp;·&nbsp; Scan config: SharedComponents-tests &nbsp;·&nbsp; Org: ceco (dev) &nbsp;·&nbsp; 25 pages · 16 designed components · 1311 actual desktop violations &nbsp;·&nbsp; Updated 2026-09-29</div>
   </div>
 
   <div class="tldr">
-    <strong>How to use:</strong> Run <em>SharedComponents-tests</em> in QualiBooth dev. Open the Shared Components tab. Compare every metric below against what the portal shows. Record any deviation as a regression. Check the total violations count <strong>first</strong> — all share-of-run percentages depend on the correct denominator.
+    <strong>How to use:</strong> Run <em>SharedComponents-tests</em> in QualiBooth dev. Open the Shared Components tab. Compare every metric below against what the portal shows. Record any deviation as a regression. <strong>The actual total violations (1311) is the correct denominator</strong> — it includes both engineered violations and unintended noise from the page structure. All share% values in this document use 1311.
   </div>
 
-  <h2>Run-Level Baseline</h2>
+  <h2>Actual Run Baseline (2026-09-29 17:46)</h2>
   <div class="metrics">
     <div class="metric blue"><div class="num">25</div><div class="label">Pages in run</div></div>
-    <div class="metric tp"><div class="num">12</div><div class="label">Shared components expected</div></div>
-    <div class="metric pct"><div class="num">~231</div><div class="label">Total violations (denominator)</div></div>
-    <div class="metric blue"><div class="num">14</div><div class="label">Distinct issue types</div></div>
+    <div class="metric tp"><div class="num">124</div><div class="label">Components in portal</div></div>
+    <div class="metric pct"><div class="num">1311</div><div class="label">Total violations (denominator)</div></div>
+    <div class="metric blue"><div class="num">16</div><div class="label">Engineered components</div></div>
   </div>
 
   <div class="finding">
-    <div class="finding-header blue"><span>Denominator note</span></div>
+    <div class="finding-header blue"><span>Denominator note — actual vs designed</span></div>
     <div class="finding-body">
-      <p>~231 is the designed total. Actual may differ slightly if axe-core reports violations on child elements rather than the parent selector (e.g. <code>.tooltip-content</code> instead of <code>.tooltip-btn</code>). Verify the actual total before computing share percentages.</p>
-      <div class="insight-box blue">Step 1 of every regression run: confirm total violations = ~231. If different, investigate before asserting other failures.</div>
+      <p>The designed violation total was ~239 (engineered components only). The actual total is <strong>1311</strong> because the scan also detects noise from unintended violations: AAA colour contrast on most text elements, reflow at 320px, focus-not-obscured from the cookie banner, missing main landmark, and content outside landmarks. This is expected and not a portal bug.</p>
+      <p>All share-of-run percentages below use <strong>1311</strong> as the denominator. Designed share percentages (based on ~239) are shown in parentheses for reference.</p>
+      <div class="insight-box blue">Step 1 of every regression run: read the total violation count. If it changes significantly from 1311, investigate which pages or components changed before asserting share-% regressions.</div>
     </div>
   </div>
+
+  <div class="finding">
+    <div class="finding-header teal"><span>Changes since v2 baseline (run 14:10 → 17:46)</span></div>
+    <div class="finding-body">
+      <p><strong>Input (newsletter-input) label violation: now working.</strong> After removing placeholder from violation pages, the <code>label</code> rule fires on 5 pages. Portal shows <code>input</code> at 8 pages, 10 issues, 2 types (label Critical 5occ/5pg + region Medium 5occ/5pg).</p>
+      <p><strong>Tooltip ARIA violations: correctly grouped</strong> by parent context into 4 components. All use <code>aria-controls="tooltip-panel"</code>.</p>
+      <p><strong>#product-modal: 3 pages not 5</strong> — product-accessories.html and product-shirts.html not triggering the modal lifecycle behavioral check. Residual bug.</p>
+      <p><strong>#qv-trigger: 3 modal-lifecycle Critical</strong> (was 4) — same cause as above.</p>
+      <p><strong>#cookie-banner: 18 pages</strong> (was 19) — one fewer AAA-only-obscured page.</p>
+      <p><strong>.section-divider: still 2/25</strong> — blog.html generates bare <code>h2</code> selector instead of <code>.section-divider</code>.</p>
+    </div>
+  </div>
+
+  <h2>Engineered Component Baselines</h2>
+  <p style="font-size:0.82rem;color:#94a3b8;margin-bottom:1rem;">Share% uses actual denominator of 1311. Designed share% (using ~239) shown in parentheses.</p>
 
   <h2>Expected Shared Components (12 entries)</h2>
 
