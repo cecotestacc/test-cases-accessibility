@@ -384,7 +384,25 @@ For each component (grouped by selector):
 
 ---
 
-### Step 4 — Verify every metric for every component
+### Step 4 — Verify every metric for EVERY shared component
+
+**All metrics must be verified for all components — not just the ones pasted.** The six key metrics to check per component are:
+
+1. **Pages affected** (count and %)
+2. **Issues here** (total violation count, threshold-adjusted)
+3. **% of all issues / Share of run** (issues_here / total_violations × 100)
+4. **Issue types** (count of shown sub-issues)
+5. **X occurrences across X pages** (per each issue type within the component)
+6. **By-severity page breakdown** (the numbers shown before "N issue types")
+
+If the user pastes only a subset of the portal output, do not silently skip the rest. Instead:
+
+1. Compute all components from the JSON (using the generator script) and produce the full report.
+2. Explicitly state how many components were in the pasted text vs the total in the portal.
+3. For components NOT in the pasted text: show the JSON-computed values and note they are unverified against the portal display.
+4. Ask the user if they want to paste the remaining components for a complete check, or accept the JSON-computed values as the baseline.
+
+Only mark verification as complete when all components have been checked — either by comparing pasted portal text or by explicit user acceptance of the JSON-computed values.
 
 For each component in the pasted portal text, check all of the following:
 
