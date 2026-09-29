@@ -313,14 +313,17 @@ Do not add `summary.html`, `expected-results.html`, `test-coverage.html`, `READM
 
 The scan will always contain violations beyond the 16 engineered components. These are expected and should not be treated as failures. Do not try to fix them unless they interfere with the engineered component metrics.
 
-| Noise source | Root cause | Affects |
-|---|---|---|
-| AAA colour contrast (`color-contrast-enhanced`) | Most text colours pass AA but fail AAA 7:1 threshold | Card text, footer text, nav links, promo line text |
-| Reflow at 320px (`reflow`) | Sticky nav + cookie banner cause horizontal scroll at narrow widths | Nav links, some content elements |
-| Focus not obscured — cookie banner (`focus-obscured`) | Fixed `#cookie-banner` at bottom of viewport covers elements when tabbing near bottom | `#cookie-banner`, footer nav links |
-| Focus visible on nav links | Browser default focus ring doesn't meet AAA 2.4.13 contrast threshold | All `nav.site-nav` links |
-| Missing main landmark (`landmark-one-main`) | Pages without `<main>` element | "Whole page" component, any page missing `<main>` |
-| Content outside landmarks (`region`) | Content divs not wrapped in `<main>` | `.page-hero`, `.content`, `.section-title`, etc. |
+A noise-reduction pass was applied in commit `8e7078b` (2026-09-29) — AAA colour contrast was fixed for most elements and explicit focus rings were added to nav links. Actual violations dropped from 1,418 (run 1) to 761 (run 4), and components from 141 to 80.
+
+| Noise source | Status | Root cause | Affects |
+|---|---|---|---|
+| AAA colour contrast — most elements (`color-contrast-enhanced`) | **ELIMINATED** — colours fixed to pass AAA | Colours darkened: card text → `#334155`, price → `#1e40af`, footer → `#b0bec9`, promo-bar bg → `#1940b8` | Was: card text, footer, promo-line |
+| AAA colour contrast — newsletter subscribe buttons | **RESIDUAL** — not yet fixed | Inline subscribe buttons in newsletter sections still use old `#1d4ed8` background not reached by batch CSS fix | `div:nth-child(5/6/7) > div > button` on sale/trending/new-arrivals |
+| Reflow at 320px (`reflow`) | **RESIDUAL** | Sticky nav causes horizontal scroll at narrow widths | Nav links on 20+ pages |
+| Focus not obscured — cookie banner (`focus-obscured`) | **RESIDUAL** | Fixed `#cookie-banner` at bottom covers elements when tabbing near bottom | `#cookie-banner`, footer nav links |
+| Focus visible on nav links (AAA) | **ELIMINATED** — focus ring added | Explicit `a:focus-visible { outline: 2px solid #a5b4fc }` added to both nav elements | Was: all `nav.site-nav` and `nav.footer-nav` links |
+| Missing main landmark (`landmark-one-main`) | **RESIDUAL** | 17 of 25 pages missing `<main>` | "Whole page" component |
+| Content outside landmarks (`region`) | **RESIDUAL** | Content divs not wrapped in `<main>` | `.page-hero`, `.content`, `.section-title`, etc. |
 
 ---
 

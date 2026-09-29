@@ -133,7 +133,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     <div class="metric tp"><div class="num">16</div><div class="label">Shared components</div></div>
     <div class="metric teal"><div class="num">14</div><div class="label">Accessibility issue types</div></div>
     <div class="metric pct"><div class="num">4</div><div class="label">Severity levels covered</div></div>
-    <div class="metric tp"><div class="num">~239</div><div class="label">Estimated total violations</div></div>
+    <div class="metric tp"><div class="num">~761</div><div class="label">Actual violations (run 4, post noise-fix)</div></div>
     <div class="metric blue"><div class="num">0</div><div class="label">Gaps remaining</div></div>
   </div>
 
@@ -160,7 +160,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     <div class="score-card green">
       <div class="check-name">Share of run %</div>
       <div class="score-line"><span class="badge badge-green">✓ Covered</span></div>
-      <div class="note">&lt;1% to 21.6%. Tests calculation accuracy across the full denominator (~239 total).</div>
+      <div class="note">&lt;1% to 21.6%. Tests calculation accuracy across the full denominator (~761 in run 4 post noise-fix; engineered components alone ≈239).</div>
     </div>
     <div class="score-card green">
       <div class="check-name">Issue types per component</div>
@@ -577,7 +577,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       <tr><td><code>.hero-section</code></td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: gradient luminance computation</td></tr>
       <tr><td><code>.tooltip-btn</code> (ARIA)</td><td class="hit">✓</td><td class="hit">✓</td><td>Standard axe rule: aria-valid-attr-value</td></tr>
       <tr><td><code>.tooltip-btn</code> (hover/focus 3×)</td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: CSS/JS interaction simulation</td></tr>
-      <tr><td><code>#toast-region</code></td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: region JS-created with content at instantiation (static HTML not detected)</td></tr>
+      <tr><td><code>#toast-region</code></td><td class="miss">—</td><td class="miss">—*</td><td>Behavioral: live-region-with-content NOT in JSON export. JS injection with setTimeout(300ms) confirmed — rule still not detected across all 4 scan runs. Only focus-obscured fires on 2 pages.</td></tr>
       <tr><td><code>#product-modal</code></td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: focus-return analysis on modal close</td></tr>
       <tr><td><code>.modal-close</code></td><td class="hit">✓</td><td class="hit">✓</td><td>axe rule: focus-visible / scrollable-region</td></tr>
       <tr><td><code>h3.section-title</code></td><td class="hit">✓</td><td class="hit">✓</td><td>Standard axe rule: heading-order</td></tr>
@@ -588,7 +588,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       <tr><td><code>.newsletter-input</code></td><td class="hit">✓</td><td class="hit">✓</td><td>Standard axe rule: label</td></tr>
     </tbody>
   </table>
-  <p style="font-size:0.75rem;color:#64748b;margin-bottom:1.5rem;">axe-core only: 13/16 components have at least one axe-core rule firing (.hero-section, #product-modal, and #toast-region are behavioral-only). Full behavioral: all 16 fire. Behavioral-only rules require QualiBooth's deep scan mode.</p>
+  <p style="font-size:0.75rem;color:#64748b;margin-bottom:1.5rem;">axe-core only: 13/16 components have at least one axe-core rule firing. Behavioral-only (no axe): .hero-section, #product-modal, #toast-region. * #toast-region: the live-region-with-content behavioral rule does NOT appear in the raw JSON export across all 4 scan runs — confirmed absent. Only focus-obscured (noise) fires on that selector.</p>
 
   <!-- ═══ KEY REGRESSION ASSERTIONS ══════════════════════════════════════════ -->
   <h2>Key regression assertions</h2>

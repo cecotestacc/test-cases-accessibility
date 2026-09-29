@@ -24,7 +24,9 @@ The pages simulate a fictional e-commerce site called **Lumino**. Every accessib
 | Shared components | 16 |
 | Accessibility issue types | 14 |
 | Severity levels | Critical, High, Moderate, Low (all 4) |
-| Estimated total violations | ~239 |
+| Engineered violations (designed) | ~239 |
+| Actual violations — latest scan (run 4, 2026-09-29) | ~761 |
+| Noise reduction applied | Yes — AAA colours fixed, nav focus rings added |
 | Scan config | `SharedComponents-tests` (org: `ceco`, QualiBooth dev) |
 
 ---
