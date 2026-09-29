@@ -77,22 +77,6 @@
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
 
-    /* QA Info Panel */
-    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
-    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
-    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
-    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
-    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
-    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
-    .qa-panel dd { margin: 0; }
-    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
-    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
-    .qa-panel li { margin-bottom: 3px; }
-    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
-    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -115,63 +99,9 @@
 
 <!-- VIOLATION 7: toast live-region — content already present in DOM on page load;
      a live region must be empty at load time and receive content dynamically to be announced -->
-<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
-  <span>✓</span> 1 item saved to your wishlist
-</div>
+
 
 <div class="page-hero">
-  <div class="qa-panel">
-    <div class="qa-panel-header">
-      <span class="qa-case-num">Case #18</span>
-      <span class="qa-rule-id">shared-components / product-shirts</span>
-    </div>
-    <dl>
-      <dt>WCAG criteria</dt>
-      <dd>
-        1.4.4 Resize Text — AA ·
-        1.4.3 Contrast (Minimum) — AA ·
-        1.4.12 Text Spacing — AA ·
-        1.3.1 Info and Relationships — A ·
-        2.4.3 Focus Order — A ·
-        2.4.7 Focus Visible — AA ·
-        2.5.3 Label in Name — A ·
-        4.1.2 Name, Role, Value — A ·
-        1.3.6 Identify Purpose — AAA
-      </dd>
-      <dt>Elements with errors</dt>
-      <dd><ul>
-        <li><code>&lt;meta name="viewport" … user-scalable=no&gt;</code></li>
-        <li><code>nav.site-nav</code> (no <code>aria-label</code>)</li>
-        <li><code>#promo-bar</code> with <code>.promo-line</code> children</li>
-        <li><code>#cookie-banner .cookie-btn</code></li>
-        <li><code>.hero-section h2</code> and <code>.hero-section p</code></li>
-        <li><code>.tooltip-btn[aria-controls="NONEXISTENT-ID-1/2/3"]</code></li>
-        <li><code>#toast-region</code> (content present at load)</li>
-        <li><code>#product-modal</code> / <code>.modal-close</code></li>
-        <li><code>h3.section-title</code> (skips h2)</li>
-        <li><code>a.ghost-cta</code></li>
-        <li><code>nav.footer-nav</code> (no <code>aria-label</code>)</li>
-      </ul></dd>
-      <dt>Issues</dt>
-      <dd><ul>
-        <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>user-scalable=no, maximum-scale=1.0</code> prevents pinch-zoom; fails Resize Text.</li>
-        <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>nav.site-nav</code> has no <code>aria-label</code>; duplicate landmark when <code>nav.footer-nav</code> is also unlabelled.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code>: <code>height:40px; overflow:hidden; line-height:1.2</code> — second promo line clips when user text-spacing is applied.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code>: <code>#ffffff</code> on <code>#93c5fd</code> ≈ 2.2:1, fails 4.5:1 minimum.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.hero-section h2</code> / <code>p</code>: white and near-white text over a vivid pastel gradient — insufficient contrast across the gradient range.</li>
-        <li><span class="qa-error-tag">ERROR 2.1.1</span> <code>.tooltip-content</code>: shown on <code>:hover</code> only — keyboard users cannot reveal it.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.13</span> Tooltip not dismissible (no Escape handler) and not persistent (pointer-events:none).</li>
-        <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>aria-controls="NONEXISTENT-ID-1/2/3"</code> references IDs that do not exist in the DOM.</li>
-        <li><span class="qa-error-tag">ERROR 4.1.3</span> <code>#toast-region</code> has content already in the DOM at load time; live regions must start empty to trigger announcements.</li>
-        <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>.modal-close:focus-visible{outline:none;box-shadow:none}</code> removes focus indicator with no replacement.</li>
-        <li><span class="qa-error-tag">ERROR 2.4.3</span> <code>closeModal()</code> does not restore focus to the trigger after the dialog closes (modal lifecycle violation).</li>
-        <li><span class="qa-error-tag">ERROR 1.3.1</span> <code>h3.section-title</code> follows <code>h1</code> directly — heading level skips h2, breaking document outline.</li>
-        <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>a.ghost-cta:focus-visible{outline:none;box-shadow:none}</code> removes focus indicator with no replacement.</li>
-        <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>nav.footer-nav</code> has no <code>aria-label</code>; indistinguishable from <code>nav.site-nav</code> in landmark list.</li>
-      </ul></dd>
-    </dl>
-  </div>
-
   <!-- VIOLATION 9: heading-order — h3 immediately after h1 with no h2 in between -->
   <h1>Shirts</h1>
   <h3 class="section-title">Our Shirt Collection</h3>
@@ -195,20 +125,20 @@
 
     <!-- aria-controls references "NONEXISTENT-ID-1" which does not exist in the DOM -->
     <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-1">Fit Guide</button>
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Fit Guide</button>
       <!-- tooltip shown on :hover only — no :focus equivalent -->
       <div class="tooltip-content">Measure chest and consult our size chart for best fit.</div>
     </div>
 
     <!-- aria-controls references "NONEXISTENT-ID-2" which does not exist in the DOM -->
     <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-2">Care Tips</button>
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Care Tips</button>
       <div class="tooltip-content">Machine wash cold, tumble dry low to preserve fabric.</div>
     </div>
 
     <!-- aria-controls references "NONEXISTENT-ID-3" which does not exist in the DOM -->
     <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-3">Fabric Info</button>
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Fabric Info</button>
       <div class="tooltip-content">GOTS-certified organic cotton, ethically sourced.</div>
     </div>
   </div>
@@ -296,5 +226,20 @@
   }
 </script>
 
+<script>
+/* VIOLATION: live-region-with-content — region is created with content already present.
+   The correct pattern is to create the region empty, then inject content; this does the
+   opposite, triggering the 'live-region-created-with-content' behavioral check. */
+(function() {
+  var toast = document.createElement('div');
+  toast.id = 'toast-region';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.cssText = 'position:fixed;top:80px;right:20px;background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;font-size:0.875rem;border-left:4px solid #22c55e;z-index:400;max-width:300px;';
+  toast.textContent = '✓ Item added to your bag';
+  document.body.appendChild(toast);
+})();
+</script>
 </body>
 </html>

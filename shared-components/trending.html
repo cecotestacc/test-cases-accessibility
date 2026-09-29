@@ -124,18 +124,18 @@
   <!-- VIOLATION: tooltip — hover-only (no :focus), not-dismissible (no Escape handler), not-persistent, aria-controls points to nonexistent IDs -->
   <div style="display:flex;gap:16px;margin:16px 0 28px;flex-wrap:wrap;">
     <div class="tooltip-wrapper">
-      <!-- aria-controls="tooltip-info-1" — element with id="tooltip-info-1" does not exist -->
-      <button class="tooltip-btn" aria-controls="tooltip-info-1">Pastel trend info</button>
+      <!-- aria-controls="tooltip-panel" — element with id="tooltip-info-1" does not exist -->
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Pastel trend info</button>
       <div class="tooltip-content">Pastels up 38% in saves this week. Linen blends lead the category.</div>
     </div>
     <div class="tooltip-wrapper">
-      <!-- aria-controls="tooltip-info-2" — element with id="tooltip-info-2" does not exist -->
-      <button class="tooltip-btn" aria-controls="tooltip-info-2">Oversized fit info</button>
+      <!-- aria-controls="tooltip-panel" — element with id="tooltip-info-2" does not exist -->
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Oversized fit info</button>
       <div class="tooltip-content">Oversized silhouettes trending across all age groups. Size up one for the look.</div>
     </div>
     <div class="tooltip-wrapper">
-      <!-- aria-controls="tooltip-info-3" — element with id="tooltip-info-3" does not exist -->
-      <button class="tooltip-btn" aria-controls="tooltip-info-3">Retro prints info</button>
+      <!-- aria-controls="tooltip-panel" — element with id="tooltip-info-3" does not exist -->
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Retro prints info</button>
       <div class="tooltip-content">70s-inspired prints seeing a 52% surge. Pair with neutral basics.</div>
     </div>
   </div>
@@ -184,7 +184,7 @@
     <p style="font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:6px;">Trending in your inbox</p>
     <p style="font-size:0.875rem;color:#475569;margin-bottom:12px;">Weekly edit of what everyone is buying — straight to you.</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <input type="email" class="newsletter-input" placeholder="Your email address" style="padding:9px 14px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.875rem;flex:1;min-width:180px;">
+      <input type="email" class="newsletter-input" style="padding:9px 14px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.875rem;flex:1;min-width:180px;">
       <button style="background:#1d4ed8;color:#fff;border:none;padding:9px 18px;border-radius:5px;font-size:0.875rem;cursor:pointer;font-family:inherit;">Subscribe</button>
     </div>
   </div>

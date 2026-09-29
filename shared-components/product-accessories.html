@@ -98,9 +98,7 @@
 
 <!-- VIOLATION: live-region already populated on page load — screen readers will not announce the
      content because the live region must be empty when injected into the DOM. -->
-<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
-  <span>&#10003;</span> 1 item saved to your wishlist
-</div>
+
 
 <div class="page-hero">
   <h1>Accessories</h1>
@@ -201,5 +199,20 @@
   }
 </script>
 
+<script>
+/* VIOLATION: live-region-with-content — region is created with content already present.
+   The correct pattern is to create the region empty, then inject content; this does the
+   opposite, triggering the 'live-region-created-with-content' behavioral check. */
+(function() {
+  var toast = document.createElement('div');
+  toast.id = 'toast-region';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.cssText = 'position:fixed;top:80px;right:20px;background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;font-size:0.875rem;border-left:4px solid #22c55e;z-index:400;max-width:300px;';
+  toast.textContent = '✓ Item added to your bag';
+  document.body.appendChild(toast);
+})();
+</script>
 </body>
 </html>

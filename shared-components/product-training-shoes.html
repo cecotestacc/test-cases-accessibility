@@ -77,22 +77,6 @@
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
 
-    /* QA Info Panel — copy verbatim, do not modify */
-    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
-    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
-    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
-    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
-    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
-    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
-    .qa-panel dd { margin: 0; }
-    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
-    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
-    .qa-panel li { margin-bottom: 3px; }
-    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
-    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -114,9 +98,7 @@
 </div>
 
 <!-- VIOLATION: live-region pre-populated — content present in the DOM at page load means AT will not announce it -->
-<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
-  <span>✓</span> 1 item saved to your wishlist
-</div>
+
 
 <div class="page-hero">
   <!-- h1 is correct; heading-order violation is the h3 that follows directly with no h2 between -->
@@ -169,20 +151,20 @@
   <p class="body-text">Hover over each badge to learn more about the technology behind our training shoes.</p>
 
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
-    <!-- VIOLATION: aria-controls="NONEXISTENT-ID-1" — referenced element does not exist -->
+    <!-- VIOLATION: aria-controls="tooltip-panel" — referenced element does not exist -->
     <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-1">Dual-Density Midsole</button>
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Dual-Density Midsole</button>
       <!-- VIOLATION: tooltip only appears on :hover — no :focus equivalent in CSS -->
       <div class="tooltip-content">Two-layer foam absorbs impact while keeping a stable base.</div>
     </div>
-    <!-- VIOLATION: aria-controls="NONEXISTENT-ID-2" — referenced element does not exist -->
+    <!-- VIOLATION: aria-controls="tooltip-panel" — referenced element does not exist -->
     <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-2">Lateral Lock System</button>
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Lateral Lock System</button>
       <div class="tooltip-content">Reinforced upper cage prevents ankle roll on lateral moves.</div>
     </div>
-    <!-- VIOLATION: aria-controls="NONEXISTENT-ID-3" — referenced element does not exist -->
+    <!-- VIOLATION: aria-controls="tooltip-panel" — referenced element does not exist -->
     <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-3">Grip-Zone Outsole</button>
+      <button class="tooltip-btn" aria-controls="tooltip-panel">Grip-Zone Outsole</button>
       <div class="tooltip-content">Zoned rubber compounds optimised for gym and turf surfaces.</div>
     </div>
   </div>
@@ -226,49 +208,6 @@
   </div>
 </footer>
 
-<div class="qa-panel">
-  <div class="qa-panel-header">
-    <span class="qa-case-num">Case #18</span>
-    <span class="qa-rule-id">shared-components / product-training-shoes</span>
-  </div>
-  <dl>
-    <dt>WCAG criteria</dt>
-    <dd>Multiple — see Issues below</dd>
-    <dt>Elements with errors</dt>
-    <dd>
-      <code>&lt;meta name="viewport"&gt;</code>,
-      <code>nav.site-nav</code>,
-      <code>#promo-bar</code>,
-      <code>.cookie-btn</code>,
-      <code>.hero-section h2</code>,
-      <code>.hero-section p</code>,
-      <code>.tooltip-btn[aria-controls]</code>,
-      <code>#toast-region</code>,
-      <code>.modal-close</code>,
-      <code>#product-modal</code> (JS),
-      <code>h3.section-title</code>,
-      <code>.ghost-cta</code>,
-      <code>nav.footer-nav</code>
-    </dd>
-    <dt>Issues</dt>
-    <dd><ul>
-      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>meta viewport</code> — <code>user-scalable=no</code> and <code>maximum-scale=1.0</code> prevent user zoom (Resize Text, Level AA)</li>
-      <li><span class="qa-error-tag">ERROR 1.3.6 / 2.4.1</span> <code>nav.site-nav</code> — unlabelled <code>&lt;nav&gt;</code> landmark; two <code>&lt;nav&gt;</code> elements on page with no distinguishing <code>aria-label</code></li>
-      <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code> — fixed <code>height:40px</code> + <code>overflow:hidden</code> clips second promo line when text-spacing is increased per SC 1.4.12</li>
-      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code> — <code>#ffffff</code> on <code>#93c5fd</code> yields contrast ratio ≈ 2.2:1; minimum required is 4.5:1</li>
-      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.hero-section h2</code> / <code>p</code> — white and near-white text over vivid mid-gradient (<code>#60a5fa</code>→<code>#c084fc</code>→<code>#f472b6</code>) fails contrast at gradient midpoints</li>
-      <li><span class="qa-error-tag">ERROR 1.3.1 / 4.1.2</span> <code>.tooltip-btn aria-controls</code> — <code>aria-controls</code> on all three buttons references IDs that do not exist in the DOM</li>
-      <li><span class="qa-error-tag">ERROR 1.4.13</span> <code>.tooltip-content</code> — tooltip only shown on <code>:hover</code>; no <code>:focus</code> equivalent; content is not dismissible without moving pointer, not persistent on hover</li>
-      <li><span class="qa-error-tag">ERROR 4.1.3</span> <code>#toast-region</code> — live region (<code>role="status"</code> + <code>aria-live="polite"</code>) contains content already present in the DOM at page load; AT will not announce pre-populated live-region content</li>
-      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>.modal-close</code> — <code>outline:none; box-shadow:none</code> removes focus indicator with no accessible replacement (Focus Appearance, Level AA)</li>
-      <li><span class="qa-error-tag">ERROR 2.1.2 / 3.2.1</span> <code>#product-modal JS</code> — <code>closeModal()</code> removes the modal without restoring focus to the trigger element (<code>#qv-trigger</code>); modal lifecycle violation</li>
-      <li><span class="qa-error-tag">ERROR 1.3.1 / 2.4.6</span> <code>h3.section-title</code> — heading level jumps from <code>&lt;h1&gt;</code> directly to <code>&lt;h3&gt;</code>; no <code>&lt;h2&gt;</code> exists between them</li>
-      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>.ghost-cta</code> — <code>outline:none; box-shadow:none</code> removes focus indicator with no accessible replacement</li>
-      <li><span class="qa-error-tag">ERROR 1.3.6 / 2.4.1</span> <code>nav.footer-nav</code> — second unlabelled <code>&lt;nav&gt;</code> landmark; indistinguishable from <code>nav.site-nav</code></li>
-    </ul></dd>
-  </dl>
-</div>
-
 <script>
   function openModal() {
     // VIOLATION: modal-lifecycle — trigger focus is not saved before opening
@@ -281,5 +220,20 @@
   }
 </script>
 
+<script>
+/* VIOLATION: live-region-with-content — region is created with content already present.
+   The correct pattern is to create the region empty, then inject content; this does the
+   opposite, triggering the 'live-region-created-with-content' behavioral check. */
+(function() {
+  var toast = document.createElement('div');
+  toast.id = 'toast-region';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.cssText = 'position:fixed;top:80px;right:20px;background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;font-size:0.875rem;border-left:4px solid #22c55e;z-index:400;max-width:300px;';
+  toast.textContent = '✓ Item added to your bag';
+  document.body.appendChild(toast);
+})();
+</script>
 </body>
 </html>

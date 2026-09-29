@@ -75,49 +75,9 @@
     .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
-
-    /* ── QA Info Panel ── (copy verbatim, do not modify) */
-    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
-    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
-    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
-    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
-    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
-    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
-    .qa-panel dd { margin: 0; }
-    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
-    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
-    .qa-panel li { margin-bottom: 3px; }
-    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
-    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
   </style>
 </head>
 <body>
-
-<div class="qa-panel">
-  <div class="qa-panel-header">
-    <span class="qa-case-num">Page 25</span>
-    <span class="qa-rule-id">Lumino / shared-components / store-locator</span>
-  </div>
-  <dl>
-    <dt>Page</dt>
-    <dd>Find a Store — support/utility page (no promo-bar, no cookie banner, no hero, no tooltips, no toast, no modal, no ghost-cta, no heading skip)</dd>
-    <dt>Elements with errors</dt>
-    <dd>
-      <code>&lt;meta name="viewport"&gt;</code>,
-      <code>nav.site-nav</code> (no <code>aria-label</code>),
-      <code>nav.footer-nav</code> (no <code>aria-label</code>)
-    </dd>
-    <dt>Issues</dt>
-    <dd><ul>
-      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>meta viewport</code> sets <code>user-scalable=no</code> and <code>maximum-scale=1.0</code> — prevents text resize / zoom</li>
-      <li><span class="qa-error-tag">ERROR landmark-unique</span> <code>nav.site-nav</code> has no <code>aria-label</code> — indistinguishable from footer nav for AT users; sticky positioning also risks focus-not-obscured</li>
-      <li><span class="qa-error-tag">ERROR landmark-unique</span> <code>nav.footer-nav</code> has no <code>aria-label</code> — second unlabelled <code>&lt;nav&gt;</code> on the same page</li>
-    </ul></dd>
-  </dl>
-</div>
 
 <!-- site nav — VIOLATION: no aria-label (landmark-unique) + sticky (focus-not-obscured) -->
 <nav class="site-nav">

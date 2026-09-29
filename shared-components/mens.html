@@ -76,23 +76,6 @@
     .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
-
-    /* ── QA Info Panel ── (copy verbatim, do not modify) */
-    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
-    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
-    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
-    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
-    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
-    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
-    .qa-panel dd { margin: 0; }
-    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
-    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
-    .qa-panel li { margin-bottom: 3px; }
-    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
-    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -113,31 +96,6 @@
 </div>
 
 <!-- VIOLATION: live region has content already in DOM at load time — announcements are not read by screen readers (WCAG 4.1.3) -->
-<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">&#x2713; Your wishlist has been updated</div>
-
-<div class="qa-panel">
-  <div class="qa-panel-header">
-    <span class="qa-case-num">Case #18</span>
-    <span class="qa-rule-id">shared-components / mens</span>
-  </div>
-  <dl>
-    <dt>WCAG criteria</dt>
-    <dd>Multiple — see individual issues below</dd>
-    <dt>Elements with errors</dt>
-    <dd><code>&lt;meta name="viewport"&gt;</code>, <code>nav.site-nav</code>, <code>#promo-bar</code>, <code>#cookie-banner .cookie-btn</code>, <code>#toast-region</code>, <code>h3.section-title</code>, <code>a.ghost-cta</code>, <code>nav.footer-nav</code></dd>
-    <dt>Issues</dt>
-    <dd><ul>
-      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>user-scalable=no, maximum-scale=1.0</code> on viewport meta — pinch-zoom disabled for all users</li>
-      <li><span class="qa-error-tag">ERROR 1.3.6 / 2.4.1</span> <code>nav.site-nav</code> has no <code>aria-label</code> — indistinguishable from <code>nav.footer-nav</code> when two nav landmarks exist</li>
-      <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code> uses <code>height:40px; overflow:hidden; line-height:1.2</code> — text clips when letter-spacing or line-height is increased via user stylesheet</li>
-      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code> background <code>#93c5fd</code> with <code>color:#ffffff</code> yields approximately 2.2:1 contrast ratio — fails AA minimum of 4.5:1 for normal text</li>
-      <li><span class="qa-error-tag">ERROR 4.1.3</span> <code>#toast-region</code> is a live region with content already present in the DOM at page load — screen readers do not announce pre-existing live-region content</li>
-      <li><span class="qa-error-tag">ERROR 1.3.1 / 2.4.6</span> <code>h3.section-title</code> ("Featured picks") follows <code>h1</code> directly with no intervening <code>h2</code> — heading level skipped</li>
-      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>a.ghost-cta</code> suppresses all focus indicators via <code>outline:none; box-shadow:none</code> with no replacement — keyboard focus not visible</li>
-      <li><span class="qa-error-tag">ERROR 1.3.6 / 2.4.1</span> <code>nav.footer-nav</code> has no <code>aria-label</code> — indistinguishable from <code>nav.site-nav</code></li>
-    </ul></dd>
-  </dl>
-</div>
 
 <div class="page-hero">
   <h1>Men's Collection</h1>
@@ -176,7 +134,6 @@
     </div>
   </div>
 
-  <h2 class="section-h2">Browse the full range</h2>
   <p class="body-text">From tailored essentials to relaxed weekend wear, the men's edit brings together considered pieces built for the long term. Every style is cut for comfort and refined over multiple seasons.</p>
 
   <!-- VIOLATION: .ghost-cta:focus and :focus-visible both set outline:none; box-shadow:none with no replacement indicator -->
@@ -205,5 +162,20 @@
   </div>
 </footer>
 
+<script>
+/* VIOLATION: live-region-with-content — region is created with content already present.
+   The correct pattern is to create the region empty, then inject content; this does the
+   opposite, triggering the 'live-region-created-with-content' behavioral check. */
+(function() {
+  var toast = document.createElement('div');
+  toast.id = 'toast-region';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.cssText = 'position:fixed;top:80px;right:20px;background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;font-size:0.875rem;border-left:4px solid #22c55e;z-index:400;max-width:300px;';
+  toast.textContent = '✓ Item added to your bag';
+  document.body.appendChild(toast);
+})();
+</script>
 </body>
 </html>

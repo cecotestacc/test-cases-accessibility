@@ -76,23 +76,6 @@
     .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
-
-    /* ── QA Info Panel ── (copy verbatim, do not modify) */
-    .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
-    .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-    .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
-    .qa-rule-id { font-weight: 700; font-size: 1rem; color: #a5b4fc; font-family: monospace; }
-    .qa-panel dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 6px 16px; align-items: start; }
-    .qa-panel dd, .qa-panel a { overflow-wrap: break-word; min-width: 0; }
-    .qa-panel dt { font-weight: 600; color: #7dd3fc; white-space: nowrap; }
-    .qa-panel dd { margin: 0; }
-    .qa-panel code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; color: #f9a8d4; font-family: monospace; }
-    .qa-panel ul { margin: 4px 0 0; padding-left: 18px; }
-    .qa-panel li { margin-bottom: 3px; }
-    .qa-error-tag { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
-    .qa-pass-tag { display: inline-block; background: #14532d; color: #86efac; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-source-tag { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
-    .qa-fp-tag { display: inline-block; background: #78350f; color: #fde68a; border-radius: 3px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -113,59 +96,6 @@
 </div>
 
 <!-- VIOLATION: live-region-on-load — content present in DOM at page load; AT announced nothing when the region was created, so this update is missed -->
-<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
-  <span>&#10003;</span> 1 item saved to your wishlist.
-</div>
-
-<div class="qa-panel">
-  <div class="qa-panel-header">
-    <span class="qa-case-num">Case #18</span>
-    <span class="qa-rule-id">shared-components / product-jackets</span>
-  </div>
-  <dl>
-    <dt>WCAG criteria</dt>
-    <dd>
-      1.3.1 Info and Relationships — A |
-      1.4.3 Contrast (Minimum) — AA |
-      1.4.4 Resize Text — AA |
-      1.4.12 Text Spacing — AA |
-      2.4.3 Focus Order — A |
-      2.4.6 Headings and Labels — AA |
-      2.4.7 Focus Visible — AA |
-      2.4.11 Focus Not Obscured — AA |
-      4.1.2 Name, Role, Value — A |
-      4.1.3 Status Messages — AA
-    </dd>
-    <dt>Elements with errors</dt>
-    <dd>
-      <code>&lt;meta name="viewport"&gt;</code>,
-      <code>nav.site-nav</code> (no aria-label),
-      <code>#promo-bar</code> (height clipped),
-      <code>.cookie-btn</code> (low contrast),
-      <code>.hero-section h2 &amp; p</code> (gradient contrast),
-      <code>#toast-region</code> (content pre-populated on load),
-      <code>.modal-close</code> (no focus indicator),
-      <code>h3.section-title</code> (skips h2),
-      <code>.ghost-cta</code> (no focus indicator),
-      <code>nav.footer-nav</code> (no aria-label),
-      <code>closeModal()</code> (no focus restoration)
-    </dd>
-    <dt>Issues</dt>
-    <dd><ul>
-      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>meta viewport</code> — <code>user-scalable=no</code> and <code>maximum-scale=1.0</code> prevent users from zooming the page, violating resize-text requirements.</li>
-      <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>nav.site-nav</code> — landmark with no <code>aria-label</code>; a second unlabelled <code>&lt;nav&gt;</code> in the footer makes both indistinguishable to AT users.</li>
-      <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code> — fixed <code>height:40px</code> with <code>overflow:hidden</code> clips the second promo line when text-spacing overrides (line-height &ge;1.5) are applied.</li>
-      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code> — white text on <code>#93c5fd</code> (light blue) yields a contrast ratio of approximately 2.2:1, far below the 4.5:1 minimum.</li>
-      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.hero-section</code> — white and near-white text rendered over a vivid three-stop gradient; contrast falls below 4.5:1 at the lightest gradient stop.</li>
-      <li><span class="qa-error-tag">ERROR 4.1.3</span> <code>#toast-region</code> — live region contains content already present in the DOM at page load; assistive technologies announce live-region updates, not initial content, so the message is never read.</li>
-      <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>.modal-close</code> — <code>outline:none; box-shadow:none</code> on <code>:focus</code> and <code>:focus-visible</code> removes the focus indicator with no visible replacement.</li>
-      <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>#product-modal</code> — <code>closeModal()</code> removes the <code>.open</code> class without returning focus to the triggering element (<code>#qv-trigger</code>), breaking the modal lifecycle.</li>
-      <li><span class="qa-error-tag">ERROR 2.4.6</span> <code>h3.section-title</code> — heading level jumps from <code>h1</code> directly to <code>h3</code> with no intervening <code>h2</code>, breaking the document outline.</li>
-      <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>.ghost-cta</code> — <code>outline:none; box-shadow:none</code> on <code>:focus</code> and <code>:focus-visible</code> removes the focus indicator with no visible replacement.</li>
-      <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>nav.footer-nav</code> — second unlabelled <code>&lt;nav&gt;</code> landmark; AT users cannot distinguish it from the site navigation.</li>
-    </ul></dd>
-  </dl>
-</div>
 
 <div class="page-hero">
   <!-- VIOLATION: heading-order — h1 is followed immediately by h3.section-title with no h2 in between -->
@@ -265,5 +195,20 @@
   }
 </script>
 
+<script>
+/* VIOLATION: live-region-with-content — region is created with content already present.
+   The correct pattern is to create the region empty, then inject content; this does the
+   opposite, triggering the 'live-region-created-with-content' behavioral check. */
+(function() {
+  var toast = document.createElement('div');
+  toast.id = 'toast-region';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.cssText = 'position:fixed;top:80px;right:20px;background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;font-size:0.875rem;border-left:4px solid #22c55e;z-index:400;max-width:300px;';
+  toast.textContent = '✓ Item added to your bag';
+  document.body.appendChild(toast);
+})();
+</script>
 </body>
 </html>
