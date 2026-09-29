@@ -391,7 +391,19 @@ Compute from **shown sub-issues only**:
 ### Step 3 — Compute run-level totals
 
 - `total_violations` = sum of all occurrence counts across all selectors (including the "Whole page" group, using the correct device).
-- `share_of_run` for each component = `issues_here / total_violations × 100`, rounded to nearest integer.
+- `share_of_run` for each component = `math.floor(issues_here / total_violations × 100 + 0.5)`
+
+**Critical:** The portal uses **round-half-up**, not Python's default banker's rounding (`round()`). They differ at exactly 0.5%:
+- Python `round(0.5)` = 0 (banker's rounding)
+- Portal `floor(0.5 + 0.5)` = 1 (round-half-up)
+
+Always use `import math; math.floor(x + 0.5)` in verification scripts. Confirmed against 121 components in run 2026-09-29 18:27: components with raw share 0.54%–0.93% all display as "1%" in the portal. Python's `round()` would return 0 for these, causing false failures.
+
+```python
+import math
+def portal_share(issues, total):
+    return math.floor(issues / total * 100 + 0.5) if total else 0
+```
 
 ---
 
@@ -403,16 +415,20 @@ Verification must therefore run in two directions:
 
 #### Direction A — Pasted portal → JSON (accuracy check)
 
-For every component in the pasted text, verify all six metrics against the JSON:
+For **every component in the pasted text** — all of them, not just engineered ones — verify all six metrics against the JSON:
 
 1. **Pages affected** (count and %)
 2. **Issues here** (threshold-adjusted total)
-3. **% of all issues / Share of run** (`issues_here / total_violations × 100`, ±1pp)
+3. **% of all issues / Share of run** (`portal_share(issues, total)` using round-half-up — see Step 3)
 4. **Issue types** (count of shown sub-issues)
 5. **X occurrences across X pages** (per each issue type listed)
 6. **By-severity page breakdown** (the numbers before "N issue types")
 
 This catches portal values that are wrong (wrong counts, wrong percentages, wrong issue types shown).
+
+**Scope:** Run 3 (2026-09-29 18:27) verified all 121 components × 1,233 metric checks with 0 failures. This is the expected scope — if the portal shows 120 components, check all 120, not just the engineered subset.
+
+**Implementation:** Use `verify_final_all.py` in the temp folder as the canonical script. For each new run, update the PORTAL data structure with the new component list from the pasted text, update the JSON filename, and re-run. The script structure encodes all component data in one place and runs all checks in a single pass.
 
 #### Direction B — JSON → pasted portal (completeness check)
 
@@ -457,7 +473,7 @@ For each component in the pasted portal text, check all of the following:
 | **Pages affected — denominator** | Always equals the total scanned pages for this run (e.g. 25) |
 | **Pages affected — %** | `round(pages_affected / total_pages × 100)` — tolerance ±1pp for rounding |
 | **Issues here** | Matches computed `issues_here` (shown sub-issues only) |
-| **Share of run %** | `round(issues_here / total_violations × 100)` — tolerance ±1pp |
+| **Share of run %** | `math.floor(issues_here / total_violations × 100 + 0.5)` — portal uses **round-half-up**, not Python's `round()`. No tolerance needed; values are exact when using the correct rounding. |
 | **Issue types count** | Matches count of shown sub-issues |
 | **"By severity" page breakdown** | The numbers shown before "N issue types" are the page counts per shown sub-issue, ordered critical → high → medium → low |
 
@@ -524,10 +540,12 @@ Document these when they appear; do not report them as portal bugs:
 2. **Component excluded when no single rule reaches 2 pages** — the portal's Level 1 threshold is per `(selector, rule_id)`, not a union of pages across rules. A selector where rule A fires on page X and rule B fires on page Y (union = 2 pages, but no rule fires on 2+ pages individually) is excluded entirely. Example: selector `h2` with `region` on one page and `empty-heading` on a different page → excluded. This is NOT a bug — it is the defined display rule.
 3. **"Whole Page" component** — page-level issues (e.g. "Document should have one main landmark") use selector `html` in the JSON and appear in the portal as "Whole page / no single element to point at". Do not filter out the `html` selector when building components.
 4. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
-5. **Share rounding** — portal rounds share% to the nearest integer; differences of ±1pp are expected.
+5. **Share% uses round-half-up, not Python's `round()`** — The portal rounds share percentages with `math.floor(x + 0.5)`. Python's `round()` uses banker's rounding (round-half-to-even), which differs at exactly 0.5%: `round(0.5)` = 0 in Python but the portal shows 1%. In practice, any component with raw share 0.50%–0.94% displays as "1%", and 0.95%–1.49% displays as "1%" as well. Confirmed by verifying all 121 components in run 2026-09-29 18:27: zero failures once the correct rounding is applied. Always use `math.floor(issues / total * 100 + 0.5)` in verification scripts.
 6. **Component count gap** — portal shows approximately 2 fewer components than a naive union-of-pages computation, because of the per-rule 2-page threshold (behaviour #2 above).
 7. **Severity label mapping is not 1:1** — QualiBooth assigns severity independently of axe `impact`. Confirmed deviations: `meta-viewport` (axe `critical` → portal **Medium**); `role-img-alt` (axe `critical` → portal **High**); `focus-visible` AAA (axe `serious` → portal **Low**); `focus-visible` AA (axe `serious` → portal **High**); `focus-obscured` AA (axe `serious` → portal **High**); `focus-obscured` AAA (axe `serious` → portal **Medium**). Always read severity from the portal display, not from the JSON impact field.
 8. **Issue name vs description** — the portal displays a human-readable rule name (e.g. "Document should have one main landmark") which may differ from the JSON `description` field (e.g. "Ensure the document has a main landmark"). Both refer to the same rule; the JSON `id` field is the authoritative identifier.
+9. **hover-focus detection requires elements outside `<main>`** — The `hover-focus-content/*` behavioral rules only fire on elements that sit outside a `<main>` landmark. Pages where the tooltip section is inside `<main>` are not reached by the hover scanner. Confirmed: `trending.html` tooltips (outside `<main>`) → fires. All other 7 tooltip pages (inside `<main>`) → does not fire. This means hover-focus currently fires on only 1 page — below the 2-page Level 1 threshold — and does not appear as a shared component.
+10. **All 23 rule IDs in the export** — The complete set of rules that appear in the raw JSON export for this test set is: `aria-allowed-attr`, `aria-valid-attr-value`, `color-contrast`, `color-contrast-enhanced`, `contrast-image`, `empty-heading`, `focus-obscured`, `focus-visible`, `heading-order`, `hover-focus-content/hover-only`, `hover-focus-content/not-dismissible`, `hover-focus-content/not-hoverable`, `label`, `landmark-one-main`, `landmark-unique`, `meta-viewport`, `modal-lifecycle/background-not-inert`, `modal-lifecycle/focus-not-moved`, `modal-lifecycle/not-dismissible`, `reflow`, `region`, `role-img-alt`, `text-spacing/clipped`. Any rule not in this list will not appear in the JSON export regardless of implementation.
 
 ---
 
