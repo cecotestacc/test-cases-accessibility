@@ -292,11 +292,14 @@ Issues with no specific element (e.g. "Document should have one main landmark") 
 
 ### Step 2 — Apply the portal display threshold
 
+The threshold is applied per **(selector + rule_id)** pair, not on the union across all rules for a selector.
+
 For each component (grouped by selector):
 
 1. Identify sub-issues (rule_id + impact pairs) that appear on **2+ pages** → these are **shown**.
 2. Sub-issues that appear on only **1 page** → **hidden**, UNLESS all sub-issues for this component have only 1 page (in that case show all; a component is never left empty).
-3. Compute from **shown sub-issues only**:
+3. **Component-level exclusion**: if NO sub-issue for a selector fires on 2+ pages, AND all sub-issues fire on different single pages (union gives 2+ pages but no individual rule reaches 2), the component is **excluded from the list entirely**. This is different from case 2: case 2 is "every rule fires on the same 1 page"; this case is "each rule fires on a different 1 page, union is 2+ but per-rule it is always 1".
+4. Compute from **shown sub-issues only**:
    - `pages_affected` = union of pages across all shown sub-issues
    - `issues_here` = sum of occurrence counts across all shown sub-issues
    - `issue_types` = count of distinct shown sub-issues
@@ -374,10 +377,13 @@ After completing all checks, write results as an HTML report using the dark-them
 Document these when they appear; do not report them as portal bugs:
 
 1. **Sub-issue threshold** — issue types with <2 pages are hidden when other sub-issues have 2+ pages.
-2. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
-3. **Share rounding** — portal rounds share% to the nearest integer; differences of ±1pp are expected.
-4. **Component count gap** — the portal may show slightly fewer components than the JSON computation (typically ±5) due to internal selector deduplication or merging logic.
-5. **Severity label mapping** — axe `serious` maps to portal `High`; axe `moderate` maps to portal `Medium`. Never use axe impact names in the report — always convert.
+2. **Component excluded when no rule reaches 2 pages** — if a selector has multiple rules each firing on a different single page (union = 2+ pages, but no individual rule hits 2), the component is excluded from the list entirely. Example: selector `h2` with `region` on page A and `empty-heading` on page B → excluded.
+3. **"Whole Page" component** — page-level issues (e.g. "Document should have one main landmark") use selector `html` in the JSON and appear in the portal as "Whole page / no single element to point at". Do not filter out the `html` selector when building components.
+4. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
+5. **Share rounding** — portal rounds share% to the nearest integer; differences of ±1pp are expected.
+6. **Component count gap** — portal shows approximately 2 fewer components than a naive union-of-pages computation, because of the per-rule 2-page threshold (behaviour #2 above).
+7. **Severity label mapping** — axe `serious` maps to portal `High`; axe `moderate` maps to portal `Medium`. Never use axe impact names in the report — always convert.
+8. **Issue name vs description** — the portal displays a human-readable rule name (e.g. "Document should have one main landmark") which may differ from the JSON `description` field (e.g. "Ensure the document has a main landmark"). Both refer to the same rule; the JSON `id` field is the authoritative identifier.
 
 ---
 
