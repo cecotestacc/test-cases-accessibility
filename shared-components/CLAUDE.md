@@ -313,17 +313,13 @@ Do not add `summary.html`, `expected-results.html`, `test-coverage.html`, `READM
 
 The scan will always contain violations beyond the 16 engineered components. These are expected and should not be treated as failures. Do not try to fix them unless they interfere with the engineered component metrics.
 
-A noise-reduction pass was applied in commit `8e7078b` (2026-09-29) — AAA colour contrast was fixed for most elements and explicit focus rings were added to nav links. Actual violations dropped from 1,418 (run 1) to 761 (run 4), and components from 141 to 80.
-
-| Noise source | Status | Root cause | Affects |
-|---|---|---|---|
-| AAA colour contrast — most elements (`color-contrast-enhanced`) | **ELIMINATED** — colours fixed to pass AAA | Colours darkened: card text → `#334155`, price → `#1e40af`, footer → `#b0bec9`, promo-bar bg → `#1940b8` | Was: card text, footer, promo-line |
-| AAA colour contrast — newsletter subscribe buttons | **RESIDUAL** — not yet fixed | Inline subscribe buttons in newsletter sections still use old `#1d4ed8` background not reached by batch CSS fix | `div:nth-child(5/6/7) > div > button` on sale/trending/new-arrivals |
-| Reflow at 320px (`reflow`) | **RESIDUAL** | Sticky nav causes horizontal scroll at narrow widths | Nav links on 20+ pages |
-| Focus not obscured — cookie banner (`focus-obscured`) | **RESIDUAL** | Fixed `#cookie-banner` at bottom covers elements when tabbing near bottom | `#cookie-banner`, footer nav links |
-| Focus visible on nav links (AAA) | **ELIMINATED** — focus ring added | Explicit `a:focus-visible { outline: 2px solid #a5b4fc }` added to both nav elements | Was: all `nav.site-nav` and `nav.footer-nav` links |
-| Missing main landmark (`landmark-one-main`) | **RESIDUAL** | 17 of 25 pages missing `<main>` | "Whole page" component |
-| Content outside landmarks (`region`) | **RESIDUAL** | Content divs not wrapped in `<main>` | `.page-hero`, `.content`, `.section-title`, etc. |
+| Noise source | Root cause | Affects |
+|---|---|---|
+| AAA colour contrast on newsletter subscribe buttons (`color-contrast-enhanced`) | Inline subscribe buttons in newsletter sections use `#1d4ed8` background (too light for AAA) | `div:nth-child(5/6/7) > div > button` on sale/trending/new-arrivals |
+| Reflow at 320px (`reflow`) | Sticky nav causes horizontal scroll at narrow widths | Nav links on 20+ pages |
+| Focus not obscured — cookie banner (`focus-obscured`) | Fixed `#cookie-banner` at bottom of viewport covers elements when tabbing near bottom | `#cookie-banner`, footer nav links |
+| Missing main landmark (`landmark-one-main`) | 17 of 25 pages missing a `<main>` element | "Whole page" component |
+| Content outside landmarks (`region`) | Content divs not wrapped in `<main>` | `.page-hero`, `.content`, `.section-title`, etc. |
 
 ---
 
@@ -400,7 +396,7 @@ Compute from **shown sub-issues only**:
 - Python `round(0.5)` = 0 (banker's rounding)
 - Portal `floor(0.5 + 0.5)` = 1 (round-half-up)
 
-Always use `import math; math.floor(x + 0.5)` in verification scripts. Confirmed against 121 components in run 2026-09-29 18:27: components with raw share 0.54%–0.93% all display as "1%" in the portal. Python's `round()` would return 0 for these, causing false failures.
+Always use `import math; math.floor(x + 0.5)` in verification scripts. Components with raw share 0.50%–0.94% all display as "1%" in the portal. Python's `round()` uses banker's rounding and would return 0 for these, causing false failures.
 
 ```python
 import math
@@ -429,7 +425,7 @@ For **every component in the pasted text** — all of them, not just engineered 
 
 This catches portal values that are wrong (wrong counts, wrong percentages, wrong issue types shown).
 
-**Scope:** Run 3 (2026-09-29 18:27) verified all 121 components × 1,233 metric checks with 0 failures. This is the expected scope — if the portal shows 120 components, check all 120, not just the engineered subset.
+**Scope:** Check every component the portal shows — if the portal shows 80 components, check all 80, not just the 16 engineered subset. The latest stable run verified 80 components × 776 metric checks with 0 failures.
 
 **Implementation:** Use `verify_final_all.py` in the temp folder as the canonical script. For each new run, update the PORTAL data structure with the new component list from the pasted text, update the JSON filename, and re-run. The script structure encodes all component data in one place and runs all checks in a single pass.
 
@@ -543,7 +539,7 @@ Document these when they appear; do not report them as portal bugs:
 2. **Component excluded when no single rule reaches 2 pages** — the portal's Level 1 threshold is per `(selector, rule_id)`, not a union of pages across rules. A selector where rule A fires on page X and rule B fires on page Y (union = 2 pages, but no rule fires on 2+ pages individually) is excluded entirely. Example: selector `h2` with `region` on one page and `empty-heading` on a different page → excluded. This is NOT a bug — it is the defined display rule.
 3. **"Whole Page" component** — page-level issues (e.g. "Document should have one main landmark") use selector `html` in the JSON and appear in the portal as "Whole page / no single element to point at". Do not filter out the `html` selector when building components.
 4. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
-5. **Share% uses round-half-up, not Python's `round()`** — The portal rounds share percentages with `math.floor(x + 0.5)`. Python's `round()` uses banker's rounding (round-half-to-even), which differs at exactly 0.5%: `round(0.5)` = 0 in Python but the portal shows 1%. In practice, any component with raw share 0.50%–0.94% displays as "1%", and 0.95%–1.49% displays as "1%" as well. Confirmed by verifying all 121 components in run 2026-09-29 18:27: zero failures once the correct rounding is applied. Always use `math.floor(issues / total * 100 + 0.5)` in verification scripts.
+5. **Share% uses round-half-up, not Python's `round()`** — The portal rounds share percentages with `math.floor(x + 0.5)`. Python's `round()` uses banker's rounding (round-half-to-even), which differs at exactly 0.5%: `round(0.5)` = 0 in Python but the portal shows 1%. Any component with raw share 0.50%–0.94% displays as "1%". Always use `math.floor(issues / total * 100 + 0.5)` in verification scripts.
 6. **Component count gap** — portal shows approximately 2 fewer components than a naive union-of-pages computation, because of the per-rule 2-page threshold (behaviour #2 above).
 7. **Severity label mapping is not 1:1** — QualiBooth assigns severity independently of axe `impact`. Confirmed deviations: `meta-viewport` (axe `critical` → portal **Medium**); `role-img-alt` (axe `critical` → portal **High**); `focus-visible` AAA (axe `serious` → portal **Low**); `focus-visible` AA (axe `serious` → portal **High**); `focus-obscured` AA (axe `serious` → portal **High**); `focus-obscured` AAA (axe `serious` → portal **Medium**). Always read severity from the portal display, not from the JSON impact field.
 8. **Issue name vs description** — the portal displays a human-readable rule name (e.g. "Document should have one main landmark") which may differ from the JSON `description` field (e.g. "Ensure the document has a main landmark"). Both refer to the same rule; the JSON `id` field is the authoritative identifier.

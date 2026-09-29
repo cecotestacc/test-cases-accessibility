@@ -59,7 +59,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
   </div>
 
   <div class="tldr">
-    <strong>TL;DR:</strong> 25 HTML pages simulating a realistic e-commerce site ("Lumino"). 16 shared components are engineered with specific accessibility violations covering 17 distinct issue types. Component page coverage ranges from 100% (universal) to 4% (1-page minimum), enabling full regression testing of every metric and edge case in the Shared Components portal view. Four gap-coverage components were added to test Low severity, 1- and 2-page minimums, and the "element present but no violation" scenario. A noise-reduction pass (commit 8e7078b) fixed AAA colour contrast on most page elements and added nav focus rings, reducing actual scan violations from 1,418 → 761 (−46%) and portal components from 141 → 80 (−43%) while leaving all 16 engineered violations intact.
+    <strong>TL;DR:</strong> 25 HTML pages simulating a realistic e-commerce site ("Lumino"). 16 shared components are engineered with specific accessibility violations covering 17 distinct issue types across all four severity levels. Component page coverage ranges from 100% (universal) to 4% (1-page minimum). Four gap-coverage components test Low severity, 1- and 2-page minimums, and the "element present but no violation" scenario. The latest scan produces ~761 total violations and 80 portal components, enabling full regression testing of every metric and edge case in the Shared Components portal view.
   </div>
 
   <h2>Coverage Statistics</h2>
@@ -67,7 +67,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     <div class="metric blue"><div class="num">25</div><div class="label">Total pages in scan</div></div>
     <div class="metric tp"><div class="num">16</div><div class="label">Shared components</div></div>
     <div class="metric amber"><div class="num">17</div><div class="label">Issue types covered</div></div>
-    <div class="metric pct"><div class="num">~761</div><div class="label">Actual violations (run 4, post noise-fix)</div></div>
+    <div class="metric pct"><div class="num">~761</div><div class="label">Total violations (latest scan)</div></div>
   </div>
 
   <h2>Component Architecture</h2>

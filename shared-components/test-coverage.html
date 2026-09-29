@@ -123,7 +123,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
   </div>
 
   <div class="tldr">
-    <strong>TL;DR:</strong> 16 engineered shared components across 25 pages cover every metric, severity level, selector type, issue-type count, and page-coverage ratio that the QualiBooth Shared Components portal view can display. Three previously missing scenarios — Low severity, minimum page count (1 and 2 pages), and element-present-but-no-violation — have been added and are now fully covered.
+    <strong>TL;DR:</strong> 16 engineered shared components across 25 pages cover every metric, severity level, selector type, issue-type count, and page-coverage ratio that the QualiBooth Shared Components portal view can display. Coverage includes Low severity, minimum page counts (1 and 2 pages), and the element-present-but-no-violation scenario.
   </div>
 
   <!-- ═══ TOP-LINE NUMBERS ══════════════════════════════════════════════════ -->
@@ -133,7 +133,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     <div class="metric tp"><div class="num">16</div><div class="label">Shared components</div></div>
     <div class="metric teal"><div class="num">14</div><div class="label">Accessibility issue types</div></div>
     <div class="metric pct"><div class="num">4</div><div class="label">Severity levels covered</div></div>
-    <div class="metric tp"><div class="num">~761</div><div class="label">Actual violations (run 4, post noise-fix)</div></div>
+    <div class="metric tp"><div class="num">~761</div><div class="label">Total violations (latest scan)</div></div>
     <div class="metric blue"><div class="num">0</div><div class="label">Gaps remaining</div></div>
   </div>
 
@@ -160,7 +160,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     <div class="score-card green">
       <div class="check-name">Share of run %</div>
       <div class="score-line"><span class="badge badge-green">✓ Covered</span></div>
-      <div class="note">&lt;1% to 21.6%. Tests calculation accuracy across the full denominator (~761 in run 4 post noise-fix; engineered components alone ≈239).</div>
+      <div class="note">&lt;1% to 21.6%. Tests calculation accuracy across the full denominator (~761 total violations in the latest scan).</div>
     </div>
     <div class="score-card green">
       <div class="check-name">Issue types per component</div>
@@ -465,7 +465,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
   </table>
 
   <!-- ═══ THE 3 GAP SCENARIOS ═══════════════════════════════════════════════ -->
-  <h2>Previously missing scenarios — now covered</h2>
+  <h2>Gap coverage scenarios</h2>
 
   <div class="finding">
     <div class="finding-header teal">
