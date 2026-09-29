@@ -166,16 +166,18 @@
 /* VIOLATION: live-region-with-content — region is created with content already present.
    The correct pattern is to create the region empty, then inject content; this does the
    opposite, triggering the 'live-region-created-with-content' behavioral check. */
-(function() {
+setTimeout(function() {
+  /* VIOLATION: live-region-with-content - region created with content present.
+     Delayed 300ms so the behavioral scanner observes the DOM mutation. */
   var toast = document.createElement('div');
   toast.id = 'toast-region';
   toast.setAttribute('role', 'status');
   toast.setAttribute('aria-live', 'polite');
   toast.setAttribute('aria-atomic', 'true');
   toast.style.cssText = 'position:fixed;top:80px;right:20px;background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;font-size:0.875rem;border-left:4px solid #22c55e;z-index:400;max-width:300px;';
-  toast.textContent = '✓ Item added to your bag';
+  toast.textContent = '\u2713 Item added to your bag';
   document.body.appendChild(toast);
-})();
+}, 300);
 </script>
 </body>
 </html>

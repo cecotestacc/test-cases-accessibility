@@ -126,7 +126,12 @@
   <button class="cookie-dismiss">Dismiss</button>
 </div>
 
-<!-- SCENARIO 1 (Low severity): empty heading — VIOLATION empty-heading, impact: minor/Low -->
+<!-- Second h2 needed so axe uses class selector '.section-divider' for the empty heading
+     (axe picks the shortest UNIQUE selector; with two h2 elements, 'h2' is no longer unique) -->
+<h2 style="font-size:1rem;color:#1e293b;margin:24px 24px 8px;padding-bottom:8px;border-bottom:1px solid #e2e8f0;">More from the blog</h2>
+
+<!-- SCENARIO 1 (Low severity): empty heading — VIOLATION empty-heading, impact: minor/Low
+     Now has a sibling h2, so axe generates '.section-divider' as the selector, not bare 'h2' -->
 <h2 class="section-divider" style="height:1px;border:none;border-top:1px solid #e2e8f0;margin:32px 24px;font-size:0;overflow:hidden;"></h2>
 
 <!-- SCENARIO 3 (present WITH aria-label): newsletter-input NO violation on this page -->
