@@ -23,55 +23,77 @@ A controlled test set for QualiBooth's **shared components** feature — the por
 
 ## The four reference files — always keep in sync
 
-Every change to the test pages or component design must be reflected in the reference files **in the same commit**. Never commit a page change without also updating the affected reference files. The table below maps change type to which files need updating and what specifically changes.
+**Rule: these four files must reflect the current state at all times. Never commit a page change, scan result, or component change without also updating every affected reference file in the same commit.**
 
-| Change type | README.md | summary.html | expected-results.html | test-coverage.html |
+```
+README.md          — quick facts, component list, page matrix
+summary.html       — component architecture, violation mechanisms, page inventory
+expected-results.html — regression baseline for ALL portal components (regenerate from JSON)
+test-coverage.html — coverage matrix, scan depth, severity classification
+```
+
+### When to update each file
+
+| Trigger | README.md | summary.html | expected-results.html | test-coverage.html |
 |---|---|---|---|---|
-| **New page added** | Page inventory matrix row | Page inventory table row | Per-page table row | — |
-| **Page removed** | Remove row | Remove row | Remove row | — |
-| **New shared component added** | Component overview table row, gap-coverage table if applicable | Component architecture table row, issue types table row if new type, supplementary table if gap-coverage | Component card block, acceptance criteria card | Component inventory row, issue types table row if new type, page count range table row, severity coverage, scan depth matrix row |
-| **Component removed** | Remove row | Remove row | Remove component card | Remove rows |
-| **Component page count changes** | Update pages column | Update pages/coverage/issues/share columns | Update component card metrics and acceptance criteria | Update component inventory row and page count range table |
-| **Violation severity corrected** | Update severity column | Update severity badge | Update impact pill in component card | Update severity in issue types table and component inventory |
-| **Violation mechanism changes** (e.g. static → JS) | — | Update issue types table description | Update component card description | Update scan depth matrix notes |
-| **aria-controls value, tooltip ID, or other ARIA fix** | — | Update component description in issue types table | — | — |
-| **New issue type introduced** | Update "Accessibility issue types" count in quick stats | Update "All N issue types" count, add row to issue types table | Update run-level baseline "Distinct issue types" metric | Update "All N types covered" scorecard, add row to issue types table, update heading |
-| **Total violation count changes** | Update "Estimated total violations" | Update ~N metric | Update run-level baseline and all share% values | Update ~N in metrics |
-| **Scan results available (new scan run)** | — | — | Update all baseline values, add uncertainty notes | — |
+| **Page added / removed** | Page matrix row | Page inventory row | Regenerate from JSON | — |
+| **New engineered component** | Component table row + gap table if applicable | Component architecture row, issue types row, page inventory | Regenerate from JSON | Component inventory row, issue types row, scan depth row, page count range row, severity section |
+| **Component removed** | Remove row | Remove row | Regenerate from JSON | Remove rows |
+| **Violation CSS/JS mechanism changes** | — | Update violation description | Regenerate from JSON | Update scan depth notes |
+| **Colour or style fix** | — | Update if violation description references colours | Regenerate from JSON | Update scan depth if behavioral classification changes |
+| **New issue type introduced** | Update issue type count | Update "All N types" heading and table | Regenerate from JSON | Update scorecard, issue types table, heading count |
+| **New scan run completed** | Update "Estimated total violations" | Update total violations metric | **Regenerate from JSON** | Update total violations metric |
+| **Scan depth finding changes** | — | — | — | Update scan depth matrix and footnote |
+
+### How to update expected-results.html
+
+`expected-results.html` is **always generated from the raw JSON export** — never edited by hand. After every scan run:
+
+1. Save the JSON export to the Downloads folder.
+2. Update `generate_verification_report.py` to point to the new JSON file.
+3. Run the generator script `gen_expected2.py` (in the temp folder) — it reads the JSON, applies the correct Level 1 threshold, and writes the full 80-component baseline.
+4. Commit the updated `expected-results.html` in the same commit as the verification report.
+
+If `gen_expected2.py` is not available, recreate it using the logic in `verification-report-2026-09-29-2157.html` or any recent verification report: group violations by `(selector, rule_id, impact)`, apply the 2-page-per-rule threshold, compute pages/issues/share/types/breakdown, sort by issues DESC.
+
+**expected-results.html structure (current):**
+- Run-level baseline: total pages, portal components, total violations, engineered count
+- Calculation rules: threshold, sub-issue hiding, share% rounding (round-half-up), location description derivation, issue type name source
+- Engineered components table (16): hard regression assertions — every metric must match exactly
+- Full N-component table: all portal components with all metrics; engineered highlighted in teal; hidden sub-issues shown at reduced opacity
 
 ### Specific fields to update per file
 
-**README.md** — update when: page count changes, component count changes, violation count changes, severity changes, new gap-coverage component added.
-- Quick stats table: Pages, Shared components, Accessibility issue types, Severity levels, Estimated total violations
+**README.md:**
+- Quick stats: Pages, Shared components, Accessibility issue types, Severity levels, Estimated total violations
 - Component overview table: all rows (pages/%, severity, issue types count)
 - Pages at a glance matrix: add/remove rows
 - Gap-coverage component table: add/remove rows, update violation/pass page lists
 
-**summary.html** — update when: anything in the component or page structure changes.
+**summary.html:**
 - Header meta line: component count, issue type count
-- TL;DR text: component count, issue type count, coverage range (min → max %)
+- TL;DR: component count, issue type count, violations total
 - Coverage Statistics metrics: component count, issue type count, total violations
-- Component Architecture table: all rows, share percentages (recalculate against new total)
+- Component Architecture table: all rows, share percentages
 - Issue Types Covered table: heading count, rows
 - Page Inventory table: add/remove rows
-- Gap Coverage Components supplementary table: add/remove rows, update violation/pass columns
+- Gap Coverage Components supplementary table: add/remove rows
 
-**expected-results.html** — update when: a new scan run completes OR expected values change.
-- Run-Level Baseline metrics
-- Each component card: pages, %, issues, share, types, sub-issue occurrences/pages
-- Per-page table: add/remove rows, update violation columns
-- Regression Acceptance Criteria scorecard: update expected values and tolerances
+**expected-results.html:**
+- **Regenerate entirely from the latest scan JSON** — do not patch individual values.
+- After regeneration, verify the 16 engineered component rows match what the portal actually shows.
 
-**test-coverage.html** — update when: component count, issue type count, severity labels, scan depth, or page count range changes.
-- Coverage at a glance metrics: component count, issue type count, severity level count, total violations
-- "Issue types per component" scorecard note: update the "(N components)" with 1 type
-- "Issue type names + severities" scorecard: update "All N types covered"
-- All N components table: add/remove rows, update severity/issues columns
-- Severity level coverage findings: update component lists per severity
-- All N accessibility issue types table: heading, add/remove rows, fix severity labels
+**test-coverage.html:**
+- Coverage at a glance metrics: component count, issue type count, severity levels, total violations
+- Issue types per component scorecard: update the "(N components)" count
+- Issue type names + severities scorecard: update "All N types covered"
+- All N components table: add/remove rows, update severity/issues
+- Severity level coverage findings: update component lists
+- All N issue types table: heading, add/remove rows, severity labels
 - Page count range table: add/remove rows
-- Scan depth matrix: add/remove rows, fix axe-core/behavioral classification
+- Scan depth matrix: add/remove rows, update behavioral/axe-core classification
 - Scan depth footnote: update component counts
+- Remove any historical labels (NEW, ADDED, new-row highlights) — present current state only
 
 ---
 
