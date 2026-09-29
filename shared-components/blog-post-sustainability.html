@@ -110,6 +110,16 @@
   <button class="cookie-dismiss" type="button">Dismiss</button>
 </div>
 
+<!-- SCENARIO 3 (present WITH aria-label): newsletter-input NO violation on this page -->
+<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin:0 24px 24px;">
+  <p style="font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:6px;">Follow our sustainability journey</p>
+  <p style="font-size:0.875rem;color:#475569;margin-bottom:12px;">Progress updates and new commitments in your inbox — no fluff.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <input type="email" class="newsletter-input" aria-label="Email address for sustainability newsletter" placeholder="Your email address" style="padding:9px 14px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.875rem;flex:1;min-width:180px;">
+    <button style="background:#1d4ed8;color:#fff;border:none;padding:9px 18px;border-radius:5px;font-size:0.875rem;cursor:pointer;font-family:inherit;">Subscribe</button>
+  </div>
+</div>
+
 <!-- VIOLATION: nav.footer-nav has no aria-label — fails landmark-unique -->
 <footer class="site-footer">
   <div class="footer-inner">

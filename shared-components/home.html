@@ -139,6 +139,25 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
       <div class="card"><h3>Chelsea Boot</h3><p>Full-grain leather, elastic gusset</p><div class="price">$195</div></div>
     </div>
   </div>
+
+  <!-- SCENARIO 1 (Low severity): empty heading — VIOLATION empty-heading, impact: minor/Low -->
+  <h2 class="section-divider" style="height:1px;border:none;border-top:1px solid #e2e8f0;margin:32px 24px;font-size:0;overflow:hidden;"></h2>
+
+  <!-- SCENARIO 2 (1-page only): aria-checked not allowed on <section> — VIOLATION aria-allowed-attr, Critical -->
+  <section id="featured-promo" aria-checked="true" style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin:0 24px 24px;">
+    <h3 style="font-size:1rem;color:#0f172a;margin-bottom:6px;">This Week's Feature</h3>
+    <p style="font-size:0.875rem;color:#475569;">Handpicked pieces from the new season collection.</p>
+  </section>
+
+  <!-- SCENARIO 3 (present but no violation): newsletter-input WITHOUT label — VIOLATION label, Critical -->
+  <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin:0 24px 24px;">
+    <p style="font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:6px;">Stay in the loop</p>
+    <p style="font-size:0.875rem;color:#475569;margin-bottom:12px;">New arrivals and exclusive offers in your inbox.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <input type="email" class="newsletter-input" placeholder="Your email address" style="padding:9px 14px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.875rem;flex:1;min-width:180px;">
+      <button style="background:#1d4ed8;color:#fff;border:none;padding:9px 18px;border-radius:5px;font-size:0.875rem;cursor:pointer;font-family:inherit;">Subscribe</button>
+    </div>
+  </div>
 </main>
 
 <footer class="site-footer">

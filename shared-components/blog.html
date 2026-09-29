@@ -126,6 +126,19 @@
   <button class="cookie-dismiss">Dismiss</button>
 </div>
 
+<!-- SCENARIO 1 (Low severity): empty heading — VIOLATION empty-heading, impact: minor/Low -->
+<h2 class="section-divider" style="height:1px;border:none;border-top:1px solid #e2e8f0;margin:32px 24px;font-size:0;overflow:hidden;"></h2>
+
+<!-- SCENARIO 3 (present WITH aria-label): newsletter-input NO violation on this page -->
+<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin:0 24px 24px;">
+  <p style="font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:6px;">Subscribe to the blog</p>
+  <p style="font-size:0.875rem;color:#475569;margin-bottom:12px;">New posts three times a week — delivered to your inbox.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <input type="email" class="newsletter-input" aria-label="Email address for blog newsletter" placeholder="Your email address" style="padding:9px 14px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.875rem;flex:1;min-width:180px;">
+    <button style="background:#1d4ed8;color:#fff;border:none;padding:9px 18px;border-radius:5px;font-size:0.875rem;cursor:pointer;font-family:inherit;">Subscribe</button>
+  </div>
+</div>
+
 <!-- VIOLATION 6: footer nav has no aria-label (landmark-unique violation) -->
 <footer class="site-footer">
   <div class="footer-inner">

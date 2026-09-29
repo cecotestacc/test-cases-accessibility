@@ -141,6 +141,19 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
       <div class="card"><span class="sale-badge">25% OFF</span><h3>Merino Polo</h3><p>Fine-gauge, slim fit</p><div class="price"><span class="old-price">$98</span>$73</div></div>
     </div>
   </div>
+
+  <!-- SCENARIO 2 (2-page only): role="img" with no accessible name — VIOLATION role-img-alt, Critical -->
+  <div class="flash-sale-chip" role="img" style="width:140px;height:32px;background:linear-gradient(90deg,#dc2626,#ef4444);border-radius:4px;margin:24px 24px 0;"></div>
+
+  <!-- SCENARIO 3 (present but no violation): newsletter-input WITHOUT label — VIOLATION label, Critical -->
+  <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin:16px 24px 24px;">
+    <p style="font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:6px;">Don't miss a deal</p>
+    <p style="font-size:0.875rem;color:#475569;margin-bottom:12px;">Get sale alerts and exclusive codes sent straight to your inbox.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <input type="email" class="newsletter-input" placeholder="Your email address" style="padding:9px 14px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.875rem;flex:1;min-width:180px;">
+      <button style="background:#1d4ed8;color:#fff;border:none;padding:9px 18px;border-radius:5px;font-size:0.875rem;cursor:pointer;font-family:inherit;">Subscribe</button>
+    </div>
+  </div>
 </main>
 
 <footer class="site-footer">
