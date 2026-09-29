@@ -245,3 +245,15 @@ confirmed: true   ← all configs are ON_DEMAND, no scheduled impact
 - Do not create a new folder for a rule that already has a folder.
 - Do not skip case numbers or reuse them.
 - Do not mix multiple failure modes in one file — one scenario per file.
+
+---
+
+## HTML report format
+
+When writing any HTML analysis report (scan results, TP/FP analysis, performance comparisons), use the dark-theme format defined in:
+
+```
+.claude/report-html-format.md
+```
+
+That file contains the full CSS block, colour palette, all component classes, and a skeleton HTML template. Always use it — the user confirmed they like this format.
