@@ -15,13 +15,13 @@
     nav.site-nav a:hover { color: #fff; }
 
     /* #promo-bar — VIOLATION text-spacing clipped (height:40px + overflow:hidden + line-height:1.2) */
-    #promo-bar { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
+    #promo-bar { background: #1940b8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
     .promo-line { display: block; line-height: 1.2; }
 
     /* #cookie-banner + .cookie-btn — VIOLATION color-contrast (#fff on #93c5fd ≈ 2.2:1) */
     #cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #e2e8f0; padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; z-index: 200; border-top: 1px solid #334155; }
     .cookie-btn { background: #93c5fd; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
-    .cookie-dismiss { background: none; border: 1px solid #475569; color: #94a3b8; padding: 9px 14px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+    .cookie-dismiss { background: none; border: 1px solid #475569; color: #b0bec9; padding: 9px 14px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
 
     /* .hero-section — VIOLATION text contrast over vivid gradient */
     .hero-section { background: linear-gradient(135deg, #60a5fa 0%, #c084fc 50%, #f472b6 100%); padding: 72px 24px; text-align: center; }
@@ -43,39 +43,43 @@
     #product-modal.open { display: flex; }
     .modal-box { background: #fff; border-radius: 10px; padding: 32px 28px; max-width: 480px; width: 90%; position: relative; }
     .modal-box h2 { font-size: 1.25rem; color: #0f172a; margin-bottom: 12px; }
-    .modal-box p { font-size: 0.875rem; color: #475569; line-height: 1.6; margin-bottom: 16px; }
+    .modal-box p { font-size: 0.875rem; color: #334155; line-height: 1.6; margin-bottom: 16px; }
     /* .modal-close — VIOLATION focus-visible (outline:none with no replacement) */
-    .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; font-size: 1.25rem; color: #64748b; line-height: 1; padding: 4px; }
+    .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; font-size: 1.25rem; color: #334155; line-height: 1; padding: 4px; }
     .modal-close:focus, .modal-close:focus-visible { outline: none; box-shadow: none; }
 
     /* h3.section-title — VIOLATION heading-order (appears after h1 with no h2 in between) */
     /* No special CSS needed — structural violation */
 
     /* .ghost-cta — VIOLATION focus-visible (outline:none with no replacement) */
-    .ghost-cta { display: inline-block; text-decoration: none; color: #1d4ed8; font-size: 0.875rem; font-weight: 600; padding: 9px 18px; border: 2px solid #1d4ed8; border-radius: 5px; }
+    .ghost-cta { display: inline-block; text-decoration: none; color: #1e40af; font-size: 0.875rem; font-weight: 600; padding: 9px 18px; border: 2px solid #1e40af; border-radius: 5px; }
     .ghost-cta:focus, .ghost-cta:focus-visible { outline: none; box-shadow: none; }
 
     /* nav.footer-nav — VIOLATION landmark-unique (no aria-label) */
     nav.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
-    nav.footer-nav a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+    nav.footer-nav a { color: #b0bec9; text-decoration: none; font-size: 0.875rem; }
     nav.footer-nav a:hover { color: #e2e8f0; }
 
     /* Layout helpers */
     .page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
     .page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
-    .page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
+    .page-hero .lead { color: #334155; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
     .content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
     .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
     .card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
-    .card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
-    .card .price { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; margin-top: 10px; }
+    .card p { font-size: 0.8125rem; color: #334155; margin: 0; }
+    .card .price { font-size: 1.125rem; font-weight: 700; color: #1e40af; margin-top: 10px; }
     h2.section-h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
-    p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
-    .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
+    p.body-text { color: #334155; line-height: 1.7; margin-bottom: 16px; }
+    .site-footer { background: #0f172a; color: #b0bec9; padding: 28px 24px; margin-top: 48px; }
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
-  </style>
+    .quick-view-btn { background: #1940b8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
+  
+    /* Nav focus rings — meet AAA 2.4.13 criterion */
+    nav.site-nav a:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 2px; }
+    nav.footer-nav a:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 2px; }
+</style>
 </head>
 <body>
 
