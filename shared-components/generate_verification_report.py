@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Generate verification report for shared-components scan run 2026-09-29 18:27.
+Generate verification report for shared-components scan run 2026-09-29 21:57.
 Usage: python3 generate_verification_report.py
 """
 
 import json
 from collections import defaultdict
 
-INPUT_JSON = r"C:\Users\TsvetomirTsanov\Downloads\scan-run-raw-2026-09-29_18-27-06.json"
-OUTPUT_HTML = r"C:\newgithubaccountfolder\test-cases-accessibility\shared-components\verification-report-2026-09-29-1827.html"
+INPUT_JSON = r"C:\Users\TsvetomirTsanov\Downloads\scan-run-raw-2026-09-29_21-57-49.json"
+OUTPUT_HTML = r"C:\newgithubaccountfolder\test-cases-accessibility\shared-components\verification-report-2026-09-29-2157.html"
 
 TOTAL_PAGES = 25
 
