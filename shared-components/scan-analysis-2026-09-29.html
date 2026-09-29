@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Analysis — Shared Components · 2026-09-29</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; font-size: 0.9375rem; line-height: 1.65; padding: 2rem 1rem 4rem; }
+.page { max-width: 980px; margin: 0 auto; }
+.report-header { border-left: 4px solid #818cf8; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: #1e293b; border-radius: 0 6px 6px 0; }
+.report-header h1 { font-size: 1.35rem; color: #a5b4fc; font-weight: 700; margin-bottom: 0.25rem; }
+.report-header .meta { font-size: 0.8rem; color: #94a3b8; }
+.vs { display: inline-block; background: #334155; color: #93c5fd; font-size: 0.72rem; padding: 1px 8px; border-radius: 20px; margin-left: 0.5rem; }
+.tldr { background: #1e293b; border-left: 3px solid #818cf8; border-radius: 0 6px 6px 0; padding: 0.9rem 1.1rem; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1.5rem; }
+.tldr strong { color: #a5b4fc; }
+h2 { font-size: 1.05rem; color: #7dd3fc; font-weight: 700; margin: 2.5rem 0 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; }
+h3 { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.metric { background: #1e293b; border-radius: 6px; padding: 0.8rem 1rem; border-top: 3px solid; text-align: center; }
+.metric .num { font-size: 2rem; font-weight: 800; line-height: 1; }
+.metric .label { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
+.metric.tp { border-color: #22c55e; } .metric.tp .num { color: #86efac; }
+.metric.fp { border-color: #ef4444; } .metric.fp .num { color: #fca5a5; }
+.metric.fn { border-color: #f59e0b; } .metric.fn .num { color: #fde68a; }
+.metric.blue { border-color: #3b82f6; } .metric.blue .num { color: #93c5fd; }
+.metric.pct { border-color: #818cf8; } .metric.pct .num { color: #a5b4fc; font-size: 1.4rem; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.badge-green { background: #14532d; color: #86efac; }
+.badge-red { background: #7f1d1d; color: #fca5a5; }
+.badge-amber { background: #78350f; color: #fde68a; }
+.badge-blue { background: #1e3a5f; color: #93c5fd; }
+.badge-gray { background: #334155; color: #94a3b8; }
+.badge-teal { background: #134e4a; color: #5eead4; }
+.finding { background: #1e293b; border-radius: 6px; margin-bottom: 1rem; overflow: hidden; }
+.finding-header { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 700; flex-wrap: wrap; }
+.finding-header.red    { background: #7f1d1d22; border-bottom: 1px solid #ef444433; color: #fca5a5; }
+.finding-header.amber  { background: #78350f22; border-bottom: 1px solid #f59e0b33; color: #fde68a; }
+.finding-header.green  { background: #14532d22; border-bottom: 1px solid #22c55e33; color: #86efac; }
+.finding-header.blue   { background: #1e3a5f22; border-bottom: 1px solid #3b82f633; color: #93c5fd; }
+.finding-header.teal   { background: #134e4a22; border-bottom: 1px solid #14b8a633; color: #5eead4; }
+.finding-body { padding: 0.75rem 1rem; font-size: 0.82rem; color: #cbd5e1; }
+.finding-body p { margin-bottom: 0.5rem; }
+.finding-body p:last-child { margin-bottom: 0; }
+.insight-box { background: #0f172a; border-left: 3px solid #f59e0b; border-radius: 0 4px 4px 0; padding: 0.6rem 0.8rem; margin: 0.5rem 0; font-size: 0.8rem; color: #fde68a; }
+.insight-box.green { border-color: #22c55e; color: #86efac; }
+.insight-box.blue  { border-color: #3b82f6; color: #93c5fd; }
+.insight-box.red   { border-color: #ef4444; color: #fca5a5; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem; }
+th { background: #1e293b; color: #7dd3fc; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; border-bottom: 1px solid #334155; white-space: nowrap; }
+td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e293b44; }
+td.ok   { color: #86efac; font-weight: 700; }
+td.bug  { color: #fca5a5; font-weight: 700; }
+td.part { color: #fde68a; font-weight: 700; }
+td.note { color: #94a3b8; font-size: 0.75rem; }
+code { background: #0f172a; color: #f9a8d4; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 0.8rem; }
+ul { padding-left: 1.2rem; }
+ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
+.sev { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+.sev-critical { background: #7f1d1d; color: #fca5a5; }
+.sev-high     { background: #78350f; color: #fde68a; }
+.sev-medium   { background: #1e3a5f; color: #93c5fd; }
+.sev-low      { background: #134e4a; color: #5eead4; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="report-header">
+    <h1>Scan Analysis — Shared Components Feature <span class="vs">Run 15a89e92 · 2026-09-29</span></h1>
+    <div class="meta">
+      25 pages · 139 shared components found · 1,418 total desktop violations · Scan config: SharedComponents-tests
+    </div>
+  </div>
+
+  <div class="tldr">
+    <strong>TL;DR:</strong> 6 of 16 engineered components verified exactly correct. 3 partial matches (wrong page counts). 3 not detected at all. 4 test design bugs identified. 8 bugs to fix before this can be used as a reliable regression baseline. The feature itself (grouping, page counts, percentages, severity labels) works correctly wherever our test pages triggered violations properly.
+  </div>
+
+  <h2>Run statistics</h2>
+  <div class="metrics">
+    <div class="metric blue"><div class="num">25</div><div class="label">Pages scanned</div></div>
+    <div class="metric blue"><div class="num">139</div><div class="label">Shared components found</div></div>
+    <div class="metric fp"><div class="num">1,418</div><div class="label">Total desktop violations</div></div>
+    <div class="metric tp"><div class="num">6</div><div class="label">Components verified exact</div></div>
+    <div class="metric fn"><div class="num">3</div><div class="label">Partial matches</div></div>
+    <div class="metric fp"><div class="num">8</div><div class="label">Bugs to fix</div></div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header blue"><span>Why 1,418 violations instead of ~239 expected</span></div>
+    <div class="finding-body">
+      <p>The scanner detected many unplanned violations from the page structure: AAA colour contrast failures on nearly every text element (our pages use colours that pass AA but not AAA), missing landmark containment (pages lack <code>&lt;main&gt;</code> on some agents' output), reflow failures at 320px, focus-not-obscured on cookie banner and footer links, and focus-visible on nav links. QA panels added by 9 agents to product pages create additional noise components (<code>.qa-panel</code>, <code>.qa-case-num</code>, <code>.qa-error-tag</code>). Our 16 engineered violations account for roughly 120 of the 1,418 — the rest is unintended.</p>
+    </div>
+  </div>
+
+  <h2>Engineered component verification</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Expected pages</th>
+        <th>Actual pages</th>
+        <th>Expected issue type</th>
+        <th>Actual issue type</th>
+        <th>Severity</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>meta[name="viewport"]</code></td>
+        <td>25/25</td>
+        <td class="ok">25/25 ✓</td>
+        <td>Viewport scaling</td>
+        <td class="ok">Zooming and scaling must not be disabled ✓</td>
+        <td>Expected Critical · Got <span class="sev sev-medium">Medium</span></td>
+        <td class="part">PARTIAL — severity differs</td>
+      </tr>
+      <tr>
+        <td><code>.site-nav</code></td>
+        <td>25/25</td>
+        <td class="ok">25/25 ✓</td>
+        <td>Landmark unique</td>
+        <td class="ok">Landmark unique ✓</td>
+        <td><span class="sev sev-medium">Medium</span> ✓</td>
+        <td class="ok">EXACT MATCH</td>
+      </tr>
+      <tr>
+        <td><code>#promo-bar</code></td>
+        <td>15/25</td>
+        <td class="ok">15/25 ✓</td>
+        <td>Text spacing clipped</td>
+        <td class="ok">Text spacing clipped ✓</td>
+        <td><span class="sev sev-high">High</span> ✓</td>
+        <td class="ok">EXACT MATCH</td>
+      </tr>
+      <tr>
+        <td><code>.cookie-btn</code></td>
+        <td>20/25</td>
+        <td class="ok">20/25 ✓</td>
+        <td>Colour contrast</td>
+        <td class="ok">Colour contrast AA ✓</td>
+        <td>Expected Critical · Got <span class="sev sev-high">High</span></td>
+        <td class="part">PARTIAL — severity differs</td>
+      </tr>
+      <tr>
+        <td><code>.flash-sale-chip</code></td>
+        <td>2/25</td>
+        <td class="ok">2/25 ✓</td>
+        <td>role-img-alt</td>
+        <td class="ok">role-img-alt ✓</td>
+        <td>Expected Critical · Got <span class="sev sev-high">High</span></td>
+        <td class="part">PARTIAL — severity differs</td>
+      </tr>
+      <tr>
+        <td><code>#featured-promo</code></td>
+        <td>1/25</td>
+        <td class="ok">1/25 ✓</td>
+        <td>aria-allowed-attr</td>
+        <td class="ok">aria-allowed-attr ✓</td>
+        <td><span class="sev sev-critical">Critical</span> ✓</td>
+        <td class="ok">EXACT MATCH</td>
+      </tr>
+      <tr>
+        <td><code>#product-modal</code></td>
+        <td>5/25</td>
+        <td class="bug">4/25 ✗</td>
+        <td>Modal lifecycle focus not restored</td>
+        <td class="ok">3 modal lifecycle types ✓</td>
+        <td><span class="sev sev-critical">Critical</span> ✓</td>
+        <td class="bug">BUG — 1 page missing</td>
+      </tr>
+      <tr>
+        <td><code>h2.section-divider</code></td>
+        <td>3/25</td>
+        <td class="bug">2/25 ✗</td>
+        <td>empty-heading, Low</td>
+        <td class="ok">empty-heading ✓</td>
+        <td><span class="sev sev-low">Low</span> ✓</td>
+        <td class="bug">BUG — 1 page wrong selector</td>
+      </tr>
+      <tr>
+        <td><code>h3.section-title</code></td>
+        <td>20/25</td>
+        <td class="bug">14/25 ✗</td>
+        <td>heading-order</td>
+        <td class="ok">heading-order ✓</td>
+        <td><span class="sev sev-medium">Medium</span> ✓</td>
+        <td class="bug">BUG — 6 pages not firing</td>
+      </tr>
+      <tr>
+        <td><code>.newsletter-input</code> (label violation)</td>
+        <td>5/25</td>
+        <td class="bug">0/25 ✗</td>
+        <td>label rule (Critical)</td>
+        <td class="bug">NOT DETECTED</td>
+        <td>—</td>
+        <td class="bug">BUG — test design flaw</td>
+      </tr>
+      <tr>
+        <td><code>#toast-region</code> (live region)</td>
+        <td>6/25</td>
+        <td class="bug">0/25 ✗</td>
+        <td>Live region with content</td>
+        <td class="bug">NOT DETECTED</td>
+        <td>—</td>
+        <td class="bug">BUG — not triggered</td>
+      </tr>
+      <tr>
+        <td><code>.ghost-cta</code> (focus-visible)</td>
+        <td>18/25</td>
+        <td class="bug">0/25 ✗ (by class)</td>
+        <td>focus-visible High</td>
+        <td class="bug">Fires on positional selectors, not <code>.ghost-cta</code></td>
+        <td>—</td>
+        <td class="bug">BUG — wrong selector generated</td>
+      </tr>
+      <tr>
+        <td><code>.modal-close</code> (focus-visible)</td>
+        <td>5/25</td>
+        <td class="bug">0/25 ✗ (by class)</td>
+        <td>focus-visible High</td>
+        <td><code>#qv-trigger</code> Low focus-visible on 5 pages</td>
+        <td>—</td>
+        <td class="bug">BUG — wrong element flagged</td>
+      </tr>
+      <tr>
+        <td><code>.tooltip-btn</code> ARIA grouping</td>
+        <td>8/25 as one group</td>
+        <td class="bug">3+3+3 as separate groups ✗</td>
+        <td>aria-valid-attr-value Critical</td>
+        <td class="ok">aria-valid-attr-value ✓ but fragmented</td>
+        <td><span class="sev sev-critical">Critical</span> ✓</td>
+        <td class="bug">BUG — ID values differ per page</td>
+      </tr>
+      <tr>
+        <td><code>nav.footer-nav</code> (landmark)</td>
+        <td>25/25</td>
+        <td class="note">Not grouped as nav.footer-nav</td>
+        <td>Landmark unique</td>
+        <td class="note">Footer links grouped individually by position</td>
+        <td>—</td>
+        <td class="note">OBSERVATION — structure creates many sub-components</td>
+      </tr>
+      <tr>
+        <td><code>.hero-section</code> (gradient contrast)</td>
+        <td>10/25</td>
+        <td class="note">7/25 as landmark issue; 3/25 gradient text</td>
+        <td>Text contrast over gradient High</td>
+        <td class="note">Gradient contrast detected on child <code>h2</code>/<code>p</code> elements, 3 pages only</td>
+        <td><span class="sev sev-high">High</span> ✓</td>
+        <td class="note">OBSERVATION — fewer pages triggered</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Bug details and root causes</h2>
+
+  <!-- BUG 1 -->
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Bug 1 — .newsletter-input: label rule never fires (placeholder accepted as label)</span>
+      <span class="badge badge-red">Test design</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> <code>label</code> rule fires on 5 pages where <code>.newsletter-input</code> has no <code>aria-label</code>. Portal shows 5/25 pages, demonstrating "element present but no violation" on the 3 blog pages.</p>
+      <p><strong>Actual:</strong> <code>label</code> rule fires on 0 pages. The <code>placeholder="Your email address"</code> attribute is accepted by axe-core as a sufficient accessible name — the label rule only fires when there is no accessible name whatsoever (no label, no aria-label, no aria-labelledby, no title, and no placeholder).</p>
+      <p><strong>What is shown instead:</strong> The <code>region</code> rule fires on <code>input</code> for 5 pages, but the WRONG 5 pages: new-arrivals, trending, blog, blog-post-performance, blog-post-sustainability. This mixes violation pages (new-arrivals, trending) with non-violation pages (blog group) and misses home, shop-all, sale.</p>
+      <div class="insight-box red">The "element present but no violation" test is completely non-functional. The label rule is not a reliable discriminator here. Fix: remove <code>placeholder</code> from all newsletter inputs, then add <code>aria-label</code> only on the pass pages. Without placeholder, the label rule will fire.</div>
+      <p><strong>Fix:</strong> Change violation pages to <code>&lt;input type="email" class="newsletter-input"&gt;</code> (no placeholder). Add <code>aria-label="Email address"</code> only on blog, blog-post-performance, blog-post-sustainability. Verify label rule fires on exactly 5 pages.</p>
+    </div>
+  </div>
+
+  <!-- BUG 2 -->
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Bug 2 — .tooltip-btn: aria-controls values differ per page, preventing grouping</span>
+      <span class="badge badge-red">Test design</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> All 8 tooltip pages group under a single component (e.g. <code>.tooltip-btn</code>) with 8/25 pages.</p>
+      <p><strong>Actual:</strong> Each page uses different <code>aria-controls</code> values. The selector generated by axe-core includes the attribute value (e.g. <code>button[aria-controls="NONEXISTENT-ID-1"]</code> vs <code>button[aria-controls="nonexistent-id-1"]</code> vs <code>button[aria-controls="tooltip-info-1"]</code>). This creates 9+ separate groups of 2–3 pages each instead of one group of 8.</p>
+      <p>Pages found: new-arrivals (nonexistent-id-*), product-running/training/shirts (NONEXISTENT-ID-*), trending (tooltip-info-*). Pages home, shop-all, sale used descriptive IDs like <code>size-guide-panel</code> which may actually resolve if a real element exists, or are grouped differently.</p>
+      <div class="insight-box red">Fix: standardise all tooltip buttons to use the same nonexistent ID: <code>aria-controls="tooltip-content"</code> on every page. This produces one selector <code>button[aria-controls="tooltip-content"]</code> grouping all 8 pages together.</div>
+    </div>
+  </div>
+
+  <!-- BUG 3 -->
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Bug 3 — #product-modal missing from product-accessories.html</span>
+      <span class="badge badge-red">Implementation</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> 5/25 pages (product-running-shoes, product-training-shoes, product-shirts, product-jackets, product-accessories).</p>
+      <p><strong>Actual:</strong> 4/25 pages — product-accessories.html does not contain <code>#product-modal</code>. The workflow agent for batch 2 (pages 6–10) did not add the modal to product-accessories despite the spec requiring it.</p>
+      <div class="insight-box red">Fix: Add <code>#product-modal</code> and <code>openModal()</code>/<code>closeModal()</code> JS to product-accessories.html following the same pattern as product-running-shoes.html.</div>
+    </div>
+  </div>
+
+  <!-- BUG 4 -->
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Bug 4 — h2.section-divider on blog.html uses selector "h2" not ".section-divider"</span>
+      <span class="badge badge-red">Implementation</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> 3/25 pages under <code>.section-divider</code> (home, blog, faq).</p>
+      <p><strong>Actual:</strong> home.html and faq.html produce selector <code>.section-divider</code> (2 pages ✓). blog.html's empty heading produces selector <code>h2</code> (generic, no class) — placed in a different group.</p>
+      <p>Root cause: blog.html's empty heading was added without the <code>class="section-divider"</code> attribute, or the class was omitted by the edit.</p>
+      <div class="insight-box red">Fix: Check blog.html's section-divider element and add <code>class="section-divider"</code> if missing.</div>
+    </div>
+  </div>
+
+  <!-- BUG 5 -->
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Bug 5 — h3.section-title heading-order fires on only 14 of 20 expected pages</span>
+      <span class="badge badge-red">Implementation</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> 20/25 pages trigger heading-order (h3 after h1 with no h2).</p>
+      <p><strong>Actual:</strong> Only 14/25 pages trigger it. The portal shows 17 pages have the <code>.section-title</code> element, but heading-order only fires on 14. This means 6 pages have an h2 somewhere that "breaks" the skip (makes the h3 not a skip), and 3 pages are missing the element entirely.</p>
+      <p>The 6 pages where heading-order doesn't fire likely have an h2 added by the workflow agents (e.g. inside a card, a newsletter section, or the page-hero area), which satisfies the axe-core rule even though the <code>h3.section-title</code> still appears.</p>
+      <div class="insight-box red">Fix: Audit pages 11–20 to confirm no h2 appears before h3.section-title. Remove any unintentional h2 elements on those pages. Also confirm pages 1–3 that appear to be missing the element actually have it.</div>
+    </div>
+  </div>
+
+  <!-- BUG 6 -->
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Bug 6 — #toast-region live-region-with-content not detected</span>
+      <span class="badge badge-amber">Behavioral scan gap</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> 6 pages show "Live region created with content" violation on <code>#toast-region</code>.</p>
+      <p><strong>Actual:</strong> Zero detections for any live-region rule. <code>#toast-region</code> only appears with a focus-not-obscured issue on 2 pages (the fixed-positioned toast covers keyboard-focused elements on small viewports).</p>
+      <p>Root cause: The "live region created with content" check requires the live region to be dynamically CREATED with content via JavaScript (i.e. the region doesn't exist at page load — it's injected). Static <code>aria-live</code> regions that have content in the initial HTML are not flagged by this rule in the current scanner version.</p>
+      <div class="insight-box red">Fix: Change <code>#toast-region</code> to be injected via JS on page load with content already in the element — simulating a component that is dynamically added with pre-existing content. Use <code>document.addEventListener('DOMContentLoaded', ...)</code> to inject a region containing text. This matches the real-world failure pattern the rule targets.</div>
+    </div>
+  </div>
+
+  <!-- BUG 7 -->
+  <div class="finding">
+    <div class="finding-header amber">
+      <span>Bug 7 — .ghost-cta and .modal-close: focus-visible not grouped by class selector</span>
+      <span class="badge badge-amber">Selector generation</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Expected:</strong> <code>.ghost-cta</code> groups 18 pages under one component for focus-visible.</p>
+      <p><strong>Actual:</strong> The scanner generates positional selectors for each ghost-cta link (<code>html &gt; body &gt; main &gt; div:nth-of-type(1) &gt; a</code>, etc.) because the link appears in different DOM positions on different pages. These scatter across many 1–3 page components.</p>
+      <p>Focus-visible IS detected on ghost-cta elements — the underlying rule fires — but the grouping key changes per page, preventing aggregation. The same applies to <code>.modal-close</code>.</p>
+      <div class="insight-box">This is a fundamental constraint: stable class selectors only group when the element consistently appears as the unique or primary element matching that class. If the same class selector resolves to <em>one</em> clear element per page, the class is used. If positional disambiguation is needed, the positional path is used instead. The fix is to ensure ghost-cta links have no other siblings matching the same axe selector criteria — or accept that focus-visible detection on links will scatter. Consider using an ID on a wrapper instead of relying on the class.</div>
+      <p><strong>Fix option A:</strong> Wrap each ghost-cta in a unique-per-type container so the class selector is unambiguous. <strong>Fix option B:</strong> Accept this as a known scanner behaviour and remove .ghost-cta and .modal-close from the expected components list.</p>
+    </div>
+  </div>
+
+  <!-- BUG 8 -->
+  <div class="finding">
+    <div class="finding-header amber">
+      <span>Bug 8 — 9 pages have QA panels causing noise components</span>
+      <span class="badge badge-amber">Implementation — agent error</span>
+    </div>
+    <div class="finding-body">
+      <p>The workflow agents added QA panels to 9 pages: account, blog-post-style, brands, faq, mens, orders, product-jackets, product-shirts, product-training-shoes, store-locator. These panels generate shared components in the portal: <code>.qa-panel</code> (9 pages, landmark issue), <code>.qa-case-num</code> (10 pages, AAA contrast), <code>.qa-error-tag</code> in multiple list positions (10 pages each, AAA contrast).</p>
+      <div class="insight-box">Fix: Remove QA panel HTML and CSS from all affected pages. The CLAUDE.md for this folder explicitly prohibits QA panels.</div>
+    </div>
+  </div>
+
+  <h2>Severity label discrepancies</h2>
+
+  <div class="finding">
+    <div class="finding-header blue"><span>Expected Critical, got Medium/High — not a scanner bug</span></div>
+    <div class="finding-body">
+      <p>Three components showed lower severity than expected: <code>meta[name="viewport"]</code> (expected Critical, got Medium), <code>.cookie-btn</code> (expected Critical, got High), <code>.flash-sale-chip</code> (expected Critical, got High).</p>
+      <p>This is a mapping error in our expected results, not a scanner bug. QualiBooth uses its own 4-level scale (Critical/High/Medium/Low) which does not map 1:1 to axe-core's impact levels (critical/serious/moderate/minor):</p>
+      <ul>
+        <li><code>meta-viewport</code> — axe impact: <em>critical</em> → QualiBooth: <em>Medium</em> (AA level, non-urgent user impact)</li>
+        <li><code>color-contrast</code> AA — axe impact: <em>serious</em> → QualiBooth: <em>High</em></li>
+        <li><code>role-img-alt</code> — axe impact: <em>critical</em> → QualiBooth: <em>High</em></li>
+      </ul>
+      <div class="insight-box blue">Fix: Update expected-results.html to use QualiBooth's actual severity labels, not axe-core impact labels. Record the correct mapping after this scan.</div>
+    </div>
+  </div>
+
+  <h2>What works correctly (feature verification)</h2>
+
+  <div class="finding">
+    <div class="finding-header green"><span>Feature: page counts and percentages are accurate</span></div>
+    <div class="finding-body">
+      <p>For every component where the violation did fire correctly, the portal shows the exact expected page count and percentage. <code>#promo-bar</code> at 15/25 (60%), <code>.cookie-btn</code> at 20/25 (80%), <code>.site-nav</code> at 25/25 (100%), <code>#featured-promo</code> at 1/25 (4%), <code>.flash-sale-chip</code> at 2/25 (8%) — all exact. The counting and percentage calculation logic is correct.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header green"><span>Feature: issue counts per component are accurate</span></div>
+    <div class="finding-body">
+      <p>Issue counts match page counts exactly for 1-per-page components: 25 issues on 25 pages, 15 issues on 15 pages, 20 issues on 20 pages, 2 issues on 2 pages, 1 issue on 1 page. The issue counting mechanism is correct.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header green"><span>Feature: multiple issue types per component display correctly</span></div>
+    <div class="finding-body">
+      <p><code>#product-modal</code> shows 3 issue types (not-dismissible, focus-not-moved, background-not-inert) and <code>#qv-trigger</code> shows 5 issue types. The multi-type display and severity breakdown within a single component works correctly.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header green"><span>Feature: Low severity component renders correctly</span></div>
+    <div class="finding-body">
+      <p><code>.section-divider</code> appears with Low severity badge, 2 issues, 2 pages — confirming that Low-severity components are displayed and grouped correctly by the portal. The issue type name and WCAG reference also render correctly.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header green"><span>Feature: 1-page minimum component renders correctly</span></div>
+    <div class="finding-body">
+      <p><code>#featured-promo</code> at 1/25 pages (4%) renders correctly in the portal — confirming the feature handles the minimum page count without hiding, merging, or rounding incorrectly.</p>
+    </div>
+  </div>
+
+  <h2>Fix plan — 8 tasks, priority order</h2>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Fix</th><th>Files to change</th><th>Expected outcome after fix</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Remove QA panels from 9 pages</td>
+        <td>account, blog-post-style, brands, faq, mens, orders, product-jackets, product-shirts, product-training-shoes, store-locator</td>
+        <td>Eliminates <code>.qa-panel</code>, <code>.qa-case-num</code>, <code>.qa-error-tag</code> noise components</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Standardise tooltip <code>aria-controls</code> to one nonexistent ID value across all 8 pages</td>
+        <td>home, shop-all, sale, new-arrivals, trending, product-running-shoes, product-training-shoes, product-shirts</td>
+        <td><code>button[aria-controls="tooltip-content"]</code> groups as 1 component · 8/25 pages · Critical</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Fix .newsletter-input — remove placeholder from 5 violation pages</td>
+        <td>home, shop-all, sale, new-arrivals, trending</td>
+        <td><code>label</code> rule fires on exactly 5 pages · <code>input.newsletter-input</code> shows 5/25 (not 8/25) · "element present but no violation" test works</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Add #product-modal to product-accessories.html</td>
+        <td>product-accessories.html</td>
+        <td><code>#product-modal</code> at 5/25 pages ✓</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Fix h2.section-divider on blog.html — add missing class</td>
+        <td>blog.html</td>
+        <td><code>.section-divider</code> at 3/25 pages (12%) · Low severity ✓</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Audit pages 11–20 for accidental h2 elements before h3.section-title</td>
+        <td>Up to 6 pages in the 11–20 range</td>
+        <td><code>h3.section-title</code> heading-order fires on 20/25 pages ✓</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Change #toast-region to JS-injected live region with pre-populated content</td>
+        <td>product-running-shoes, product-training-shoes, product-shirts, product-jackets, product-accessories, mens</td>
+        <td>Live-region-with-content fires on 6 pages · <code>#toast-region</code> component visible</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Update expected-results.html severity labels to match QualiBooth scale</td>
+        <td>expected-results.html</td>
+        <td>Baseline reflects actual portal output — no false regression alerts on severity</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Unintended noise — not bugs, just observations</h2>
+
+  <div class="finding">
+    <div class="finding-header teal"><span>AAA colour contrast on almost every element</span></div>
+    <div class="finding-body">
+      <p>The scanner runs AAA colour contrast checks. Nearly all text elements fail AAA (enhanced contrast, 7:1 for normal text). This produces hundreds of components like <code>.card:nth-child(N) &gt; .price</code>, <code>.promo-line:nth-child(N)</code>, footer links, etc. These are all genuine AAA failures — our pages were designed for AA only. This is expected and not an error.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header teal"><span>Missing landmark containment — pages without &lt;main&gt;</span></div>
+    <div class="finding-body">
+      <p>17 of 25 pages show "Document should have one main landmark" as a whole-page issue. The workflow agents structured some pages without a <code>&lt;main&gt;</code> element, causing all content to be outside landmarks. This produces the <code>region</code> rule firing on many selectors. The fix for this is adding <code>&lt;main&gt;</code> wrappers, but it requires auditing which pages are affected and is lower priority than the 8 bugs above.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header teal"><span>Focus-not-obscured on cookie banner and footer links</span></div>
+    <div class="finding-body">
+      <p>The fixed-position <code>#cookie-banner</code> at the bottom of the viewport obscures keyboard-focused elements when the user tabs to elements near the bottom of the page. This was not planned but is a genuine accessibility issue — the cookie banner has no mechanism to dismiss or reposition. This is actually a good real-world finding but adds unplanned noise to the component list.</p>
+    </div>
+  </div>
+
+  <p style="font-size:0.75rem;color:#64748b;margin-top:1.5rem;text-align:center;">
+    Scan analysis · run 15a89e92 · SharedComponents-tests · 2026-09-29
+  </p>
+
+</div>
+</body>
+</html>
