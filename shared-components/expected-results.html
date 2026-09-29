@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expected Results — Shared Components Feature Regression</title>
+<title>Expected Results — Shared Components Feature Regression v2</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; font-size: 0.9375rem; line-height: 1.65; padding: 2rem 1rem 4rem; }
@@ -11,7 +11,7 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; c
 .report-header { border-left: 4px solid #818cf8; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: #1e293b; border-radius: 0 6px 6px 0; }
 .report-header h1 { font-size: 1.35rem; color: #a5b4fc; font-weight: 700; margin-bottom: 0.25rem; }
 .report-header .meta { font-size: 0.8rem; color: #94a3b8; }
-.report-header .vs { display: inline-block; background: #334155; color: #93c5fd; font-size: 0.72rem; padding: 1px 8px; border-radius: 20px; margin-left: 0.5rem; }
+.vs { display: inline-block; background: #334155; color: #93c5fd; font-size: 0.72rem; padding: 1px 8px; border-radius: 20px; margin-left: 0.5rem; }
 .tldr { background: #1e293b; border-left: 3px solid #818cf8; border-radius: 0 6px 6px 0; padding: 0.9rem 1.1rem; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1.5rem; }
 .tldr strong { color: #a5b4fc; }
 h2 { font-size: 1.05rem; color: #7dd3fc; font-weight: 700; margin: 2.5rem 0 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; }
@@ -21,30 +21,34 @@ h3 { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; margin: 1.25rem 0 0.5r
 .metric .num { font-size: 2rem; font-weight: 800; line-height: 1; }
 .metric .label { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
 .metric.tp { border-color: #22c55e; } .metric.tp .num { color: #86efac; }
-.metric.fp { border-color: #ef4444; } .metric.fp .num { color: #fca5a5; }
-.metric.fn { border-color: #f59e0b; } .metric.fn .num { color: #fde68a; }
 .metric.blue { border-color: #3b82f6; } .metric.blue .num { color: #93c5fd; }
 .metric.pct { border-color: #818cf8; } .metric.pct .num { color: #a5b4fc; font-size: 1.4rem; }
 .badge { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
 .badge-green { background: #14532d; color: #86efac; }
 .badge-red { background: #7f1d1d; color: #fca5a5; }
-.badge-blue { background: #1e3a5f; color: #93c5fd; }
 .badge-amber { background: #78350f; color: #fde68a; }
+.badge-blue { background: #1e3a5f; color: #93c5fd; }
 .badge-gray { background: #334155; color: #94a3b8; }
 .badge-teal { background: #134e4a; color: #5eead4; }
+.scorecard { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.score-card { background: #1e293b; border-radius: 6px; padding: 0.75rem 1rem; border-left: 3px solid; display: flex; flex-direction: column; gap: 0.25rem; }
+.score-card.green { border-color: #22c55e; }
+.score-card.amber { border-color: #f59e0b; }
+.score-card.red { border-color: #ef4444; }
+.score-card .check-name { font-size: 0.82rem; font-weight: 700; color: #e2e8f0; }
+.score-card .score-line { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; flex-wrap: wrap; }
+.score-card .note { font-size: 0.75rem; color: #94a3b8; margin-top: 0.15rem; }
 .finding { background: #1e293b; border-radius: 6px; margin-bottom: 1rem; overflow: hidden; }
 .finding-header { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 700; flex-wrap: wrap; }
 .finding-header.red { background: #7f1d1d22; border-bottom: 1px solid #ef444433; color: #fca5a5; }
 .finding-header.amber { background: #78350f22; border-bottom: 1px solid #f59e0b33; color: #fde68a; }
-.finding-header.green { background: #14532d22; border-bottom: 1px solid #22c55e33; color: #86efac; }
-.finding-header.blue { background: #1e3a5f22; border-bottom: 1px solid #3b82f633; color: #93c5fd; }
 .finding-header.teal { background: #134e4a22; border-bottom: 1px solid #14b8a633; color: #5eead4; }
+.finding-header.blue { background: #1e3a5f22; border-bottom: 1px solid #3b82f633; color: #93c5fd; }
 .finding-body { padding: 0.75rem 1rem; font-size: 0.82rem; color: #cbd5e1; }
 .finding-body p { margin-bottom: 0.5rem; }
 .insight-box { background: #0f172a; border-left: 3px solid #f59e0b; border-radius: 0 4px 4px 0; padding: 0.6rem 0.8rem; margin: 0.5rem 0; font-size: 0.8rem; color: #fde68a; }
-.insight-box.red { border-color: #ef4444; color: #fca5a5; }
-.insight-box.green { border-color: #22c55e; color: #86efac; }
 .insight-box.blue { border-color: #3b82f6; color: #93c5fd; }
+.insight-box.red { border-color: #ef4444; color: #fca5a5; }
 table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem; }
 th { background: #1e293b; color: #7dd3fc; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; border-bottom: 1px solid #334155; }
 td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: top; }
@@ -54,29 +58,20 @@ tr:hover td { background: #1e293b44; }
 .verdict-miss { color: #fca5a5; font-weight: 700; }
 .verdict-pass { color: #86efac; }
 code { background: #0f172a; color: #f9a8d4; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 0.8rem; }
-.scorecard { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
-.score-card { background: #1e293b; border-radius: 6px; padding: 0.75rem 1rem; border-left: 3px solid; display: flex; flex-direction: column; gap: 0.25rem; }
-.score-card.green { border-color: #22c55e; }
-.score-card.red { border-color: #ef4444; }
-.score-card.amber { border-color: #f59e0b; }
-.score-card .check-name { font-size: 0.82rem; font-weight: 700; color: #e2e8f0; }
-.score-card .score-line { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; flex-wrap: wrap; }
-.score-card .note { font-size: 0.75rem; color: #94a3b8; margin-top: 0.15rem; }
-/* Component result card — mimics the portal UI */
-.component-card { background: #1e293b; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #334155; }
-.component-card-header { background: #0f172a; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; border-bottom: 1px solid #334155; }
-.component-selector { font-family: monospace; font-size: 0.9rem; font-weight: 700; color: #a5b4fc; }
-.component-card-body { padding: 1rem; }
-.component-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem; }
+.comp-card { background: #1e293b; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #334155; }
+.comp-card-header { background: #0f172a; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; border-bottom: 1px solid #334155; }
+.comp-selector { font-family: monospace; font-size: 0.9rem; font-weight: 700; color: #a5b4fc; }
+.comp-card-body { padding: 1rem; }
+.comp-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem; }
 .stat-box { background: #0f172a; border-radius: 6px; padding: 0.6rem 0.75rem; }
 .stat-box .sval { font-size: 1.25rem; font-weight: 800; color: #e2e8f0; }
 .stat-box .slabel { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
 .stat-box .ssub { font-size: 0.7rem; color: #94a3b8; }
-.issue-row { background: #0f172a; border-radius: 6px; padding: 0.65rem 0.85rem; font-size: 0.8rem; color: #cbd5e1; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.issue-row { background: #0f172a; border-radius: 6px; padding: 0.55rem 0.85rem; font-size: 0.8rem; color: #cbd5e1; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 6px; }
 .impact-pill { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
-.impact-high { background: #78350f; color: #fde68a; }
-.impact-critical { background: #7f1d1d; color: #fca5a5; }
-.impact-medium { background: #854d0e; color: #fef08a; }
+.i-critical { background: #7f1d1d; color: #fca5a5; }
+.i-high { background: #78350f; color: #fde68a; }
+.i-moderate { background: #1e3a5f; color: #93c5fd; }
 ul { padding-left: 1.2rem; }
 ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
 </style>
@@ -85,240 +80,308 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
 <div class="page">
 
   <div class="report-header">
-    <h1>Expected Results <span class="vs">Regression Baseline</span></h1>
-    <div class="meta">Feature: Shared Components grouping &nbsp;·&nbsp; Test set: <code style="color:#a5b4fc;background:transparent;padding:0">shared-components/</code> &nbsp;·&nbsp; Org: testSharedComponent &nbsp;·&nbsp; Created 2025-09-29</div>
+    <h1>Expected Results <span class="vs">Regression Baseline v2</span></h1>
+    <div class="meta">Feature: Shared Components grouping &nbsp;·&nbsp; Scan config: SharedComponents-tests &nbsp;·&nbsp; Org: ceco (dev) &nbsp;·&nbsp; 25 pages · 12 components · ~231 violations &nbsp;·&nbsp; 2025-09-29</div>
   </div>
 
   <div class="tldr">
-    <strong>How to use:</strong> Run the SharedComponents-tests scan config in QualiBooth dev. After the run completes, open the Shared Components view in the portal and compare every metric against this document. Any deviation from the values below is a regression. The "Tolerance" column defines acceptable rounding.
+    <strong>How to use:</strong> Run <em>SharedComponents-tests</em> in QualiBooth dev. Open the Shared Components tab. Compare every metric below against what the portal shows. Record any deviation as a regression. Check the total violations count <strong>first</strong> — all share-of-run percentages depend on the correct denominator.
   </div>
 
   <h2>Run-Level Baseline</h2>
-
   <div class="metrics">
-    <div class="metric blue"><div class="num">20</div><div class="label">Pages in run</div></div>
-    <div class="metric fp"><div class="num">35</div><div class="label">Total violations expected</div></div>
-    <div class="metric tp"><div class="num">2</div><div class="label">Shared components with issues</div></div>
-    <div class="metric pct"><div class="num">2</div><div class="label">Unique issue types total</div></div>
+    <div class="metric blue"><div class="num">25</div><div class="label">Pages in run</div></div>
+    <div class="metric tp"><div class="num">12</div><div class="label">Shared components expected</div></div>
+    <div class="metric pct"><div class="num">~231</div><div class="label">Total violations (denominator)</div></div>
+    <div class="metric blue"><div class="num">14</div><div class="label">Distinct issue types</div></div>
   </div>
 
   <div class="finding">
-    <div class="finding-header blue">
-      <span>Violation breakdown</span>
-    </div>
+    <div class="finding-header blue"><span>Denominator note</span></div>
     <div class="finding-body">
-      <p><strong>15 violations</strong> from <code>#marquee-message</code> (text-spacing) — 1 per page on 15 marquee pages.</p>
-      <p><strong>20 violations</strong> from <code>.subscribe-btn</code> (colour-contrast) — 1 per page on all 20 pages.</p>
-      <div class="insight-box blue">Total = 35. If the actual total differs, check whether axe-core flagged additional child elements inside <code>#marquee-message</code> (e.g. <code>.marquee-line</code> spans) or generated a different selector for the button.</div>
+      <p>~231 is the designed total. Actual may differ slightly if axe-core reports violations on child elements rather than the parent selector (e.g. <code>.tooltip-content</code> instead of <code>.tooltip-btn</code>). Verify the actual total before computing share percentages.</p>
+      <div class="insight-box blue">Step 1 of every regression run: confirm total violations = ~231. If different, investigate before asserting other failures.</div>
     </div>
   </div>
 
-  <h2>Expected Shared Component: <code>#marquee-message</code></h2>
+  <h2>Expected Shared Components (12 entries)</h2>
 
-  <div class="component-card">
-    <div class="component-card-header">
-      <span class="component-selector">#marquee-message</span>
-      <span class="badge badge-blue">at the top of the document</span>
+  <!-- 1 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">meta[name="viewport"]</span>
+      <span class="badge badge-blue">universal — in &lt;head&gt; on every page</span>
     </div>
-    <div class="component-card-body">
-      <div class="component-stats">
-        <div class="stat-box">
-          <div class="sval">15</div>
-          <div class="slabel">Pages affected</div>
-          <div class="ssub">of 20 · 75%</div>
-        </div>
-        <div class="stat-box">
-          <div class="sval">15</div>
-          <div class="slabel">Issues here</div>
-        </div>
-        <div class="stat-box">
-          <div class="sval">42.9%</div>
-          <div class="slabel">Share of run</div>
-          <div class="ssub">15 of 35 total</div>
-        </div>
-        <div class="stat-box">
-          <div class="sval">1</div>
-          <div class="slabel">Issue types</div>
-        </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">25</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 100%</div></div>
+        <div class="stat-box"><div class="sval">25</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">10.8%</div><div class="slabel">Share of run</div><div class="ssub">25 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
       </div>
-      <div class="issue-row">
-        <span class="impact-pill impact-high">High</span>
-        <span>Text spacing overlap</span>
-        <span class="badge badge-blue">AA</span>
-        <span style="color:#64748b;font-size:0.75rem;">15 occurrences across 15 pages</span>
-      </div>
+      <div class="issue-row"><span class="impact-pill i-critical">Critical</span><span>Viewport scaling disabled — users cannot zoom or scale text</span><span class="badge badge-blue">1.4.4</span><span style="color:#64748b;font-size:0.75rem;">25 occurrences · 25 pages · user-scalable=no</span></div>
     </div>
   </div>
 
-  <h2>Expected Shared Component: <code>.subscribe-btn</code></h2>
-
-  <div class="component-card">
-    <div class="component-card-header">
-      <span class="component-selector">.subscribe-btn</span>
-      <span class="badge badge-blue">in footer on every page</span>
+  <!-- 2 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">nav.site-nav</span>
+      <span class="badge badge-blue">sticky top header · all pages</span>
     </div>
-    <div class="component-card-body">
-      <div class="component-stats">
-        <div class="stat-box">
-          <div class="sval">20</div>
-          <div class="slabel">Pages affected</div>
-          <div class="ssub">of 20 · 100%</div>
-        </div>
-        <div class="stat-box">
-          <div class="sval">20</div>
-          <div class="slabel">Issues here</div>
-        </div>
-        <div class="stat-box">
-          <div class="sval">57.1%</div>
-          <div class="slabel">Share of run</div>
-          <div class="ssub">20 of 35 total</div>
-        </div>
-        <div class="stat-box">
-          <div class="sval">1</div>
-          <div class="slabel">Issue types</div>
-        </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">25</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 100%</div></div>
+        <div class="stat-box"><div class="sval">50</div><div class="slabel">Issues here</div><div class="ssub">2 per page</div></div>
+        <div class="stat-box"><div class="sval">21.6%</div><div class="slabel">Share of run</div><div class="ssub">50 of 231</div></div>
+        <div class="stat-box"><div class="sval">2</div><div class="slabel">Issue types</div></div>
       </div>
-      <div class="issue-row">
-        <span class="impact-pill impact-critical">Critical</span>
-        <span>Colour contrast</span>
-        <span class="badge badge-blue">AA</span>
-        <span style="color:#64748b;font-size:0.75rem;">20 occurrences across 20 pages · #ffffff on #e2e8f0 ≈ 1.22:1 (required 4.5:1)</span>
-      </div>
+      <div class="issue-row"><span class="impact-pill i-moderate">Moderate</span><span>Landmarks should have unique role/label/title — nav has no aria-label</span><span class="badge badge-blue">1.3.6</span><span style="color:#64748b;font-size:0.75rem;">25 occurrences</span></div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Focus not obscured — sticky nav may cover keyboard-focused elements below</span><span class="badge badge-blue">2.4.11</span><span style="color:#64748b;font-size:0.75rem;">25 occurrences · if detected by behavioral scan</span></div>
+      <div class="insight-box">Focus not obscured requires behavioral scanning. If the portal shows only 1 issue type (landmark-unique) and 25 issues instead of 50, the behavioral check did not fire — expected and not a regression in the axe-core layer.</div>
     </div>
   </div>
 
-  <h2>Per-Page Expected Results</h2>
+  <!-- 3 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">nav.footer-nav</span>
+      <span class="badge badge-blue">footer navigation · all pages</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">25</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 100%</div></div>
+        <div class="stat-box"><div class="sval">25</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">10.8%</div><div class="slabel">Share of run</div><div class="ssub">25 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-moderate">Moderate</span><span>Landmarks should have unique role/label/title — footer nav has no aria-label</span><span class="badge badge-blue">1.3.6</span><span style="color:#64748b;font-size:0.75rem;">25 occurrences</span></div>
+    </div>
+  </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Page</th>
-        <th>#marquee-message violation</th>
-        <th>.subscribe-btn violation</th>
-        <th>Total violations on page</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td><code>home.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>about.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>products.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>product-shoes.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>product-shirts.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>product-accessories.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>blog.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>blog-summer-trends.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>blog-company-update.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>blog-sustainability.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>services.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>portfolio.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>testimonials.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>events.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>news.html</code></td><td class="verdict-hit">YES — 1</td><td class="verdict-hit">YES — 1</td><td>2</td></tr>
-      <tr><td><code>faq.html</code></td><td class="verdict-miss">NO — element absent</td><td class="verdict-hit">YES — 1</td><td>1</td></tr>
-      <tr><td><code>careers.html</code></td><td class="verdict-miss">NO — element absent</td><td class="verdict-hit">YES — 1</td><td>1</td></tr>
-      <tr><td><code>privacy.html</code></td><td class="verdict-miss">NO — element absent</td><td class="verdict-hit">YES — 1</td><td>1</td></tr>
-      <tr><td><code>terms.html</code></td><td class="verdict-miss">NO — element absent</td><td class="verdict-hit">YES — 1</td><td>1</td></tr>
-      <tr><td><code>sitemap.html</code></td><td class="verdict-miss">NO — element absent</td><td class="verdict-hit">YES — 1</td><td>1</td></tr>
-    </tbody>
-  </table>
+  <!-- 4 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">#promo-bar</span>
+      <span class="badge badge-blue">announcement ticker · pages 1–15</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">15</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 60%</div></div>
+        <div class="stat-box"><div class="sval">15</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">6.5%</div><div class="slabel">Share of run</div><div class="ssub">15 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Text spacing clipped — height:40px + overflow:hidden clips second line at line-height:1.5em</span><span class="badge badge-blue">1.4.12</span><span style="color:#64748b;font-size:0.75rem;">15 occurrences · 15 pages</span></div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">.cookie-btn</span>
+      <span class="badge badge-blue">cookie consent accept button · pages 1–20</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">20</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 80%</div></div>
+        <div class="stat-box"><div class="sval">20</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">8.7%</div><div class="slabel">Share of run</div><div class="ssub">20 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-critical">Critical</span><span>Colour contrast — #ffffff text on #93c5fd background ≈ 2.2:1 (required 4.5:1)</span><span class="badge badge-blue">1.4.3</span><span style="color:#64748b;font-size:0.75rem;">20 occurrences · 20 pages</span></div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">.hero-section</span>
+      <span class="badge badge-blue">gradient hero banner · pages 1–10</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">10</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 40%</div></div>
+        <div class="stat-box"><div class="sval">10</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">4.3%</div><div class="slabel">Share of run</div><div class="ssub">10 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Text contrast over gradient — white text on blue-purple-pink gradient may fall below 3:1</span><span class="badge badge-blue">1.4.11</span><span style="color:#64748b;font-size:0.75rem;">10 occurrences · behavioral scan required</span></div>
+      <div class="insight-box">Gradient contrast requires the scanner to compute luminance across the gradient range. May not fire in all scanner versions — flag as informational if absent.</div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">.tooltip-btn</span>
+      <span class="badge badge-blue">product tooltip trigger · pages 1–8 · 4 issue types</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">8</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 32%</div></div>
+        <div class="stat-box"><div class="sval">32</div><div class="slabel">Issues here</div><div class="ssub">4 per page</div></div>
+        <div class="stat-box"><div class="sval">13.9%</div><div class="slabel">Share of run</div><div class="ssub">32 of 231</div></div>
+        <div class="stat-box"><div class="sval">4</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-critical">Critical</span><span>ARIA — aria-controls references non-existent element ID</span><span class="badge badge-blue">4.1.2</span><span style="color:#64748b;font-size:0.75rem;">24 occurrences (3 per page)</span></div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Hover/focus content — hover only (tooltip not shown on keyboard focus)</span><span class="badge badge-blue">1.4.13</span><span style="color:#64748b;font-size:0.75rem;">behavioral scan · 8 pages</span></div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Hover/focus content — not dismissible (no Escape key handler)</span><span class="badge badge-blue">1.4.13</span><span style="color:#64748b;font-size:0.75rem;">behavioral scan · 8 pages</span></div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Hover/focus content — not persistent (tooltip lost when moving pointer to it)</span><span class="badge badge-blue">1.4.13</span><span style="color:#64748b;font-size:0.75rem;">behavioral scan · 8 pages</span></div>
+      <div class="insight-box">The three hover/focus sub-issues require QualiBooth behavioral scanning. axe-core alone will detect only the ARIA violation (Critical). Expected: 1 issue type from axe-core only, 4 issue types from full behavioral scan.</div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">#toast-region</span>
+      <span class="badge badge-blue">status notification · pages 6–11</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">6</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 24%</div></div>
+        <div class="stat-box"><div class="sval">6</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">2.6%</div><div class="slabel">Share of run</div><div class="ssub">6 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Live region created with content — aria-live="polite" region has text in DOM on initial load</span><span class="badge badge-blue">4.1.3</span><span style="color:#64748b;font-size:0.75rem;">6 occurrences · 6 pages (product-running-shoes through mens)</span></div>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">#product-modal</span>
+      <span class="badge badge-blue">quick-view dialog · pages 6–10</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">5</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 20%</div></div>
+        <div class="stat-box"><div class="sval">5</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">2.2%</div><div class="slabel">Share of run</div><div class="ssub">5 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-critical">Critical</span><span>Modal lifecycle focus not restored — closeModal() does not return focus to the opening trigger</span><span class="badge badge-blue">2.4.3</span><span style="color:#64748b;font-size:0.75rem;">5 occurrences · behavioral scan required</span></div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">.modal-close</span>
+      <span class="badge badge-blue">close button inside quick-view · pages 6–10</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">5</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 20%</div></div>
+        <div class="stat-box"><div class="sval">5</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">2.2%</div><div class="slabel">Share of run</div><div class="ssub">5 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Focus visible — .modal-close:focus { outline:none; box-shadow:none } with no visible focus replacement</span><span class="badge badge-blue">2.4.7</span><span style="color:#64748b;font-size:0.75rem;">5 occurrences</span></div>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">h3.section-title</span>
+      <span class="badge badge-blue">section heading · pages 1–20 · skips h2</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">20</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 80%</div></div>
+        <div class="stat-box"><div class="sval">20</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">8.7%</div><div class="slabel">Share of run</div><div class="ssub">20 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-moderate">Moderate</span><span>Heading levels should only increase by one — h3 directly after h1 with no h2 in between</span><span class="badge badge-blue">1.3.1</span><span style="color:#64748b;font-size:0.75rem;">20 occurrences · 20 pages</span></div>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="comp-card">
+    <div class="comp-card-header">
+      <span class="comp-selector">.ghost-cta</span>
+      <span class="badge badge-blue">call-to-action link · pages 1–18</span>
+    </div>
+    <div class="comp-card-body">
+      <div class="comp-stats">
+        <div class="stat-box"><div class="sval">18</div><div class="slabel">Pages affected</div><div class="ssub">of 25 · 72%</div></div>
+        <div class="stat-box"><div class="sval">18</div><div class="slabel">Issues here</div></div>
+        <div class="stat-box"><div class="sval">7.8%</div><div class="slabel">Share of run</div><div class="ssub">18 of 231</div></div>
+        <div class="stat-box"><div class="sval">1</div><div class="slabel">Issue types</div></div>
+      </div>
+      <div class="issue-row"><span class="impact-pill i-high">High</span><span>Focus visible — .ghost-cta:focus { outline:none; box-shadow:none } with no visible focus replacement</span><span class="badge badge-blue">2.4.7</span><span style="color:#64748b;font-size:0.75rem;">18 occurrences · 18 pages</span></div>
+    </div>
+  </div>
 
   <h2>Regression Acceptance Criteria</h2>
-
   <div class="scorecard">
-    <div class="score-card green">
-      <div class="check-name">#marquee-message — Pages affected count</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 15</span></div>
-      <div class="note">Tolerance: exact. Any number other than 15 is a regression.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">#marquee-message — Issues count</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 15</span></div>
-      <div class="note">Tolerance: ±0. If axe-core flags child elements (.marquee-line), actual may be higher — investigate before failing.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">#marquee-message — Pages affected %</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 75%</span></div>
-      <div class="note">Tolerance: ±1pp rounding. Accept 74–76%.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">#marquee-message — Share of run %</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 42.9%</span></div>
-      <div class="note">Tolerance: ±1pp rounding. Accept 42–44%. Sensitive to total violation count — verify total is 35 first.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">#marquee-message — Issue types</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 1</span></div>
-      <div class="note">Exactly 1 issue type: Text spacing overlap. Any other type is a regression.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">.subscribe-btn — Pages affected count</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 20</span></div>
-      <div class="note">Tolerance: exact. All 20 pages must be reported.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">.subscribe-btn — Share of run %</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 57.1%</span></div>
-      <div class="note">Tolerance: ±1pp. Accept 56–58%.</div>
-    </div>
-    <div class="score-card green">
-      <div class="check-name">Total violations in run</div>
-      <div class="score-line"><span class="badge badge-green">Expected: 35</span></div>
-      <div class="note">Must be verified FIRST — all other percentages depend on this denominator being correct.</div>
-    </div>
+    <div class="score-card green"><div class="check-name">Total violations in run</div><div class="score-line"><span class="badge badge-green">~231 (±5 tolerance)</span></div><div class="note">Verify FIRST. All share percentages depend on this. Deviation beyond ±5 warrants investigation.</div></div>
+    <div class="score-card green"><div class="check-name">Number of shared components</div><div class="score-line"><span class="badge badge-green">12 components (axe-core) or up to 14 (full behavioral)</span></div><div class="note">Components vary by scan depth. nav.site-nav may show 1 or 2 issue types depending on behavioral scan.</div></div>
+    <div class="score-card green"><div class="check-name">meta[name="viewport"] — pages</div><div class="score-line"><span class="badge badge-green">25/25 · 100%</span></div><div class="note">Exact. All 25 pages have user-scalable=no.</div></div>
+    <div class="score-card green"><div class="check-name">nav.site-nav — pages</div><div class="score-line"><span class="badge badge-green">25/25 · 100%</span></div><div class="note">Exact. Issue count: 25 (axe-core only) or 50 (behavioral).</div></div>
+    <div class="score-card green"><div class="check-name">nav.footer-nav — pages</div><div class="score-line"><span class="badge badge-green">25/25 · 100%</span></div><div class="note">Exact. 25 issues.</div></div>
+    <div class="score-card green"><div class="check-name">#promo-bar — pages</div><div class="score-line"><span class="badge badge-green">15/25 · 60%</span></div><div class="note">Exact. Pages 1–15 (home through collections).</div></div>
+    <div class="score-card green"><div class="check-name">.cookie-btn — pages</div><div class="score-line"><span class="badge badge-green">20/25 · 80%</span></div><div class="note">Exact. Pages 1–20. Pages 21–25 (support) have no cookie banner.</div></div>
+    <div class="score-card green"><div class="check-name">.hero-section — pages</div><div class="score-line"><span class="badge badge-green">10/25 · 40%</span></div><div class="note">Exact. Pages 1–10. Behavioral only — may not appear in axe-core-only scans.</div></div>
+    <div class="score-card green"><div class="check-name">.tooltip-btn — pages</div><div class="score-line"><span class="badge badge-green">8/25 · 32%</span></div><div class="note">Exact pages. Issue count varies: 8 (axe-core, ARIA only) to 32 (full behavioral, 4 types).</div></div>
+    <div class="score-card green"><div class="check-name">#toast-region — pages</div><div class="score-line"><span class="badge badge-green">6/25 · 24%</span></div><div class="note">Exact. Pages 6–11 (product-running-shoes through mens).</div></div>
+    <div class="score-card green"><div class="check-name">#product-modal — pages</div><div class="score-line"><span class="badge badge-green">5/25 · 20%</span></div><div class="note">Exact. Pages 6–10. Behavioral scan required.</div></div>
+    <div class="score-card green"><div class="check-name">h3.section-title — pages</div><div class="score-line"><span class="badge badge-green">20/25 · 80%</span></div><div class="note">Exact. Pages 1–20. Pages 21–25 use correct h2 hierarchy.</div></div>
+    <div class="score-card green"><div class="check-name">.ghost-cta — pages</div><div class="score-line"><span class="badge badge-green">18/25 · 72%</span></div><div class="note">Exact. Pages 1–18. Pages 19–25 have no ghost-cta element.</div></div>
   </div>
 
-  <h2>Known Uncertainties</h2>
+  <h2>Known Uncertainties &amp; Scan-Depth Variations</h2>
 
   <div class="finding">
-    <div class="finding-header amber">
-      <span>Selector for .subscribe-btn may vary</span>
-    </div>
+    <div class="finding-header amber"><span>Behavioral-only detections may be absent in axe-core-only scan</span></div>
     <div class="finding-body">
-      <p>axe-core generates selectors automatically. For <code>&lt;button class="subscribe-btn"&gt;</code>, the generated selector may be <code>.subscribe-btn</code>, <code>button.subscribe-btn</code>, <code>.footer-inner &gt; button</code>, or something more specific depending on axe-core's selector algorithm version.</p>
-      <div class="insight-box">If the portal shows the button under a different selector, update the expected selector in this document and record the actual selector as the regression baseline.</div>
+      <p>Four components require QualiBooth behavioral scanning to be fully detected: <code>.hero-section</code> (gradient contrast), <code>.tooltip-btn</code> (hover/focus 3 sub-issues), <code>#product-modal</code> (modal lifecycle), and <code>nav.site-nav</code> (focus not obscured). If the scan runs axe-core only:</p>
+      <ul>
+        <li><code>.hero-section</code> — may not appear at all</li>
+        <li><code>.tooltip-btn</code> — shows 1 issue type (ARIA) instead of 4; 8 issues instead of 32</li>
+        <li><code>#product-modal</code> — may not appear</li>
+        <li><code>nav.site-nav</code> — shows 1 issue type (landmark-unique) instead of 2; 25 issues instead of 50</li>
+      </ul>
+      <div class="insight-box">Document which mode was used for each scan run. Compare behavioral results against behavioral baseline, and axe-core results against axe-core baseline separately.</div>
     </div>
   </div>
 
   <div class="finding">
-    <div class="finding-header amber">
-      <span>axe-core may report violations on child elements inside #marquee-message</span>
-    </div>
+    <div class="finding-header amber"><span>Selector precision — axe-core may generate a more specific selector</span></div>
     <div class="finding-body">
-      <p>If axe-core reports the text-spacing violation on <code>.marquee-line</code> (the child spans) rather than on <code>#marquee-message</code> itself, the shared components group would appear under a different selector. The violation count per page might be 2 (one per span) rather than 1.</p>
-      <div class="insight-box">If this occurs: update expected issue count to 30 (2 per page × 15 pages), update selector, and re-calculate share percentages: 30/(30+20) = 60%.</div>
+      <p>axe-core generates CSS selectors automatically. <code>.cookie-btn</code> might be reported as <code>button.cookie-btn</code> or <code>#cookie-banner > button.cookie-btn</code>. Similarly <code>.modal-close</code> might be <code>.modal-box > button.modal-close</code>. If a component appears under a more specific selector, update the baseline — the page count and issue count are still the ground truth.</p>
     </div>
   </div>
 
   <div class="finding">
-    <div class="finding-header teal">
-      <span>Confirm: pages WITHOUT #marquee-message are NOT listed under the component</span>
-    </div>
+    <div class="finding-header teal"><span>Pages 21–25 (support) — verify they appear in run total but NOT in most component lists</span></div>
     <div class="finding-body">
-      <p>The five pages without <code>#marquee-message</code> (faq, careers, privacy, terms, sitemap) must <em>not</em> appear in the pages list under the <code>#marquee-message</code> component. Verify that the portal shows exactly 15 pages, not 20.</p>
+      <p>account, orders, faq, careers, and store-locator should appear in the scan run total (25 pages) but should NOT appear in the pages lists for promo-bar, cookie-btn, hero-section, tooltip-btn, toast-region, product-modal, section-title, or ghost-cta.</p>
+      <p>They SHOULD appear in the pages lists for <code>meta[name="viewport"]</code>, <code>nav.site-nav</code>, and <code>nav.footer-nav</code>.</p>
     </div>
   </div>
 
   <h2>Test Execution Checklist</h2>
   <ul>
-    <li>Run scan config "SharedComponents-tests" (org: testSharedComponent) on QualiBooth dev</li>
-    <li>Wait for run to complete — verify all 20 URLs were scanned successfully</li>
-    <li>Open Shared Components view in the portal</li>
-    <li>Locate <code>#marquee-message</code> in the component list — verify it exists</li>
-    <li>Check: Pages affected = 15 of 20 (75%)</li>
-    <li>Check: Issues = 15</li>
-    <li>Check: Share of run ≈ 42.9%</li>
-    <li>Check: Issue types = 1 (Text spacing overlap)</li>
-    <li>Click into <code>#marquee-message</code> — verify the 15 affected page URLs are the marquee pages (home, about, products, etc.) and NOT the 5 non-marquee pages</li>
-    <li>Locate <code>.subscribe-btn</code> (or equivalent selector) in the component list</li>
-    <li>Check: Pages affected = 20 of 20 (100%)</li>
-    <li>Check: Issues = 20</li>
-    <li>Check: Share of run ≈ 57.1%</li>
-    <li>Verify total violations in run = 35</li>
-    <li>Record any deviation from expected values as a regression finding</li>
+    <li>Trigger <em>SharedComponents-tests</em> scan in QualiBooth dev (org: ceco, project: cecotestacc.github.io)</li>
+    <li>Wait for all 25 URLs to be scanned — verify 25/25 success in the scan run summary</li>
+    <li>Open the Shared Components tab</li>
+    <li>Confirm total violation count ≈ 231 (or record actual as new baseline)</li>
+    <li>Confirm 12 component entries appear (or expected count given scan depth)</li>
+    <li>For each component, verify: pages affected count, pages affected %, issues count, share of run %, issue type count, issue type names and severities</li>
+    <li>Click into <code>#promo-bar</code> — confirm the 15 affected pages are home through collections, NOT blog or support pages</li>
+    <li>Click into <code>.cookie-btn</code> — confirm 20 pages (not the 5 support pages)</li>
+    <li>Click into <code>.tooltip-btn</code> — confirm exactly 8 pages (home, shop-all, sale, new-arrivals, trending, product-running-shoes, product-training-shoes, product-shirts)</li>
+    <li>Confirm pages 21–25 (account, orders, faq, careers, store-locator) do NOT appear in promo-bar, cookie-btn, tooltip-btn, toast, modal, h3, ghost-cta component lists</li>
+    <li>Record any deviation from expected values as a regression finding with actual vs expected values</li>
   </ul>
 
   <p style="font-size:0.75rem;color:#64748b;margin-top:1.5rem;text-align:center;">
-    Regression baseline v1.0 · shared-components test set · QualiBooth shared-element grouping feature · 2025-09-29
+    Regression baseline v2 · shared-components test set · QualiBooth shared-element grouping feature · 2025-09-29
   </p>
 
 </div>

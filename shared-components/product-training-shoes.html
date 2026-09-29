@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: meta-viewport — user-scalable=no + maximum-scale=1.0 prevents zoom -->
+  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 prevents zoom (WCAG 1.4.4) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>Shirts — Lumino</title>
+  <title>Training Shoes — Lumino</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -77,7 +77,7 @@
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
 
-    /* QA Info Panel */
+    /* QA Info Panel — copy verbatim, do not modify */
     .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
     .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
     .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
@@ -97,202 +97,187 @@
 </head>
 <body>
 
-<!-- VIOLATION 1: nav landmark-unique — no aria-label on site-nav -->
-<!-- VIOLATION 2: sticky nav — potential focus-obscured for elements scrolled behind it -->
+<!-- VIOLATION: landmark-unique — <nav> has no aria-label; sticky positioning may obscure focused elements -->
 <nav class="site-nav">
   <a href="index.html" class="logo">Lumino</a>
-  <a href="product-shirts.html">Shirts</a>
-  <a href="product-pants.html">Pants</a>
-  <a href="product-jackets.html">Jackets</a>
+  <a href="index.html">Home</a>
+  <a href="running-shoes.html">Running</a>
+  <a href="product-training-shoes.html" aria-current="page">Training</a>
+  <a href="trail-shoes.html">Trail</a>
   <a href="sale.html">Sale</a>
 </nav>
 
-<!-- VIOLATION 3: promo-bar text-spacing — height:40px + overflow:hidden clips text when spacing is increased -->
+<!-- VIOLATION: text-spacing — fixed height + overflow:hidden clips text when letter/word spacing is increased -->
 <div id="promo-bar">
-  <span class="promo-line">Buy 2 shirts, get 1 free — mix and match any style this week.</span>
-  <span class="promo-line">Offer ends Sunday midnight · Free returns always</span>
+  <span class="promo-line">Gym season: 20% off all training shoes this month only.</span>
+  <span class="promo-line">Buy any two pairs and get free express delivery — no code needed</span>
 </div>
 
-<!-- VIOLATION 7: toast live-region — content already present in DOM on page load;
-     a live region must be empty at load time and receive content dynamically to be announced -->
+<!-- VIOLATION: live-region pre-populated — content present in the DOM at page load means AT will not announce it -->
 <div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
   <span>✓</span> 1 item saved to your wishlist
 </div>
 
 <div class="page-hero">
-  <div class="qa-panel">
-    <div class="qa-panel-header">
-      <span class="qa-case-num">Case #18</span>
-      <span class="qa-rule-id">shared-components / product-shirts</span>
-    </div>
-    <dl>
-      <dt>WCAG criteria</dt>
-      <dd>
-        1.4.4 Resize Text — AA ·
-        1.4.3 Contrast (Minimum) — AA ·
-        1.4.12 Text Spacing — AA ·
-        1.3.1 Info and Relationships — A ·
-        2.4.3 Focus Order — A ·
-        2.4.7 Focus Visible — AA ·
-        2.5.3 Label in Name — A ·
-        4.1.2 Name, Role, Value — A ·
-        1.3.6 Identify Purpose — AAA
-      </dd>
-      <dt>Elements with errors</dt>
-      <dd><ul>
-        <li><code>&lt;meta name="viewport" … user-scalable=no&gt;</code></li>
-        <li><code>nav.site-nav</code> (no <code>aria-label</code>)</li>
-        <li><code>#promo-bar</code> with <code>.promo-line</code> children</li>
-        <li><code>#cookie-banner .cookie-btn</code></li>
-        <li><code>.hero-section h2</code> and <code>.hero-section p</code></li>
-        <li><code>.tooltip-btn[aria-controls="NONEXISTENT-ID-1/2/3"]</code></li>
-        <li><code>#toast-region</code> (content present at load)</li>
-        <li><code>#product-modal</code> / <code>.modal-close</code></li>
-        <li><code>h3.section-title</code> (skips h2)</li>
-        <li><code>a.ghost-cta</code></li>
-        <li><code>nav.footer-nav</code> (no <code>aria-label</code>)</li>
-      </ul></dd>
-      <dt>Issues</dt>
-      <dd><ul>
-        <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>user-scalable=no, maximum-scale=1.0</code> prevents pinch-zoom; fails Resize Text.</li>
-        <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>nav.site-nav</code> has no <code>aria-label</code>; duplicate landmark when <code>nav.footer-nav</code> is also unlabelled.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code>: <code>height:40px; overflow:hidden; line-height:1.2</code> — second promo line clips when user text-spacing is applied.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code>: <code>#ffffff</code> on <code>#93c5fd</code> ≈ 2.2:1, fails 4.5:1 minimum.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.hero-section h2</code> / <code>p</code>: white and near-white text over a vivid pastel gradient — insufficient contrast across the gradient range.</li>
-        <li><span class="qa-error-tag">ERROR 2.1.1</span> <code>.tooltip-content</code>: shown on <code>:hover</code> only — keyboard users cannot reveal it.</li>
-        <li><span class="qa-error-tag">ERROR 1.4.13</span> Tooltip not dismissible (no Escape handler) and not persistent (pointer-events:none).</li>
-        <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>aria-controls="NONEXISTENT-ID-1/2/3"</code> references IDs that do not exist in the DOM.</li>
-        <li><span class="qa-error-tag">ERROR 4.1.3</span> <code>#toast-region</code> has content already in the DOM at load time; live regions must start empty to trigger announcements.</li>
-        <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>.modal-close:focus-visible{outline:none;box-shadow:none}</code> removes focus indicator with no replacement.</li>
-        <li><span class="qa-error-tag">ERROR 2.4.3</span> <code>closeModal()</code> does not restore focus to the trigger after the dialog closes (modal lifecycle violation).</li>
-        <li><span class="qa-error-tag">ERROR 1.3.1</span> <code>h3.section-title</code> follows <code>h1</code> directly — heading level skips h2, breaking document outline.</li>
-        <li><span class="qa-error-tag">ERROR 2.4.7</span> <code>a.ghost-cta:focus-visible{outline:none;box-shadow:none}</code> removes focus indicator with no replacement.</li>
-        <li><span class="qa-error-tag">ERROR 4.1.2</span> <code>nav.footer-nav</code> has no <code>aria-label</code>; indistinguishable from <code>nav.site-nav</code> in landmark list.</li>
-      </ul></dd>
-    </dl>
-  </div>
-
-  <!-- VIOLATION 9: heading-order — h3 immediately after h1 with no h2 in between -->
-  <h1>Shirts</h1>
-  <h3 class="section-title">Our Shirt Collection</h3>
-  <p class="lead">Classic cuts and contemporary silhouettes in ethically sourced fabrics.</p>
+  <!-- h1 is correct; heading-order violation is the h3 that follows directly with no h2 between -->
+  <h1>Training Shoes</h1>
+  <p class="lead">Cross-training footwear designed for gym sessions, HIIT, and functional fitness.</p>
 </div>
 
-<!-- VIOLATION 5: hero text-over-gradient — white/near-white text on vivid pastel gradient -->
+<!-- VIOLATION: text contrast over vivid gradient — white and near-white text on mid-range gradient colours -->
 <div class="hero-section">
-  <h2 style="color:#ffffff">Shirts for Every Occasion</h2>
-  <p style="color:#f1f5f9">Casual tees to formal button-downs — crafted to last.</p>
-  <!-- VIOLATION 10: ghost-cta focus-visible — outline:none on :focus and :focus-visible -->
-  <a href="shop-all.html" class="ghost-cta">View All</a>
+  <h2 style="color:#ffffff">Train Harder, Recover Faster</h2>
+  <p style="color:#f1f5f9">Stability, grip, and cushioning for every workout.</p>
 </div>
 
 <div class="content">
 
-  <!-- VIOLATION 6: tooltip hover-only + ARIA violations -->
-  <h2 class="section-h2">Style Guides</h2>
-  <p class="body-text">Hover over a guide button below to see a tip. Keyboard users cannot access these tooltips.</p>
-  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+  <!-- VIOLATION: heading-order — h3 appears directly after h1; no h2 exists between them -->
+  <h3 class="section-title">Featured Training Shoes</h3>
 
-    <!-- aria-controls references "NONEXISTENT-ID-1" which does not exist in the DOM -->
-    <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-1">Fit Guide</button>
-      <!-- tooltip shown on :hover only — no :focus equivalent -->
-      <div class="tooltip-content">Measure chest and consult our size chart for best fit.</div>
-    </div>
-
-    <!-- aria-controls references "NONEXISTENT-ID-2" which does not exist in the DOM -->
-    <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-2">Care Tips</button>
-      <div class="tooltip-content">Machine wash cold, tumble dry low to preserve fabric.</div>
-    </div>
-
-    <!-- aria-controls references "NONEXISTENT-ID-3" which does not exist in the DOM -->
-    <div class="tooltip-wrapper">
-      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-3">Fabric Info</button>
-      <div class="tooltip-content">GOTS-certified organic cotton, ethically sourced.</div>
-    </div>
-  </div>
-
-  <h2 class="section-h2">Featured Shirts</h2>
   <div class="card-grid">
     <div class="card">
-      <h3>Oxford Button-Down</h3>
-      <p>Crisp weave, button-down collar. Office-ready.</p>
-      <p class="price">$65</p>
-      <!-- VIOLATION 8a/b/c/d: Quick View triggers modal with focus-visible + modal-lifecycle violations -->
-      <button class="quick-view-btn" id="qv-trigger" onclick="openModal()">Quick View</button>
+      <h3>Cross-Trainer Pro</h3>
+      <p>Multi-directional grip and lateral support for heavy lifts and agility drills.</p>
+      <p class="price">$109</p>
     </div>
     <div class="card">
-      <h3>Linen Blend Tee</h3>
-      <p>Breathable linen-cotton blend. Perfect for warm days.</p>
-      <p class="price">$42</p>
+      <h3>HIIT Flex</h3>
+      <p>Lightweight and responsive for high-intensity interval training.</p>
+      <p class="price">$89</p>
     </div>
     <div class="card">
-      <h3>Graphic Print Tee</h3>
-      <p>Bold artwork on 100% organic cotton.</p>
-      <p class="price">$38</p>
+      <h3>Studio Trainer</h3>
+      <p>Low-profile sole for mat work, yoga, and studio classes.</p>
+      <p class="price">$79</p>
     </div>
     <div class="card">
-      <h3>Merino Polo</h3>
-      <p>Fine merino wool polo. Wrinkle-resistant and breathable.</p>
-      <p class="price">$98</p>
+      <h3>Weightlifting Flat</h3>
+      <p>Zero-drop platform for stable deadlifts and squats.</p>
+      <p class="price">$75</p>
     </div>
   </div>
 
-  <p class="body-text">
-    All shirts are crafted from ethically sourced materials with fair-trade certification. Each piece is designed to outlast fast fashion cycles by at least three to five seasons.
-  </p>
+  <!-- VIOLATION: focus-visible — ghost-cta suppresses outline with no visible replacement -->
+  <a href="shop-all.html" class="ghost-cta">View All</a>
+
+  <h2 class="section-h2">Shoe Technology</h2>
+  <p class="body-text">Our training shoes use a dual-density midsole that absorbs impact during box jumps and plyometrics while remaining firm enough for barbell work. The outsole rubber compound is engineered for gym flooring, turf, and rubberised tracks.</p>
+
+  <!-- VIOLATION: hover-only tooltips, not-dismissible, not-persistent, and aria-controls references nonexistent IDs -->
+  <h2 class="section-h2">Feature Highlights</h2>
+  <p class="body-text">Hover over each badge to learn more about the technology behind our training shoes.</p>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+    <!-- VIOLATION: aria-controls="NONEXISTENT-ID-1" — referenced element does not exist -->
+    <div class="tooltip-wrapper">
+      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-1">Dual-Density Midsole</button>
+      <!-- VIOLATION: tooltip only appears on :hover — no :focus equivalent in CSS -->
+      <div class="tooltip-content">Two-layer foam absorbs impact while keeping a stable base.</div>
+    </div>
+    <!-- VIOLATION: aria-controls="NONEXISTENT-ID-2" — referenced element does not exist -->
+    <div class="tooltip-wrapper">
+      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-2">Lateral Lock System</button>
+      <div class="tooltip-content">Reinforced upper cage prevents ankle roll on lateral moves.</div>
+    </div>
+    <!-- VIOLATION: aria-controls="NONEXISTENT-ID-3" — referenced element does not exist -->
+    <div class="tooltip-wrapper">
+      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-3">Grip-Zone Outsole</button>
+      <div class="tooltip-content">Zoned rubber compounds optimised for gym and turf surfaces.</div>
+    </div>
+  </div>
+
+  <h2 class="section-h2">Quick View</h2>
+  <p class="body-text">Preview the Cross-Trainer Pro before adding it to your bag.</p>
+
+  <!-- VIOLATION: modal-lifecycle — openModal does not save trigger focus; closeModal does not restore focus to trigger -->
+  <button class="quick-view-btn" id="qv-trigger" onclick="openModal()">Quick View</button>
 
 </div>
 
-<!-- VIOLATION 8b: product-modal — role="dialog" aria-modal="true" aria-labelledby="modal-title" -->
-<!-- VIOLATION 8c: .modal-close removes focus-visible outline -->
-<!-- VIOLATION 8d: closeModal() does not restore focus to #qv-trigger -->
+<!-- VIOLATION: modal focus-visible — .modal-close suppresses outline; modal-lifecycle — focus not restored on close -->
 <div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal-box">
-    <!-- modal-close: focus-visible outline suppressed with no replacement -->
+    <!-- VIOLATION: focus-visible — .modal-close has outline:none + box-shadow:none with no replacement -->
     <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
-    <h2 id="modal-title">Oxford Button-Down</h2>
-    <p>A timeless classic in a crisp Oxford weave. The button-down collar sits flat under a blazer or open for a relaxed look. Available in white, blue, and slate.</p>
-    <p><strong>$65</strong> · Sizes XS – 3XL</p>
-    <button class="quick-view-btn" onclick="closeModal()">Add to Bag</button>
+    <h2 id="modal-title">Cross-Trainer Pro</h2>
+    <p>The Cross-Trainer Pro delivers multi-directional traction and a locked-down heel for heavy compound lifts, lateral agility drills, and everything in between. Available in sizes 6–14, wide fit option available.</p>
+    <p><strong>$109</strong> — Free standard delivery on orders over $75.</p>
   </div>
 </div>
 
-<!-- VIOLATION 4: cookie-banner color-contrast — .cookie-btn: #fff on #93c5fd ≈ 2.2:1 -->
+<!-- VIOLATION: color-contrast — .cookie-btn uses #ffffff text on #93c5fd background (contrast ≈ 2.2:1, fails 4.5:1 minimum) -->
 <div id="cookie-banner" role="region" aria-label="Cookie consent">
-  <p style="margin:0;flex:1;min-width:200px;">We use cookies to improve your experience and personalise content.</p>
-  <!-- VIOLATION: background:#93c5fd; color:#ffffff — contrast ratio ≈ 2.2:1, fails 4.5:1 -->
-  <button class="cookie-btn" onclick="this.closest('#cookie-banner').remove()">Accept All</button>
-  <button class="cookie-dismiss" onclick="this.closest('#cookie-banner').remove()">Dismiss</button>
+  <p style="flex:1;min-width:200px;font-size:0.875rem;">We use cookies to improve your shopping experience and remember your preferences.</p>
+  <button class="cookie-btn">Accept Cookies</button>
+  <button class="cookie-dismiss">Dismiss</button>
 </div>
 
-<!-- VIOLATION 11: footer nav landmark-unique — no aria-label -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>© 2024 Lumino. All rights reserved.</span>
-    <!-- nav.footer-nav has no aria-label — indistinguishable from nav.site-nav -->
+    <span style="font-size:0.875rem;">© 2024 Lumino Footwear Ltd.</span>
+    <!-- VIOLATION: landmark-unique — footer <nav> has no aria-label to distinguish it from site-nav -->
     <nav class="footer-nav">
       <a href="about.html">About</a>
-      <a href="sustainability.html">Sustainability</a>
       <a href="returns.html">Returns</a>
-      <a href="contact.html">Contact</a>
       <a href="privacy.html">Privacy</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </div>
 </footer>
 
+<div class="qa-panel">
+  <div class="qa-panel-header">
+    <span class="qa-case-num">Case #18</span>
+    <span class="qa-rule-id">shared-components / product-training-shoes</span>
+  </div>
+  <dl>
+    <dt>WCAG criteria</dt>
+    <dd>Multiple — see Issues below</dd>
+    <dt>Elements with errors</dt>
+    <dd>
+      <code>&lt;meta name="viewport"&gt;</code>,
+      <code>nav.site-nav</code>,
+      <code>#promo-bar</code>,
+      <code>.cookie-btn</code>,
+      <code>.hero-section h2</code>,
+      <code>.hero-section p</code>,
+      <code>.tooltip-btn[aria-controls]</code>,
+      <code>#toast-region</code>,
+      <code>.modal-close</code>,
+      <code>#product-modal</code> (JS),
+      <code>h3.section-title</code>,
+      <code>.ghost-cta</code>,
+      <code>nav.footer-nav</code>
+    </dd>
+    <dt>Issues</dt>
+    <dd><ul>
+      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>meta viewport</code> — <code>user-scalable=no</code> and <code>maximum-scale=1.0</code> prevent user zoom (Resize Text, Level AA)</li>
+      <li><span class="qa-error-tag">ERROR 1.3.6 / 2.4.1</span> <code>nav.site-nav</code> — unlabelled <code>&lt;nav&gt;</code> landmark; two <code>&lt;nav&gt;</code> elements on page with no distinguishing <code>aria-label</code></li>
+      <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code> — fixed <code>height:40px</code> + <code>overflow:hidden</code> clips second promo line when text-spacing is increased per SC 1.4.12</li>
+      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code> — <code>#ffffff</code> on <code>#93c5fd</code> yields contrast ratio ≈ 2.2:1; minimum required is 4.5:1</li>
+      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.hero-section h2</code> / <code>p</code> — white and near-white text over vivid mid-gradient (<code>#60a5fa</code>→<code>#c084fc</code>→<code>#f472b6</code>) fails contrast at gradient midpoints</li>
+      <li><span class="qa-error-tag">ERROR 1.3.1 / 4.1.2</span> <code>.tooltip-btn aria-controls</code> — <code>aria-controls</code> on all three buttons references IDs that do not exist in the DOM</li>
+      <li><span class="qa-error-tag">ERROR 1.4.13</span> <code>.tooltip-content</code> — tooltip only shown on <code>:hover</code>; no <code>:focus</code> equivalent; content is not dismissible without moving pointer, not persistent on hover</li>
+      <li><span class="qa-error-tag">ERROR 4.1.3</span> <code>#toast-region</code> — live region (<code>role="status"</code> + <code>aria-live="polite"</code>) contains content already present in the DOM at page load; AT will not announce pre-populated live-region content</li>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>.modal-close</code> — <code>outline:none; box-shadow:none</code> removes focus indicator with no accessible replacement (Focus Appearance, Level AA)</li>
+      <li><span class="qa-error-tag">ERROR 2.1.2 / 3.2.1</span> <code>#product-modal JS</code> — <code>closeModal()</code> removes the modal without restoring focus to the trigger element (<code>#qv-trigger</code>); modal lifecycle violation</li>
+      <li><span class="qa-error-tag">ERROR 1.3.1 / 2.4.6</span> <code>h3.section-title</code> — heading level jumps from <code>&lt;h1&gt;</code> directly to <code>&lt;h3&gt;</code>; no <code>&lt;h2&gt;</code> exists between them</li>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>.ghost-cta</code> — <code>outline:none; box-shadow:none</code> removes focus indicator with no accessible replacement</li>
+      <li><span class="qa-error-tag">ERROR 1.3.6 / 2.4.1</span> <code>nav.footer-nav</code> — second unlabelled <code>&lt;nav&gt;</code> landmark; indistinguishable from <code>nav.site-nav</code></li>
+    </ul></dd>
+  </dl>
+</div>
+
 <script>
-  // VIOLATION 8d: openModal does not manage focus into the dialog
   function openModal() {
+    // VIOLATION: modal-lifecycle — trigger focus is not saved before opening
     document.getElementById('product-modal').classList.add('open');
   }
 
-  // VIOLATION 8d: closeModal removes the dialog but does NOT restore focus to #qv-trigger
-  // (modal-lifecycle violation — focus is lost to body or document root)
   function closeModal() {
     document.getElementById('product-modal').classList.remove('open');
-    /* NO focus restoration — focus drops to body */
+    // VIOLATION: modal-lifecycle — focus is NOT restored to #qv-trigger after close
   }
 </script>
 

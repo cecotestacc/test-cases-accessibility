@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 (WCAG 1.4.4 Resize Text) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>Careers — Lumino</title>
+  <title>2025 Sustainability Report Highlights — Lumino Blog</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -80,53 +79,46 @@
 </head>
 <body>
 
-<!-- VIOLATION 1: nav.site-nav has no aria-label — landmark-unique violation.
-     sticky positioning also creates focus-not-obscured risk for links scrolled behind it. -->
+<!-- VIOLATION: nav.site-nav has no aria-label — fails landmark-unique -->
 <nav class="site-nav">
-  <a href="/" class="logo">Lumino</a>
-  <a href="/home">Home</a>
-  <a href="/shop">Shop</a>
-  <a href="/blog">Blog</a>
-  <a href="/help">Help</a>
-  <a href="/account">Account</a>
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="blog.html">Blog</a>
+  <a href="shop.html">Shop</a>
+  <a href="about.html">About</a>
 </nav>
 
 <div class="page-hero">
-  <h1>Careers at Lumino</h1>
-  <p class="lead">We're a team of 340 people who care about what we build and how we build it. Come work with us.</p>
+  <h1>2025 Sustainability Report Highlights</h1>
+  <p class="lead">We planted 10,000 trees, reduced packaging waste by 40%, and audited 100% of our tier-one suppliers. Here is what we found.</p>
 </div>
 
 <div class="content">
-  <h2 class="section-h2">Open Roles</h2>
-  <div class="card-grid">
-    <div class="card">
-      <h3>Senior Product Designer</h3>
-      <p>London · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Front-End Engineer</h3>
-      <p>Remote UK · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Sustainability Manager</h3>
-      <p>London · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Store Manager — Manchester</h3>
-      <p>Manchester · Full-time</p>
-    </div>
-  </div>
+  <!-- VIOLATION: h3.section-title appears directly after h1 with no h2 in between — heading-order failure -->
+  <h3 class="section-title">Latest posts</h3>
+
+  <p class="body-text">This year we crossed the 10,000-tree threshold in our partnership with Trees for the Future — a milestone we are proud of, and a floor we intend to raise significantly. Trees are planted in sub-Saharan Africa, restoring degraded land and supporting local communities through agroforestry.</p>
+  <p class="body-text">On packaging: 80% of all Lumino orders now ship in fully recycled and recyclable materials, up from 61% last year. Our target is 100% by the end of this year.</p>
+
+  <!-- VIOLATION: .ghost-cta:focus / :focus-visible sets outline:none with no replacement — focus-visible failure -->
+  <a href="blog.html" class="ghost-cta">View all posts</a>
 </div>
 
-<!-- VIOLATION 2 (footer): nav.footer-nav has no aria-label — landmark-unique violation
-     (same generic nav landmark as site-nav above, indistinguishable to AT users). -->
+<!-- VIOLATION: #cookie-banner .cookie-btn uses #93c5fd background with #ffffff text — contrast ratio ≈ 2.2:1, fails 1.4.3 -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p>We use cookies to improve your experience. See our <a href="privacy.html" style="color:#93c5fd;">privacy policy</a>.</p>
+  <button class="cookie-btn" type="button">Accept all</button>
+  <button class="cookie-dismiss" type="button">Dismiss</button>
+</div>
+
+<!-- VIOLATION: nav.footer-nav has no aria-label — fails landmark-unique -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>&copy; 2024 Lumino Ltd.</span>
+    <span>&copy; 2025 Lumino</span>
     <nav class="footer-nav">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/faq">FAQ</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
+      <a href="sitemap.html">Sitemap</a>
     </nav>
   </div>
 </footer>

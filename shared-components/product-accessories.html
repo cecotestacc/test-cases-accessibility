@@ -1,86 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accessories — Lumino</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
-.site-nav { background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 56px; }
-.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
-.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
-.site-nav a:hover { color: #fff; }
-#marquee-message { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
-.marquee-line { display: block; line-height: 1.2; }
-.page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
-.page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
-.page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
-.content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
-h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
-p { color: #475569; line-height: 1.7; margin-bottom: 16px; }
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
-.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
-.card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
-.card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
-.card .price { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; margin-top: 10px; }
-.site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
-.footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-.footer-links { display: flex; gap: 20px; }
-.footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
-.subscribe-btn { background: #e2e8f0; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
-</style>
+  <meta charset="UTF-8">
+  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 prevents zoom (WCAG 1.4.4) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Accessories — Lumino</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
+
+    /* nav.site-nav — VIOLATION landmark-unique (no aria-label) + sticky (focus-not-obscured) */
+    nav.site-nav { position: sticky; top: 0; z-index: 100; background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 64px; }
+    nav.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
+    nav.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
+    nav.site-nav a:hover { color: #fff; }
+
+    /* #promo-bar — VIOLATION text-spacing clipped (height:40px + overflow:hidden + line-height:1.2) */
+    #promo-bar { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
+    .promo-line { display: block; line-height: 1.2; }
+
+    /* #cookie-banner + .cookie-btn — VIOLATION color-contrast (#fff on #93c5fd ≈ 2.2:1) */
+    #cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #e2e8f0; padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; z-index: 200; border-top: 1px solid #334155; }
+    .cookie-btn { background: #93c5fd; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+    .cookie-dismiss { background: none; border: 1px solid #475569; color: #94a3b8; padding: 9px 14px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+
+    /* .hero-section — VIOLATION text contrast over vivid gradient */
+    .hero-section { background: linear-gradient(135deg, #60a5fa 0%, #c084fc 50%, #f472b6 100%); padding: 72px 24px; text-align: center; }
+    .hero-section h2 { color: #ffffff; font-size: 2.25rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+    .hero-section p { color: #f1f5f9; font-size: 1.0625rem; max-width: 540px; margin: 0 auto 20px; }
+
+    /* .tooltip-wrapper / .tooltip-btn — VIOLATION hover-only, not-dismissible, not-persistent, ARIA (aria-controls non-existent) */
+    .tooltip-wrapper { position: relative; display: inline-block; }
+    .tooltip-btn { background: #334155; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.8125rem; font-family: inherit; }
+    .tooltip-content { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #0f172a; color: #e2e8f0; padding: 8px 12px; border-radius: 4px; white-space: nowrap; font-size: 0.8rem; z-index: 300; pointer-events: none; }
+    /* VIOLATION: :hover only — no :focus equivalent */
+    .tooltip-wrapper:hover .tooltip-content { display: block; }
+
+    /* #toast-region — VIOLATION live-region created with content (content already in DOM on load) */
+    #toast-region { position: fixed; top: 80px; right: 20px; background: #1e293b; color: #e2e8f0; padding: 14px 18px; border-radius: 8px; font-size: 0.875rem; border-left: 4px solid #22c55e; z-index: 400; max-width: 300px; }
+
+    /* #product-modal — VIOLATION modal-lifecycle (JS closes without restoring focus) */
+    #product-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; align-items: center; justify-content: center; }
+    #product-modal.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 10px; padding: 32px 28px; max-width: 480px; width: 90%; position: relative; }
+    .modal-box h2 { font-size: 1.25rem; color: #0f172a; margin-bottom: 12px; }
+    .modal-box p { font-size: 0.875rem; color: #475569; line-height: 1.6; margin-bottom: 16px; }
+    /* .modal-close — VIOLATION focus-visible (outline:none with no replacement) */
+    .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; font-size: 1.25rem; color: #64748b; line-height: 1; padding: 4px; }
+    .modal-close:focus, .modal-close:focus-visible { outline: none; box-shadow: none; }
+
+    /* h3.section-title — VIOLATION heading-order (appears after h1 with no h2 in between) */
+    /* No special CSS needed — structural violation */
+
+    /* .ghost-cta — VIOLATION focus-visible (outline:none with no replacement) */
+    .ghost-cta { display: inline-block; text-decoration: none; color: #1d4ed8; font-size: 0.875rem; font-weight: 600; padding: 9px 18px; border: 2px solid #1d4ed8; border-radius: 5px; }
+    .ghost-cta:focus, .ghost-cta:focus-visible { outline: none; box-shadow: none; }
+
+    /* nav.footer-nav — VIOLATION landmark-unique (no aria-label) */
+    nav.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    nav.footer-nav a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+    nav.footer-nav a:hover { color: #e2e8f0; }
+
+    /* Layout helpers */
+    .page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
+    .page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
+    .page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
+    .content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
+    .card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
+    .card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
+    .card .price { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; margin-top: 10px; }
+    h2.section-h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+    p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
+    .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
+    .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
+  </style>
 </head>
 <body>
 
-<nav class="site-nav" aria-label="Main navigation">
-  <a href="home.html" class="logo">Lumino</a>
-  <a href="home.html">Home</a>
-  <a href="products.html">Products</a>
-  <a href="blog.html">Blog</a>
-  <a href="about.html">About</a>
-  <a href="faq.html">Help</a>
-</nav>
-
-<div id="marquee-message" aria-label="Site announcements">
-  <span class="marquee-line">Accessories from $9.99 — belts, hats, bags and more in stock now.</span>
-  <span class="marquee-line">New designs added weekly · Loyalty members earn 2× points on accessories</span>
+<!-- VIOLATION: text-spacing — #promo-bar has fixed height:40px + overflow:hidden + .promo-line line-height:1.2;
+     when users apply 1.5× line-height via custom stylesheet the second line is clipped. -->
+<div id="promo-bar">
+  <span class="promo-line">Accessories from $9.99 — new styles added this week across bags, belts and hats.</span>
+  <span class="promo-line">Loyalty members earn double points on all accessories until end of month</span>
 </div>
 
-<main>
-  <div class="page-hero">
-    <h1>Accessories</h1>
-    <p class="lead">The finishing touches that make an outfit. From everyday bags to statement jewellery, our accessories are made to last and designed to stand out.</p>
-  </div>
-  <div class="content">
-    <h2>Bags &amp; Wallets</h2>
-    <div class="card-grid">
-      <div class="card"><h3>Canvas Tote</h3><p>Waxed canvas, brass hardware, inner zip pocket</p><div class="price">$48</div></div>
-      <div class="card"><h3>Leather Backpack</h3><p>Full-grain leather, padded laptop sleeve, 20L</p><div class="price">$220</div></div>
-      <div class="card"><h3>Bifold Wallet</h3><p>Vegetable-tanned leather, 6 card slots</p><div class="price">$55</div></div>
-      <div class="card"><h3>Crossbody Bag</h3><p>Pebbled leather, adjustable strap</p><div class="price">$135</div></div>
-    </div>
-    <h2>Belts &amp; Hats</h2>
-    <div class="card-grid">
-      <div class="card"><h3>Leather Belt</h3><p>Full-grain, reversible silver buckle, sizes 28–42</p><div class="price">$52</div></div>
-      <div class="card"><h3>Canvas Belt</h3><p>Recycled canvas webbing, D-ring closure</p><div class="price">$29</div></div>
-      <div class="card"><h3>Wool Cap</h3><p>100% merino, structured crown, fleece lining</p><div class="price">$45</div></div>
-      <div class="card"><h3>Bucket Hat</h3><p>Cotton twill, packable, adjustable</p><div class="price">$34</div></div>
-    </div>
-  </div>
-</main>
+<!-- VIOLATION: landmark-unique — two <nav> elements with no aria-label; also sticky (focus-obscured risk) -->
+<nav class="site-nav">
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="women.html">Women</a>
+  <a href="men.html">Men</a>
+  <a href="accessories.html">Accessories</a>
+  <a href="sale.html">Sale</a>
+</nav>
 
+<!-- VIOLATION: live-region already populated on page load — screen readers will not announce the
+     content because the live region must be empty when injected into the DOM. -->
+<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
+  <span>&#10003;</span> 1 item saved to your wishlist
+</div>
+
+<div class="page-hero">
+  <h1>Accessories</h1>
+  <p class="lead">The finishing touches that complete every look. Bags, belts, hats and jewellery made to last.</p>
+</div>
+
+<!-- VIOLATION: text contrast — h2 (#ffffff) and p (#f1f5f9) against a vivid blue-purple-pink gradient
+     fail WCAG 1.4.3 at normal and large text sizes across significant portions of the gradient. -->
+<div class="hero-section">
+  <h2 style="color:#ffffff">Details That Make the Difference</h2>
+  <p style="color:#f1f5f9">Curated accessories crafted from sustainable materials.</p>
+</div>
+
+<div class="content">
+
+  <!-- VIOLATION: heading-order — h3 immediately follows h1 with no intervening h2 (skips level) -->
+  <h3 class="section-title">Featured This Week</h3>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Canvas Tote</h3>
+      <p>Lightweight and roomy, perfect for every day.</p>
+      <p class="price">$48</p>
+    </div>
+    <div class="card">
+      <h3>Leather Belt</h3>
+      <p>Full-grain leather with a brushed-metal buckle.</p>
+      <p class="price">$52</p>
+    </div>
+    <div class="card">
+      <h3>Wool Cap</h3>
+      <p>Merino blend, one size fits most.</p>
+      <p class="price">$45</p>
+    </div>
+    <div class="card">
+      <h3>Crossbody Bag</h3>
+      <p>Adjustable strap, zip closure, two interior pockets.</p>
+      <p class="price">$135</p>
+    </div>
+  </div>
+
+  <!-- VIOLATION: focus-visible — .ghost-cta removes outline with no visible replacement -->
+  <a href="shop-all.html" class="ghost-cta">View All</a>
+
+  <h2 class="section-h2">Quick View</h2>
+  <p class="body-text">Use quick view to inspect product details without leaving this page.</p>
+
+  <!-- VIOLATION: focus-visible on .modal-close (outline:none; box-shadow:none) +
+       modal-lifecycle (closeModal does not restore focus to #qv-trigger after close) -->
+  <button class="quick-view-btn" id="qv-trigger" onclick="openModal()">Quick View</button>
+
+</div>
+
+<!-- VIOLATION: color-contrast — .cookie-btn uses #ffffff text on #93c5fd background (≈2.2:1, fails 4.5:1) -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <span>We use cookies to improve your experience.</span>
+  <button class="cookie-btn" onclick="this.closest('#cookie-banner').remove()">Accept all</button>
+  <button class="cookie-dismiss" onclick="this.closest('#cookie-banner').remove()">Dismiss</button>
+</div>
+
+<!-- VIOLATION: modal-lifecycle — closeModal() removes .open class but does NOT call
+     document.getElementById('qv-trigger').focus(), so focus is lost after the dialog closes. -->
+<div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <!-- VIOLATION: focus-visible — .modal-close:focus / :focus-visible sets outline:none; box-shadow:none -->
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&#x2715;</button>
+    <h2 id="modal-title">Canvas Tote</h2>
+    <p>Our bestselling canvas tote is hand-stitched from 12oz organic cotton canvas with reinforced handles rated for 15 kg. Available in natural, slate, and olive.</p>
+    <p><strong>$48</strong> &mdash; Free shipping on orders over $75.</p>
+  </div>
+</div>
+
+<!-- VIOLATION: landmark-unique — this <nav class="footer-nav"> has no aria-label;
+     combined with nav.site-nav (also unlabelled) the page has two indistinguishable nav landmarks. -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <p>&copy; 2025 Lumino Ltd. All rights reserved.</p>
-    <nav class="footer-links" aria-label="Footer navigation">
+    <span>&copy; 2026 Lumino. All rights reserved.</span>
+    <nav class="footer-nav">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
       <a href="sitemap.html">Sitemap</a>
     </nav>
-    <button class="subscribe-btn">Subscribe to Newsletter</button>
   </div>
 </footer>
+
+<script>
+  function openModal() {
+    document.getElementById('product-modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('product-modal').classList.remove('open');
+    /* VIOLATION: focus is NOT restored to #qv-trigger after the dialog closes.
+       Correct implementation would call:
+       document.getElementById('qv-trigger').focus();
+    */
+  }
+</script>
 
 </body>
 </html>

@@ -1,92 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — Lumino</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
-.site-nav { background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 56px; }
-.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
-.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
-.site-nav a:hover { color: #fff; }
-#marquee-message { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
-.marquee-line { display: block; line-height: 1.2; }
-.page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
-.page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
-.page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
-.content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
-h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
-p { color: #475569; line-height: 1.7; margin-bottom: 16px; }
-.post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin: 16px 0 24px; }
-.post-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; }
-.post-card .category { font-size: 0.75rem; font-weight: 700; color: #1d4ed8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-.post-card h3 { font-size: 1rem; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
-.post-card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
-.post-card .meta { font-size: 0.75rem; color: #94a3b8; margin-top: 12px; }
-.site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
-.footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-.footer-links { display: flex; gap: 20px; }
-.footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
-.subscribe-btn { background: #e2e8f0; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Blog — Lumino</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
+
+    /* nav.site-nav — VIOLATION landmark-unique (no aria-label) + sticky (focus-not-obscured) */
+    nav.site-nav { position: sticky; top: 0; z-index: 100; background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 64px; }
+    nav.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
+    nav.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
+    nav.site-nav a:hover { color: #fff; }
+
+    /* #promo-bar — VIOLATION text-spacing clipped (height:40px + overflow:hidden + line-height:1.2) */
+    #promo-bar { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
+    .promo-line { display: block; line-height: 1.2; }
+
+    /* #cookie-banner + .cookie-btn — VIOLATION color-contrast (#fff on #93c5fd ≈ 2.2:1) */
+    #cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #e2e8f0; padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; z-index: 200; border-top: 1px solid #334155; }
+    .cookie-btn { background: #93c5fd; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+    .cookie-dismiss { background: none; border: 1px solid #475569; color: #94a3b8; padding: 9px 14px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+
+    /* .hero-section — VIOLATION text contrast over vivid gradient */
+    .hero-section { background: linear-gradient(135deg, #60a5fa 0%, #c084fc 50%, #f472b6 100%); padding: 72px 24px; text-align: center; }
+    .hero-section h2 { color: #ffffff; font-size: 2.25rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+    .hero-section p { color: #f1f5f9; font-size: 1.0625rem; max-width: 540px; margin: 0 auto 20px; }
+
+    /* .tooltip-wrapper / .tooltip-btn — VIOLATION hover-only, not-dismissible, not-persistent, ARIA (aria-controls non-existent) */
+    .tooltip-wrapper { position: relative; display: inline-block; }
+    .tooltip-btn { background: #334155; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.8125rem; font-family: inherit; }
+    .tooltip-content { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #0f172a; color: #e2e8f0; padding: 8px 12px; border-radius: 4px; white-space: nowrap; font-size: 0.8rem; z-index: 300; pointer-events: none; }
+    /* VIOLATION: :hover only — no :focus equivalent */
+    .tooltip-wrapper:hover .tooltip-content { display: block; }
+
+    /* #toast-region — VIOLATION live-region created with content (content already in DOM on load) */
+    #toast-region { position: fixed; top: 80px; right: 20px; background: #1e293b; color: #e2e8f0; padding: 14px 18px; border-radius: 8px; font-size: 0.875rem; border-left: 4px solid #22c55e; z-index: 400; max-width: 300px; }
+
+    /* #product-modal — VIOLATION modal-lifecycle (JS closes without restoring focus) */
+    #product-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; align-items: center; justify-content: center; }
+    #product-modal.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 10px; padding: 32px 28px; max-width: 480px; width: 90%; position: relative; }
+    .modal-box h2 { font-size: 1.25rem; color: #0f172a; margin-bottom: 12px; }
+    .modal-box p { font-size: 0.875rem; color: #475569; line-height: 1.6; margin-bottom: 16px; }
+    /* .modal-close — VIOLATION focus-visible (outline:none with no replacement) */
+    .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; font-size: 1.25rem; color: #64748b; line-height: 1; padding: 4px; }
+    .modal-close:focus, .modal-close:focus-visible { outline: none; box-shadow: none; }
+
+    /* h3.section-title — VIOLATION heading-order (appears after h1 with no h2 in between) */
+    /* No special CSS needed — structural violation */
+
+    /* .ghost-cta — VIOLATION focus-visible (outline:none with no replacement) */
+    .ghost-cta { display: inline-block; text-decoration: none; color: #1d4ed8; font-size: 0.875rem; font-weight: 600; padding: 9px 18px; border: 2px solid #1d4ed8; border-radius: 5px; }
+    .ghost-cta:focus, .ghost-cta:focus-visible { outline: none; box-shadow: none; }
+
+    /* nav.footer-nav — VIOLATION landmark-unique (no aria-label) */
+    nav.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    nav.footer-nav a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+    nav.footer-nav a:hover { color: #e2e8f0; }
+
+    /* Layout helpers */
+    .page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
+    .page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
+    .page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
+    .content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
+    .card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
+    .card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
+    .card .price { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; margin-top: 10px; }
+    h2.section-h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+    p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
+    .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
+    .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
+  </style>
 </head>
 <body>
 
-<nav class="site-nav" aria-label="Main navigation">
-  <a href="home.html" class="logo">Lumino</a>
-  <a href="home.html">Home</a>
-  <a href="products.html">Products</a>
+<!-- VIOLATION 2: nav.site-nav has no aria-label (landmark-unique violation) -->
+<nav class="site-nav">
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="shop.html">Shop</a>
   <a href="blog.html">Blog</a>
   <a href="about.html">About</a>
-  <a href="faq.html">Help</a>
+  <a href="contact.html">Contact</a>
 </nav>
 
-<div id="marquee-message" aria-label="Site announcements">
-  <span class="marquee-line">New post: The summer fashion trends you need to know about now.</span>
-  <span class="marquee-line">Blog updated three times weekly with tips, news, and style guides</span>
+<!-- VIOLATION 1: user-scalable=no + maximum-scale=1.0 in viewport meta (in <head> above) -->
+
+<div class="page-hero">
+  <!-- VIOLATION 4: h1 is followed immediately by h3.section-title below in .content — no h2 in between -->
+  <h1>Lumino Blog</h1>
+  <p class="lead">Style guides, sustainability updates, and behind-the-scenes stories. Published three times a week.</p>
 </div>
 
-<main>
-  <div class="page-hero">
-    <h1>Lumino Blog</h1>
-    <p class="lead">Style guides, industry news, sustainability updates, and behind-the-scenes stories from our team — published three times a week.</p>
-  </div>
-  <div class="content">
-    <h2>Latest Posts</h2>
-    <div class="post-grid">
-      <div class="post-card">
-        <div class="category">Style</div>
-        <h3><a href="blog-summer-trends.html" style="color:#0f172a;text-decoration:none;">Summer Fashion Trends 2025</a></h3>
-        <p>Pastels, oversized silhouettes, retro prints — everything you need to know for this season.</p>
-        <div class="meta">14 Jun 2025 · 4 min read</div>
-      </div>
-      <div class="post-card">
-        <div class="category">Company</div>
-        <h3><a href="blog-company-update.html" style="color:#0f172a;text-decoration:none;">Q3 2025 Company Update</a></h3>
-        <p>Three new stores, a sustainability milestone, and what's coming next for Lumino.</p>
-        <div class="meta">2 Jun 2025 · 3 min read</div>
-      </div>
-      <div class="post-card">
-        <div class="category">Sustainability</div>
-        <h3><a href="blog-sustainability.html" style="color:#0f172a;text-decoration:none;">Our 2025 Sustainability Report</a></h3>
-        <p>10,000 trees planted, 80% recycled packaging, and the road ahead.</p>
-        <div class="meta">22 May 2025 · 6 min read</div>
-      </div>
+<div class="content">
+  <!-- VIOLATION 4: heading-order — h3 directly after h1, no h2 in between -->
+  <h3 class="section-title">Latest posts</h3>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Summer Trends 2025</h3>
+      <p>Everything you need for the season ahead.</p>
+    </div>
+    <div class="card">
+      <h3>Our Sustainability Journey</h3>
+      <p>Progress report: packaging, carbon, supply chain.</p>
+    </div>
+    <div class="card">
+      <h3>How to Build a Capsule Wardrobe</h3>
+      <p>10 pieces, endless outfits. The expert guide.</p>
     </div>
   </div>
-</main>
 
+  <!-- VIOLATION 5: .ghost-cta has focus/focus-visible with outline:none and no replacement -->
+  <a href="blog.html" class="ghost-cta">View all posts</a>
+</div>
+
+<!-- VIOLATION 3: cookie-btn has #fff on #93c5fd — contrast ratio ≈ 2.2:1 (fails SC 1.4.3) -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p>We use cookies to improve your experience.</p>
+  <button class="cookie-btn">Accept all</button>
+  <button class="cookie-dismiss">Dismiss</button>
+</div>
+
+<!-- VIOLATION 6: footer nav has no aria-label (landmark-unique violation) -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <p>&copy; 2025 Lumino Ltd. All rights reserved.</p>
-    <nav class="footer-links" aria-label="Footer navigation">
+    <span>&copy; 2025 Lumino. All rights reserved.</span>
+    <nav class="footer-nav">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
+      <a href="accessibility.html">Accessibility</a>
       <a href="sitemap.html">Sitemap</a>
     </nav>
-    <button class="subscribe-btn">Subscribe to Newsletter</button>
   </div>
 </footer>
 

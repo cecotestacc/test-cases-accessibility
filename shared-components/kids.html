@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-<title>Home — Lumino</title>
+<title>Kids' Collection — Lumino</title>
 <style>
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -91,8 +91,8 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
 </nav>
 
 <div id="promo-bar" aria-label="Promotions">
-  <span class="promo-line">Summer Sale: Up to 40% off all items — this weekend only!</span>
-  <span class="promo-line">Free shipping on orders over $75 · New arrivals every Monday</span>
+  <span class="promo-line">Kids' back-to-school edit now live — uniform essentials and weekend styles.</span>
+  <span class="promo-line">Buy 3 kids items, get 1 free · Offer auto-applied at checkout</span>
 </div>
 
 <div id="cookie-banner" role="region" aria-label="Cookie consent">
@@ -102,42 +102,24 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
 </div>
 
 <main>
-  <div class="hero-section">
-    <h2>Discover the New Season</h2>
-    <p>Curated styles for every occasion. Free returns on all orders over $75.</p>
-    <a href="shop-all.html" class="ghost-cta">Shop the Collection</a>
-  </div>
-
-  <div class="page-hero" style="padding-top:32px;">
-    <h1>Welcome to Lumino</h1>
-    <p class="lead">Quality fashion made ethically. Discover new arrivals, exclusive sales, and seasonal collections curated just for you.</p>
+  <!-- No .hero-section on this page — category pages use page-hero only -->
+  <div class="page-hero">
+    <h1>Kids' Collection</h1>
+    <p class="lead">Durable, comfortable clothing for active kids. Machine washable, ethically made.</p>
   </div>
 
   <div class="content">
-    <div style="margin:24px 0;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:0.875rem;color:#475569;">Need help choosing?</span>
-      <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="size-guide-panel">Size guide</button>
-        <div class="tooltip-content">Measure your chest, waist and hips for a perfect fit.</div>
-      </div>
-      <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="delivery-info-panel">Delivery info</button>
-        <div class="tooltip-content">Free next-day on orders over $75. Standard 3–5 days.</div>
-      </div>
-      <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="returns-info-panel">Returns policy</button>
-        <div class="tooltip-content">Free returns within 30 days, no questions asked.</div>
-      </div>
-    </div>
-
-    <h3 class="section-title" style="font-size:1.125rem;color:#1e293b;margin:24px 0 12px;font-weight:700;">Featured this week</h3>
+    <!-- VIOLATION: h3.section-title immediately after h1 with no h2 in between — heading-order violation -->
+    <h3 class="section-title" style="font-size:1.125rem;color:#1e293b;margin:24px 0 12px;font-weight:700;">Featured picks</h3>
 
     <div class="card-grid">
-      <div class="card"><h3>Running Shoes</h3><p>Lightweight mesh, cushioned sole</p><div class="price">$124</div></div>
-      <div class="card"><h3>Oxford Shirt</h3><p>100% cotton, regular fit</p><div class="price">$65</div></div>
-      <div class="card"><h3>Canvas Tote</h3><p>Waxed canvas, brass hardware</p><div class="price">$48</div></div>
-      <div class="card"><h3>Chelsea Boot</h3><p>Full-grain leather, elastic gusset</p><div class="price">$195</div></div>
+      <div class="card"><h3>Everyday School Polo</h3><p>Easy-care cotton blend, ribbed collar</p><div class="price">$22</div></div>
+      <div class="card"><h3>Cargo Adventure Shorts</h3><p>Reinforced knees, deep pockets</p><div class="price">$28</div></div>
+      <div class="card"><h3>Zip-Up Fleece Hoodie</h3><p>Anti-pill fleece, kangaroo pocket</p><div class="price">$38</div></div>
+      <div class="card"><h3>Pull-On Jogger</h3><p>Soft jersey, elasticated waist</p><div class="price">$24</div></div>
     </div>
+
+    <a href="shop-all.html" class="ghost-cta">View all kids' styles</a>
   </div>
 </main>
 

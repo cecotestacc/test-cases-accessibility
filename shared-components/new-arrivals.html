@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>New Arrivals — Lumino</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
+
+    /* nav.site-nav — VIOLATION landmark-unique (no aria-label) + sticky (focus-not-obscured) */
+    nav.site-nav { position: sticky; top: 0; z-index: 100; background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 64px; }
+    nav.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
+    nav.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
+    nav.site-nav a:hover { color: #fff; }
+
+    /* #promo-bar — VIOLATION text-spacing clipped (height:40px + overflow:hidden + line-height:1.2) */
+    #promo-bar { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
+    .promo-line { display: block; line-height: 1.2; }
+
+    /* #cookie-banner + .cookie-btn — VIOLATION color-contrast (#fff on #93c5fd ≈ 2.2:1) */
+    #cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #e2e8f0; padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; z-index: 200; border-top: 1px solid #334155; }
+    .cookie-btn { background: #93c5fd; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+    .cookie-dismiss { background: none; border: 1px solid #475569; color: #94a3b8; padding: 9px 14px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+
+    /* .hero-section — VIOLATION text contrast over vivid gradient */
+    .hero-section { background: linear-gradient(135deg, #60a5fa 0%, #c084fc 50%, #f472b6 100%); padding: 72px 24px; text-align: center; }
+    .hero-section h2 { color: #ffffff; font-size: 2.25rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+    .hero-section p { color: #f1f5f9; font-size: 1.0625rem; max-width: 540px; margin: 0 auto 20px; }
+
+    /* .tooltip-wrapper / .tooltip-btn — VIOLATION hover-only, not-dismissible, not-persistent, ARIA (aria-controls non-existent) */
+    .tooltip-wrapper { position: relative; display: inline-block; }
+    .tooltip-btn { background: #334155; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.8125rem; font-family: inherit; }
+    .tooltip-content { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #0f172a; color: #e2e8f0; padding: 8px 12px; border-radius: 4px; white-space: nowrap; font-size: 0.8rem; z-index: 300; pointer-events: none; }
+    /* VIOLATION: :hover only — no :focus equivalent */
+    .tooltip-wrapper:hover .tooltip-content { display: block; }
+
+    /* #toast-region — VIOLATION live-region created with content (content already in DOM on load) */
+    #toast-region { position: fixed; top: 80px; right: 20px; background: #1e293b; color: #e2e8f0; padding: 14px 18px; border-radius: 8px; font-size: 0.875rem; border-left: 4px solid #22c55e; z-index: 400; max-width: 300px; }
+
+    /* #product-modal — VIOLATION modal-lifecycle (JS closes without restoring focus) */
+    #product-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; align-items: center; justify-content: center; }
+    #product-modal.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 10px; padding: 32px 28px; max-width: 480px; width: 90%; position: relative; }
+    .modal-box h2 { font-size: 1.25rem; color: #0f172a; margin-bottom: 12px; }
+    .modal-box p { font-size: 0.875rem; color: #475569; line-height: 1.6; margin-bottom: 16px; }
+    /* .modal-close — VIOLATION focus-visible (outline:none with no replacement) */
+    .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; font-size: 1.25rem; color: #64748b; line-height: 1; padding: 4px; }
+    .modal-close:focus, .modal-close:focus-visible { outline: none; box-shadow: none; }
+
+    /* h3.section-title — VIOLATION heading-order (appears after h1 with no h2 in between) */
+    /* No special CSS needed — structural violation */
+
+    /* .ghost-cta — VIOLATION focus-visible (outline:none with no replacement) */
+    .ghost-cta { display: inline-block; text-decoration: none; color: #1d4ed8; font-size: 0.875rem; font-weight: 600; padding: 9px 18px; border: 2px solid #1d4ed8; border-radius: 5px; }
+    .ghost-cta:focus, .ghost-cta:focus-visible { outline: none; box-shadow: none; }
+
+    /* nav.footer-nav — VIOLATION landmark-unique (no aria-label) */
+    nav.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    nav.footer-nav a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+    nav.footer-nav a:hover { color: #e2e8f0; }
+
+    /* Layout helpers */
+    .page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
+    .page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
+    .page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
+    .content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
+    .card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
+    .card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
+    .card .price { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; margin-top: 10px; }
+    h2.section-h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+    p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
+    .site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
+    .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
+  </style>
+</head>
+<body>
+
+  <!-- VIOLATION: landmark-unique — nav has no aria-label; a second <nav> exists in the footer -->
+  <nav class="site-nav">
+    <a href="index.html" class="logo">Lumino</a>
+    <a href="new-arrivals.html">New Arrivals</a>
+    <a href="women.html">Women</a>
+    <a href="men.html">Men</a>
+    <a href="accessories.html">Accessories</a>
+    <a href="sale.html">Sale</a>
+  </nav>
+
+  <!-- VIOLATION: text-spacing — fixed height + overflow:hidden clips text when spacing overrides applied -->
+  <div id="promo-bar" aria-label="Promotions">
+    <span class="promo-line">Just landed: 20 new styles added this week across shoes, shirts and accessories.</span>
+    <span class="promo-line">Shop new arrivals first — loyalty members get 48-hour early access.</span>
+  </div>
+
+  <div class="page-hero">
+    <!-- Correct h1 -->
+    <h1>New Arrivals</h1>
+    <p class="lead">Be the first to wear it. Fresh styles added every Monday morning — shop before they sell out.</p>
+  </div>
+
+  <!-- VIOLATION: heading-order — h3 follows h1 directly with no h2 in between -->
+  <div class="content">
+    <h3 class="section-title">This Week's Highlights</h3>
+
+    <!-- VIOLATION: focus-visible — .ghost-cta suppresses outline with no alternative -->
+    <a href="shop-all.html" class="ghost-cta">Shop All New Arrivals</a>
+
+    <!-- VIOLATION: hero text contrast over vivid gradient -->
+    <div class="hero-section" style="margin: 28px -24px;">
+      <h2>New This Week</h2>
+      <p>20 fresh styles just added. Discover them before everyone else.</p>
+    </div>
+
+    <h2 class="section-h2">Fresh Picks</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Linen Oversized Shirt</h3>
+        <p>Relaxed fit in breathable natural linen. Available in 6 colourways.</p>
+        <p class="price">£49.00</p>
+        <button class="quick-view-btn" onclick="openModal('Linen Oversized Shirt', 'A relaxed, breathable linen shirt cut for all-day comfort. Easy-care fabric, available in Sand, Sage, White, Navy, Clay and Black.')">Quick View</button>
+      </div>
+      <div class="card">
+        <h3>Ribbed Knit Co-ord Set</h3>
+        <p>Matching top and wide-leg trouser in a soft cotton-blend rib.</p>
+        <p class="price">£85.00</p>
+        <button class="quick-view-btn" onclick="openModal('Ribbed Knit Co-ord Set', 'Effortlessly coordinated. Soft cotton-blend ribbed knit in a tonal set — wear together or as separates.')">Quick View</button>
+      </div>
+      <div class="card">
+        <h3>Low-Profile Canvas Trainer</h3>
+        <p>Vulcanised sole, unbleached canvas upper. Gender-neutral sizing.</p>
+        <p class="price">£62.00</p>
+        <button class="quick-view-btn" onclick="openModal('Low-Profile Canvas Trainer', 'A clean, minimal sneaker built on a vulcanised rubber sole. Unbleached canvas upper with a subtle tonal logo.')">Quick View</button>
+      </div>
+      <div class="card">
+        <h3>Structured Tote Bag</h3>
+        <p>Pebbled vegan leather with a zip-top closure and interior pockets.</p>
+        <p class="price">£74.00</p>
+        <button class="quick-view-btn" onclick="openModal('Structured Tote Bag', 'A polished everyday tote in pebbled vegan leather. Zip-top closure, three interior pockets and a detachable crossbody strap.')">Quick View</button>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Style Notes</h2>
+    <p class="body-text">Our buyers travel the season's shows and high streets to bring back the shapes, fabrics and colours that matter. This week's drop leans into relaxed tailoring and tactile textures — think linen, rib knit and raw-edge denim.</p>
+    <p class="body-text">Every piece is tested for fit across our full size range before it makes it to the site. If something doesn't feel right when it arrives, free returns are available within 60 days.</p>
+
+    <h2 class="section-h2">Size & Care Info</h2>
+    <p class="body-text">All garments in this drop follow our standard size guide. Linen pieces may shrink slightly on first wash — we recommend a cool machine wash or hand wash. The canvas trainers can be spot-cleaned with a damp cloth.</p>
+
+    <!-- VIOLATION: hover-only tooltips — three instances -->
+    <!-- Each button has aria-controls pointing to a non-existent ID (ARIA violation) -->
+    <!-- Tooltip only shows on :hover, not :focus — keyboard users cannot access it -->
+    <!-- Tooltip cannot be dismissed without moving the pointer (not-dismissible) -->
+    <!-- Tooltip disappears when pointer leaves — not persistent -->
+    <h2 class="section-h2">Care Symbols Guide</h2>
+    <p class="body-text">Hover over each symbol for guidance. (Note: keyboard users cannot access these tooltips.)</p>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px;">
+      <div class="tooltip-wrapper">
+        <button class="tooltip-btn" aria-controls="nonexistent-id-1">&#9795; Machine Wash</button>
+        <div class="tooltip-content">Machine wash at 30°C on a gentle cycle. Do not tumble dry.</div>
+      </div>
+      <div class="tooltip-wrapper">
+        <button class="tooltip-btn" aria-controls="nonexistent-id-2">&#9786; Dry Flat</button>
+        <div class="tooltip-content">Reshape whilst damp and dry flat away from direct heat or sunlight.</div>
+      </div>
+      <div class="tooltip-wrapper">
+        <button class="tooltip-btn" aria-controls="nonexistent-id-3">&#9965; Cool Iron</button>
+        <div class="tooltip-content">Iron on a low setting. Do not iron over prints or embellishments.</div>
+      </div>
+    </div>
+
+  </div><!-- /.content -->
+
+  <!-- VIOLATION: color-contrast — #ffffff text on #93c5fd background ≈ 2.2:1 (fails 4.5:1 AA) -->
+  <div id="cookie-banner" role="region" aria-label="Cookie consent">
+    <p style="flex: 1; min-width: 200px; font-size: 0.875rem;">We use cookies to personalise content and ads, analyse traffic, and improve your experience.</p>
+    <button class="cookie-btn" onclick="document.getElementById('cookie-banner').style.display='none'">Accept all cookies</button>
+    <button class="cookie-dismiss" onclick="document.getElementById('cookie-banner').style.display='none'">Manage preferences</button>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span style="font-weight: 700; color: #e2e8f0; font-size: 1rem;">Lumino</span>
+      <!-- VIOLATION: landmark-unique — nav has no aria-label; identical role to site-nav above -->
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="careers.html">Careers</a>
+        <a href="press.html">Press</a>
+        <a href="sustainability.html">Sustainability</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <span style="font-size: 0.75rem;">&copy; 2026 Lumino Fashion Ltd. All rights reserved.</span>
+    </div>
+  </footer>
+
+
+</body>
+</html>

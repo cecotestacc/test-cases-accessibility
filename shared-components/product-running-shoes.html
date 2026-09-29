@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 (WCAG 1.4.4 Resize Text) -->
+  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 prevents user zoom (WCAG 1.4.4) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>Careers — Lumino</title>
+  <title>Running Shoes — Lumino</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -80,56 +80,154 @@
 </head>
 <body>
 
-<!-- VIOLATION 1: nav.site-nav has no aria-label — landmark-unique violation.
-     sticky positioning also creates focus-not-obscured risk for links scrolled behind it. -->
+<!-- VIOLATION 3: promo-bar — text-spacing clipped (height:40px + overflow:hidden + line-height:1.2) -->
+<div id="promo-bar">
+  <span class="promo-line">NEW: Trail Runner Pro now in 4 new colourways — sizes 6–14 available.</span>
+  <span class="promo-line">Free next-day delivery on footwear over $80 · Returns within 30 days</span>
+</div>
+
+<!-- VIOLATION 2: nav.site-nav — landmark-unique (no aria-label) + sticky -->
 <nav class="site-nav">
-  <a href="/" class="logo">Lumino</a>
-  <a href="/home">Home</a>
-  <a href="/shop">Shop</a>
-  <a href="/blog">Blog</a>
-  <a href="/help">Help</a>
-  <a href="/account">Account</a>
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="index.html">Home</a>
+  <a href="product-running-shoes.html">Running Shoes</a>
+  <a href="shop-all.html">Shop All</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
 </nav>
 
-<div class="page-hero">
-  <h1>Careers at Lumino</h1>
-  <p class="lead">We're a team of 340 people who care about what we build and how we build it. Come work with us.</p>
+<!-- VIOLATION 5: hero-section — text contrast fails over vivid gradient -->
+<div class="hero-section">
+  <h2 style="color:#ffffff">Built for Every Run</h2>
+  <p style="color:#f1f5f9">From track days to trail runs — performance footwear for every athlete.</p>
 </div>
 
-<div class="content">
-  <h2 class="section-h2">Open Roles</h2>
+<!-- VIOLATION 7: toast live-region — content already present in DOM on page load -->
+<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
+  <span>✓</span> 1 item saved to your wishlist
+</div>
+
+<div class="page-hero">
+  <!-- h1 for the page -->
+  <h1>Running Shoes</h1>
+  <p class="lead">Performance footwear engineered for speed, comfort, and durability across every surface.</p>
+</div>
+
+<main class="content">
+
+  <!-- VIOLATION 9: heading-order — h3.section-title appears directly after h1 with no h2 in between -->
+  <h3 class="section-title">Featured Collection</h3>
+
+  <!-- Product cards -->
   <div class="card-grid">
     <div class="card">
-      <h3>Senior Product Designer</h3>
-      <p>London · Full-time</p>
+      <h3>Trail Runner Pro</h3>
+      <p>All-terrain grip with lightweight cushioning for off-road confidence.</p>
+      <p class="price">$124</p>
+      <!-- VIOLATION 8a: Quick View trigger for modal -->
+      <button class="quick-view-btn" id="qv-trigger" onclick="openModal()">Quick View</button>
     </div>
     <div class="card">
-      <h3>Front-End Engineer</h3>
-      <p>Remote UK · Full-time</p>
+      <h3>Road Racer Elite</h3>
+      <p>Carbon-fibre plate and energy-return foam for personal-best pace.</p>
+      <p class="price">$149</p>
     </div>
     <div class="card">
-      <h3>Sustainability Manager</h3>
-      <p>London · Full-time</p>
+      <h3>Track Sprint</h3>
+      <p>Minimal and fast — designed for track sessions and speed work.</p>
+      <p class="price">$99</p>
     </div>
     <div class="card">
-      <h3>Store Manager — Manchester</h3>
-      <p>Manchester · Full-time</p>
+      <h3>Cushion Walker</h3>
+      <p>Maximum daily comfort for long walks and all-day wear.</p>
+      <p class="price">$85</p>
     </div>
+  </div>
+
+  <!-- VIOLATION 10: ghost-cta — focus-visible suppressed (outline:none with no replacement) -->
+  <a href="shop-all.html" class="ghost-cta">View All</a>
+
+  <h2 class="section-h2">Why Choose Lumino Running?</h2>
+  <p class="body-text">Every shoe in our running range is tested across multiple terrain types and gait profiles. Our in-house biomechanics team collaborates with elite athletes and everyday runners to fine-tune cushioning stacks, upper materials, and outsole compounds.</p>
+  <p class="body-text">Whether you are chasing a podium finish or completing your first 5K, Lumino has a shoe built to your pace.</p>
+
+  <!-- VIOLATION 6: tooltip wrappers — hover-only, not-dismissible, not-persistent, aria-controls references nonexistent elements -->
+  <h2 class="section-h2">Technology Features</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+
+    <!-- Tooltip 1 — aria-controls="NONEXISTENT-ID-1" references no element in the DOM -->
+    <div class="tooltip-wrapper">
+      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-1">FlexFoam™</button>
+      <!-- Tooltip visible on :hover only — no :focus equivalent in CSS -->
+      <div class="tooltip-content">Adaptive foam that responds to your stride pattern.</div>
+    </div>
+
+    <!-- Tooltip 2 — aria-controls="NONEXISTENT-ID-2" references no element in the DOM -->
+    <div class="tooltip-wrapper">
+      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-2">GripTex™ Sole</button>
+      <!-- Tooltip visible on :hover only — no :focus equivalent in CSS -->
+      <div class="tooltip-content">Multi-directional lug pattern for wet and dry surfaces.</div>
+    </div>
+
+    <!-- Tooltip 3 — aria-controls="NONEXISTENT-ID-3" references no element in the DOM -->
+    <div class="tooltip-wrapper">
+      <button class="tooltip-btn" aria-controls="NONEXISTENT-ID-3">AirMesh Upper</button>
+      <!-- Tooltip visible on :hover only — no :focus equivalent in CSS -->
+      <div class="tooltip-content">Breathable engineered mesh keeps feet cool over long distances.</div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- VIOLATION 8b/c/d: product modal — focus-visible on close button suppressed; JS closeModal() does not restore focus -->
+<div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <!-- VIOLATION 8c: modal-close focus-visible suppressed via outline:none + box-shadow:none -->
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <h2 id="modal-title">Trail Runner Pro</h2>
+    <p>The Trail Runner Pro combines a responsive FlexFoam™ midsole with an aggressive GripTex™ outsole. Available in sizes 6–14 across four new colourways. Free next-day delivery on orders over $80.</p>
+    <p><strong>Price:</strong> $124</p>
+    <button class="quick-view-btn" onclick="closeModal()">Add to Bag</button>
   </div>
 </div>
 
-<!-- VIOLATION 2 (footer): nav.footer-nav has no aria-label — landmark-unique violation
-     (same generic nav landmark as site-nav above, indistinguishable to AT users). -->
+<!-- VIOLATION 4: cookie-banner — .cookie-btn has #fff text on #93c5fd background (contrast ≈ 2.2:1, fails 4.5:1) -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p style="flex:1;min-width:200px;font-size:0.875rem;">We use cookies to improve your experience and personalise content. See our <a href="privacy.html" style="color:#93c5fd;">privacy policy</a>.</p>
+  <!-- VIOLATION: white text on #93c5fd button background — insufficient contrast -->
+  <button class="cookie-btn">Accept All</button>
+  <button class="cookie-dismiss">Dismiss</button>
+</div>
+
+<!-- VIOLATION 11: footer nav.footer-nav — landmark-unique (no aria-label) -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>&copy; 2024 Lumino Ltd.</span>
+    <span style="font-weight:700;color:#e2e8f0;">Lumino</span>
     <nav class="footer-nav">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/faq">FAQ</a>
+      <a href="index.html">Home</a>
+      <a href="shop-all.html">Shop All</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
     </nav>
+    <span style="font-size:0.75rem;">&copy; 2026 Lumino. All rights reserved.</span>
   </div>
 </footer>
+
+<script>
+  // VIOLATION 8d: openModal does not manage focus into the dialog
+  function openModal() {
+    document.getElementById('product-modal').classList.add('open');
+    // No focus movement into modal on open
+  }
+
+  // VIOLATION 8d: closeModal does not restore focus to the trigger element
+  function closeModal() {
+    document.getElementById('product-modal').classList.remove('open');
+    // No focus restoration — modal-lifecycle violation
+  }
+</script>
 
 </body>
 </html>

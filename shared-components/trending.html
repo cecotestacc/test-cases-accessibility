@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 (WCAG 1.4.4 Resize Text) -->
+  <!-- VIOLATION: user-scalable=no prevents users from zooming (WCAG 1.4.4) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>Careers — Lumino</title>
+  <title>Lumino – Trending Now</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -80,56 +80,123 @@
 </head>
 <body>
 
-<!-- VIOLATION 1: nav.site-nav has no aria-label — landmark-unique violation.
-     sticky positioning also creates focus-not-obscured risk for links scrolled behind it. -->
+<!-- VIOLATION: nav with no aria-label (landmark-unique) + sticky top:0 z-index:100 (focus-not-obscured) -->
 <nav class="site-nav">
-  <a href="/" class="logo">Lumino</a>
-  <a href="/home">Home</a>
-  <a href="/shop">Shop</a>
-  <a href="/blog">Blog</a>
-  <a href="/help">Help</a>
-  <a href="/account">Account</a>
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="shop-all.html">Shop All</a>
+  <a href="new-arrivals.html">New Arrivals</a>
+  <a href="sale.html">Sale</a>
+  <a href="account.html">Account</a>
 </nav>
 
+<!-- VIOLATION: text-spacing — height:40px + overflow:hidden + line-height:1.2 clips content when spacing is overridden -->
+<div id="promo-bar">
+  <span class="promo-line">Trending this week: pastels, oversized fits, and retro prints.</span>
+  <span class="promo-line">Buy 2 get 1 free on all tees this week — add to bag to see discount.</span>
+</div>
+
+<!-- VIOLATION: color-contrast — .cookie-btn uses #fff on #93c5fd (approx 2.2:1, fails 4.5:1 for normal text) -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p>We use cookies to personalise content and improve your experience.</p>
+  <button class="cookie-btn" onclick="document.getElementById('cookie-banner').remove()">Accept all</button>
+  <button class="cookie-dismiss" onclick="document.getElementById('cookie-banner').remove()">Reject non-essential</button>
+</div>
+
+<!-- VIOLATION: text contrast over vivid gradient (h2 #fff and p #f1f5f9 may fail on mid-gradient colours) -->
+<div class="hero-section">
+  <h2 style="color:#ffffff">What Everyone Is Wearing</h2>
+  <p style="color:#f1f5f9">The styles our community is reaching for this season.</p>
+  <!-- VIOLATION: .ghost-cta:focus { outline:none } — no visible focus indicator replacement -->
+  <a href="shop-all.html" class="ghost-cta">Shop the trend</a>
+</div>
+
 <div class="page-hero">
-  <h1>Careers at Lumino</h1>
-  <p class="lead">We're a team of 340 people who care about what we build and how we build it. Come work with us.</p>
+  <!-- VIOLATION: heading-order — h1 followed by h3 with no h2 in between -->
+  <h1>Trending Now</h1>
+  <p class="lead">Discover what shoppers are loving right now. Updated every 48 hours based on our bestselling products.</p>
 </div>
 
 <div class="content">
-  <h2 class="section-h2">Open Roles</h2>
-  <div class="card-grid">
-    <div class="card">
-      <h3>Senior Product Designer</h3>
-      <p>London · Full-time</p>
+
+  <!-- VIOLATION: heading-order — h3 immediately after h1 (no h2 between them) -->
+  <h3 class="section-title">This Week's Highlights</h3>
+
+  <!-- VIOLATION: tooltip — hover-only (no :focus), not-dismissible (no Escape handler), not-persistent, aria-controls points to nonexistent IDs -->
+  <div style="display:flex;gap:16px;margin:16px 0 28px;flex-wrap:wrap;">
+    <div class="tooltip-wrapper">
+      <!-- aria-controls="tooltip-info-1" — element with id="tooltip-info-1" does not exist -->
+      <button class="tooltip-btn" aria-controls="tooltip-info-1">Pastel trend info</button>
+      <div class="tooltip-content">Pastels up 38% in saves this week. Linen blends lead the category.</div>
     </div>
-    <div class="card">
-      <h3>Front-End Engineer</h3>
-      <p>Remote UK · Full-time</p>
+    <div class="tooltip-wrapper">
+      <!-- aria-controls="tooltip-info-2" — element with id="tooltip-info-2" does not exist -->
+      <button class="tooltip-btn" aria-controls="tooltip-info-2">Oversized fit info</button>
+      <div class="tooltip-content">Oversized silhouettes trending across all age groups. Size up one for the look.</div>
     </div>
-    <div class="card">
-      <h3>Sustainability Manager</h3>
-      <p>London · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Store Manager — Manchester</h3>
-      <p>Manchester · Full-time</p>
+    <div class="tooltip-wrapper">
+      <!-- aria-controls="tooltip-info-3" — element with id="tooltip-info-3" does not exist -->
+      <button class="tooltip-btn" aria-controls="tooltip-info-3">Retro prints info</button>
+      <div class="tooltip-content">70s-inspired prints seeing a 52% surge. Pair with neutral basics.</div>
     </div>
   </div>
+
+  <h2 class="section-h2">Top Products This Week</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Linen Pastel Shirt</h3>
+      <p>Relaxed fit, breathable linen blend. Available in sage, blush, and sky.</p>
+      <p class="price">$49.00</p>
+      <button class="quick-view-btn" onclick="openModal('Linen Pastel Shirt', 'Relaxed fit linen blend shirt in three pastel colourways. Sizes XS–3XL. Machine washable.')">Quick view</button>
+    </div>
+    <div class="card">
+      <h3>Oversized Graphic Tee</h3>
+      <p>Drop-shoulder cut with retro artwork. 100% organic cotton.</p>
+      <p class="price">$32.00</p>
+      <button class="quick-view-btn" onclick="openModal('Oversized Graphic Tee', '100% organic cotton drop-shoulder tee. Retro artwork screenprinted. Unisex sizing S–2XL.')">Quick view</button>
+    </div>
+    <div class="card">
+      <h3>Retro Print Midi Skirt</h3>
+      <p>70s-inspired swirl print. Elasticated waist, midi length.</p>
+      <p class="price">$55.00</p>
+      <button class="quick-view-btn" onclick="openModal('Retro Print Midi Skirt', 'Midi-length skirt with elasticated waist and bold 70s swirl print. Available in two colourways, sizes 4–20.')">Quick view</button>
+    </div>
+    <div class="card">
+      <h3>Wide-Leg Linen Trousers</h3>
+      <p>Effortless wide-leg silhouette. Linen-viscose blend in four neutrals.</p>
+      <p class="price">$68.00</p>
+      <button class="quick-view-btn" onclick="openModal('Wide-Leg Linen Trousers', 'Linen-viscose blend wide-leg trousers. Belt loops and side pockets. Machine wash cold. Sizes 4–22.')">Quick view</button>
+    </div>
+  </div>
+
+  <p class="body-text">
+    These picks are updated every 48 hours using real sales and save data from our community of shoppers.
+    Popularity rankings factor in units sold, wishlist adds, and review scores over the preceding two days.
+  </p>
+
+  <p class="body-text">
+    Trending pieces move fast — if you see your size, add it to your bag to reserve it. Items in your bag
+    are held for 30 minutes. Sign in to unlock early-access notifications for next week's trending list.
+  </p>
+
 </div>
 
-<!-- VIOLATION 2 (footer): nav.footer-nav has no aria-label — landmark-unique violation
-     (same generic nav landmark as site-nav above, indistinguishable to AT users). -->
+<!-- VIOLATION: nav with no aria-label (landmark-unique — same landmark role as site-nav above with no distinguishing label) -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>&copy; 2024 Lumino Ltd.</span>
+    <span>© 2025 Lumino Fashion Ltd.</span>
     <nav class="footer-nav">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/faq">FAQ</a>
+      <a href="about.html">About</a>
+      <a href="sustainability.html">Sustainability</a>
+      <a href="careers.html">Careers</a>
+      <a href="press.html">Press</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
     </nav>
   </div>
 </footer>
+
 
 </body>
 </html>

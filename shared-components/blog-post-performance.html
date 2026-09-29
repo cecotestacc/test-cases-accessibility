@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 (WCAG 1.4.4 Resize Text) -->
+  <!-- VIOLATION: user-scalable=no prevents users from zooming (WCAG 1.4.4) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>Careers — Lumino</title>
+  <title>The Science of Performance Footwear — Lumino Blog</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -80,53 +80,53 @@
 </head>
 <body>
 
-<!-- VIOLATION 1: nav.site-nav has no aria-label — landmark-unique violation.
-     sticky positioning also creates focus-not-obscured risk for links scrolled behind it. -->
+<!-- VIOLATION: nav with no aria-label (landmark-unique) + sticky top:0 z-index:100 (focus-not-obscured) -->
 <nav class="site-nav">
-  <a href="/" class="logo">Lumino</a>
-  <a href="/home">Home</a>
-  <a href="/shop">Shop</a>
-  <a href="/blog">Blog</a>
-  <a href="/help">Help</a>
-  <a href="/account">Account</a>
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="shop-all.html">Shop All</a>
+  <a href="new-arrivals.html">New Arrivals</a>
+  <a href="blog.html">Blog</a>
+  <a href="account.html">Account</a>
 </nav>
 
+<!-- VIOLATION: color-contrast — .cookie-btn uses #fff on #93c5fd (approx 2.2:1, fails 4.5:1 for normal text) -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p>We use cookies to personalise content and improve your experience.</p>
+  <button class="cookie-btn" onclick="document.getElementById('cookie-banner').remove()">Accept all</button>
+  <button class="cookie-dismiss" onclick="document.getElementById('cookie-banner').remove()">Reject non-essential</button>
+</div>
+
 <div class="page-hero">
-  <h1>Careers at Lumino</h1>
-  <p class="lead">We're a team of 340 people who care about what we build and how we build it. Come work with us.</p>
+  <!-- VIOLATION: heading-order — h1 followed by h3 with no h2 in between -->
+  <h1>The Science of Performance Footwear</h1>
+  <p class="lead">What makes a great running shoe? We break down the tech behind cushioning, stability, and propulsion.</p>
 </div>
 
 <div class="content">
-  <h2 class="section-h2">Open Roles</h2>
-  <div class="card-grid">
-    <div class="card">
-      <h3>Senior Product Designer</h3>
-      <p>London · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Front-End Engineer</h3>
-      <p>Remote UK · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Sustainability Manager</h3>
-      <p>London · Full-time</p>
-    </div>
-    <div class="card">
-      <h3>Store Manager — Manchester</h3>
-      <p>Manchester · Full-time</p>
-    </div>
-  </div>
+
+  <!-- VIOLATION: heading-order — h3 immediately after h1 (no h2 between them) -->
+  <h3 class="section-title">Latest posts</h3>
+
+  <p class="body-text">Modern running shoes are engineering marvels. The midsole foam, the carbon-fibre plate, the outsole compound — each element is designed to return energy and protect the joints across thousands of repetitions.</p>
+  <p class="body-text">At Lumino, we work directly with materials scientists to source foams that balance energy return with durability. Our Trail Runner Pro, for example, uses a dual-density midsole: firm for stability on uneven terrain, cushioned for impact absorption on landing.</p>
+
+  <!-- VIOLATION: .ghost-cta:focus { outline:none } — no visible focus indicator replacement -->
+  <a href="blog.html" class="ghost-cta">View all posts</a>
+
 </div>
 
-<!-- VIOLATION 2 (footer): nav.footer-nav has no aria-label — landmark-unique violation
-     (same generic nav landmark as site-nav above, indistinguishable to AT users). -->
+<!-- VIOLATION: nav with no aria-label (landmark-unique — same landmark role as site-nav above with no distinguishing label) -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>&copy; 2024 Lumino Ltd.</span>
+    <span>© 2025 Lumino Fashion Ltd.</span>
     <nav class="footer-nav">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/faq">FAQ</a>
+      <a href="about.html">About</a>
+      <a href="sustainability.html">Sustainability</a>
+      <a href="careers.html">Careers</a>
+      <a href="press.html">Press</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
     </nav>
   </div>
 </footer>

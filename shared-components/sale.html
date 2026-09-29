@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-<title>Home — Lumino</title>
+<title>Sale — Lumino</title>
 <style>
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -77,6 +77,8 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
 .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
 
+.sale-badge { display:inline-block; background:#dc2626; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:3px; margin-bottom:6px; }
+.old-price { text-decoration:line-through; color:#94a3b8; font-size:0.875rem; margin-right:6px; }
 </style>
 </head>
 <body>
@@ -91,52 +93,52 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
 </nav>
 
 <div id="promo-bar" aria-label="Promotions">
-  <span class="promo-line">Summer Sale: Up to 40% off all items — this weekend only!</span>
-  <span class="promo-line">Free shipping on orders over $75 · New arrivals every Monday</span>
+  <span class="promo-line">SALE: Extra 10% off already reduced prices — use code EXTRA10.</span>
+  <span class="promo-line">Offer ends midnight Sunday · Free returns on all sale items</span>
 </div>
 
 <div id="cookie-banner" role="region" aria-label="Cookie consent">
-  <p style="font-size:0.8125rem;flex:1;min-width:200px;">We use cookies to improve your experience. By continuing you accept our <a href="privacy.html" style="color:#93c5fd;">cookie policy</a>.</p>
+  <p style="font-size:0.8125rem;flex:1;min-width:200px;">We use cookies to improve your experience. <a href="privacy.html" style="color:#93c5fd;">Cookie policy</a>.</p>
   <button class="cookie-btn">Accept all cookies</button>
   <button class="cookie-dismiss">Manage preferences</button>
 </div>
 
 <main>
   <div class="hero-section">
-    <h2>Discover the New Season</h2>
-    <p>Curated styles for every occasion. Free returns on all orders over $75.</p>
-    <a href="shop-all.html" class="ghost-cta">Shop the Collection</a>
+    <h2>Up to 50% Off This Weekend</h2>
+    <p>Hundreds of lines reduced. Sizes are going fast — shop now before they're gone.</p>
+    <a href="#sale-items" class="ghost-cta">View Sale Items</a>
   </div>
 
   <div class="page-hero" style="padding-top:32px;">
-    <h1>Welcome to Lumino</h1>
-    <p class="lead">Quality fashion made ethically. Discover new arrivals, exclusive sales, and seasonal collections curated just for you.</p>
+    <h1>Sale</h1>
+    <p class="lead">Our biggest sale of the season. Selected lines up to 50% off — for a limited time only.</p>
   </div>
 
-  <div class="content">
+  <div class="content" id="sale-items">
     <div style="margin:24px 0;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:0.875rem;color:#475569;">Need help choosing?</span>
+      <span style="font-size:0.875rem;color:#475569;">Sale guide:</span>
       <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="size-guide-panel">Size guide</button>
-        <div class="tooltip-content">Measure your chest, waist and hips for a perfect fit.</div>
+        <button class="tooltip-btn" aria-controls="sale-returns-panel">Sale returns</button>
+        <div class="tooltip-content">Sale items have the same 30-day free returns policy as full-price items.</div>
       </div>
       <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="delivery-info-panel">Delivery info</button>
-        <div class="tooltip-content">Free next-day on orders over $75. Standard 3–5 days.</div>
+        <button class="tooltip-btn" aria-controls="extra-discount-panel">Extra 10%</button>
+        <div class="tooltip-content">Apply code EXTRA10 at checkout for an additional 10% off sale prices.</div>
       </div>
       <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="returns-info-panel">Returns policy</button>
-        <div class="tooltip-content">Free returns within 30 days, no questions asked.</div>
+        <button class="tooltip-btn" aria-controls="stock-level-panel">Stock levels</button>
+        <div class="tooltip-content">Sale stock is limited and not restocked. Once it's gone, it's gone.</div>
       </div>
     </div>
 
-    <h3 class="section-title" style="font-size:1.125rem;color:#1e293b;margin:24px 0 12px;font-weight:700;">Featured this week</h3>
+    <h3 class="section-title" style="font-size:1.125rem;color:#1e293b;margin:24px 0 12px;font-weight:700;">Top deals today</h3>
 
     <div class="card-grid">
-      <div class="card"><h3>Running Shoes</h3><p>Lightweight mesh, cushioned sole</p><div class="price">$124</div></div>
-      <div class="card"><h3>Oxford Shirt</h3><p>100% cotton, regular fit</p><div class="price">$65</div></div>
-      <div class="card"><h3>Canvas Tote</h3><p>Waxed canvas, brass hardware</p><div class="price">$48</div></div>
-      <div class="card"><h3>Chelsea Boot</h3><p>Full-grain leather, elastic gusset</p><div class="price">$195</div></div>
+      <div class="card"><span class="sale-badge">50% OFF</span><h3>Classic White Sneaker</h3><p>Leather upper, sizes 6–13</p><div class="price"><span class="old-price">$89</span>$44</div></div>
+      <div class="card"><span class="sale-badge">40% OFF</span><h3>Oxford Button-Down</h3><p>100% cotton, regular fit</p><div class="price"><span class="old-price">$65</span>$39</div></div>
+      <div class="card"><span class="sale-badge">30% OFF</span><h3>Canvas Tote</h3><p>Waxed canvas, brass fittings</p><div class="price"><span class="old-price">$48</span>$33</div></div>
+      <div class="card"><span class="sale-badge">25% OFF</span><h3>Merino Polo</h3><p>Fine-gauge, slim fit</p><div class="price"><span class="old-price">$98</span>$73</div></div>
     </div>
   </div>
 </main>

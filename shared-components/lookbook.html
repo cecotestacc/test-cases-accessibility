@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 (WCAG 1.4.4 Resize Text) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>Careers — Lumino</title>
+  <title>Summer 2025 Lookbook — Lumino</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -80,53 +79,61 @@
 </head>
 <body>
 
-<!-- VIOLATION 1: nav.site-nav has no aria-label — landmark-unique violation.
-     sticky positioning also creates focus-not-obscured risk for links scrolled behind it. -->
+<!-- VIOLATION: nav.site-nav has no aria-label (landmark-unique) -->
 <nav class="site-nav">
-  <a href="/" class="logo">Lumino</a>
-  <a href="/home">Home</a>
-  <a href="/shop">Shop</a>
-  <a href="/blog">Blog</a>
-  <a href="/help">Help</a>
-  <a href="/account">Account</a>
+  <a href="#" class="logo">Lumino</a>
+  <a href="#">Women</a>
+  <a href="#">Men</a>
+  <a href="#">Lookbook</a>
+  <a href="#">Sale</a>
 </nav>
 
+<!-- VIOLATION: color-contrast — .cookie-btn uses #fff text on #93c5fd background (~2.2:1, fails 4.5:1 AA) -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p>We use cookies to improve your experience and personalise content.</p>
+  <button class="cookie-btn">Accept all</button>
+  <button class="cookie-dismiss">Dismiss</button>
+</div>
+
+<!-- Page hero: h1 with lead text -->
 <div class="page-hero">
-  <h1>Careers at Lumino</h1>
-  <p class="lead">We're a team of 340 people who care about what we build and how we build it. Come work with us.</p>
+  <h1>Summer 2025 Lookbook</h1>
+  <p class="lead">Four colour stories, 200 curated looks, shot across Lisbon, the Cotswolds, and the Greek coast.</p>
 </div>
 
 <div class="content">
-  <h2 class="section-h2">Open Roles</h2>
+  <!-- VIOLATION: heading-order — h3.section-title appears directly after h1 with no h2 in between -->
+  <h3 class="section-title">Summer 2025 — Four Colour Stories</h3>
+
   <div class="card-grid">
-    <div class="card">
-      <h3>Senior Product Designer</h3>
-      <p>London · Full-time</p>
+    <div class="card" style="background:linear-gradient(135deg,#ddd6fe,#ede9fe);min-height:120px;">
+      <h3>Story 1: Twilight</h3>
+      <p>Lavender, violet, soft plum.</p>
     </div>
-    <div class="card">
-      <h3>Front-End Engineer</h3>
-      <p>Remote UK · Full-time</p>
+    <div class="card" style="background:linear-gradient(135deg,#fde68a,#fef3c7);min-height:120px;">
+      <h3>Story 2: Harvest</h3>
+      <p>Amber, honey, terracotta.</p>
     </div>
-    <div class="card">
-      <h3>Sustainability Manager</h3>
-      <p>London · Full-time</p>
+    <div class="card" style="background:linear-gradient(135deg,#bbf7d0,#dcfce7);min-height:120px;">
+      <h3>Story 3: Meadow</h3>
+      <p>Sage, mint, cucumber.</p>
     </div>
-    <div class="card">
-      <h3>Store Manager — Manchester</h3>
-      <p>Manchester · Full-time</p>
+    <div class="card" style="background:linear-gradient(135deg,#bfdbfe,#dbeafe);min-height:120px;">
+      <h3>Story 4: Coastal</h3>
+      <p>Sky, navy, white.</p>
     </div>
   </div>
 </div>
 
-<!-- VIOLATION 2 (footer): nav.footer-nav has no aria-label — landmark-unique violation
-     (same generic nav landmark as site-nav above, indistinguishable to AT users). -->
+<!-- VIOLATION: footer nav has no aria-label (landmark-unique) -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>&copy; 2024 Lumino Ltd.</span>
+    <span>&copy; 2025 Lumino. All rights reserved.</span>
     <nav class="footer-nav">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/faq">FAQ</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Contact</a>
     </nav>
   </div>
 </footer>

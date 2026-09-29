@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-<title>Home — Lumino</title>
-<style>
+  <meta charset="UTF-8">
+  <!-- VIOLATION: user-scalable=no prevents users from zooming (WCAG 1.4.4) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Collections — Lumino</title>
+  <style>
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -77,77 +78,102 @@ p.body-text { color: #475569; line-height: 1.7; margin-bottom: 16px; }
 .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
 
-</style>
+  </style>
 </head>
 <body>
 
+<!-- VIOLATION: nav with no aria-label (landmark-unique) + sticky top:0 z-index:100 (focus-not-obscured) -->
 <nav class="site-nav">
-  <a href="home.html" class="logo">Lumino</a>
-  <a href="shop-all.html">Shop</a>
+  <a href="index.html" class="logo">Lumino</a>
+  <a href="shop-all.html">Shop All</a>
+  <a href="new-arrivals.html">New Arrivals</a>
   <a href="sale.html">Sale</a>
-  <a href="blog.html">Blog</a>
   <a href="account.html">Account</a>
-  <a href="faq.html">Help</a>
 </nav>
 
-<div id="promo-bar" aria-label="Promotions">
-  <span class="promo-line">Summer Sale: Up to 40% off all items — this weekend only!</span>
-  <span class="promo-line">Free shipping on orders over $75 · New arrivals every Monday</span>
+<!-- VIOLATION: text-spacing — height:40px + overflow:hidden + line-height:1.2 clips second line when text spacing is overridden -->
+<div id="promo-bar">
+  <span class="promo-line">Summer 2025 collection is now fully in stock — shop all four colour stories.</span>
+  <span class="promo-line">Limited edition pieces — once sold out, they do not come back</span>
 </div>
 
+<!-- VIOLATION: color-contrast — .cookie-btn uses #fff on #93c5fd (approx 2.2:1, fails 4.5:1 for normal text) -->
 <div id="cookie-banner" role="region" aria-label="Cookie consent">
   <p style="font-size:0.8125rem;flex:1;min-width:200px;">We use cookies to improve your experience. By continuing you accept our <a href="privacy.html" style="color:#93c5fd;">cookie policy</a>.</p>
-  <button class="cookie-btn">Accept all cookies</button>
-  <button class="cookie-dismiss">Manage preferences</button>
+  <button class="cookie-btn" onclick="document.getElementById('cookie-banner').remove()">Accept all cookies</button>
+  <button class="cookie-dismiss" onclick="document.getElementById('cookie-banner').remove()">Manage preferences</button>
 </div>
 
-<main>
-  <div class="hero-section">
-    <h2>Discover the New Season</h2>
-    <p>Curated styles for every occasion. Free returns on all orders over $75.</p>
-    <a href="shop-all.html" class="ghost-cta">Shop the Collection</a>
-  </div>
+<!-- Category page — no hero-section (hero gradient is home/landing page only) -->
+<!-- No #toast-region on this page -->
+<!-- No .tooltip-btn on this page -->
+<!-- No #product-modal on this page -->
 
-  <div class="page-hero" style="padding-top:32px;">
-    <h1>Welcome to Lumino</h1>
-    <p class="lead">Quality fashion made ethically. Discover new arrivals, exclusive sales, and seasonal collections curated just for you.</p>
-  </div>
+<div class="page-hero">
+  <!-- VIOLATION: heading-order — h1 followed immediately by h3 with no h2 in between -->
+  <h1>Collections</h1>
+  <p class="lead">Seasonal collections curated around a single idea, colour story, or lifestyle.</p>
+</div>
 
-  <div class="content">
-    <div style="margin:24px 0;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:0.875rem;color:#475569;">Need help choosing?</span>
-      <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="size-guide-panel">Size guide</button>
-        <div class="tooltip-content">Measure your chest, waist and hips for a perfect fit.</div>
-      </div>
-      <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="delivery-info-panel">Delivery info</button>
-        <div class="tooltip-content">Free next-day on orders over $75. Standard 3–5 days.</div>
-      </div>
-      <div class="tooltip-wrapper">
-        <button class="tooltip-btn" aria-controls="returns-info-panel">Returns policy</button>
-        <div class="tooltip-content">Free returns within 30 days, no questions asked.</div>
-      </div>
+<div class="content">
+
+  <!-- VIOLATION: heading-order — h3.section-title appears directly after h1, skipping h2 entirely -->
+  <h3 class="section-title" style="font-size:1.125rem;color:#1e293b;margin:24px 0 12px;font-weight:700;">Featured picks</h3>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Golden Hour</h3>
+      <p>Warm terracotta and amber tones. Easy linen separates for long summer evenings.</p>
+      <div class="price">From $58</div>
     </div>
-
-    <h3 class="section-title" style="font-size:1.125rem;color:#1e293b;margin:24px 0 12px;font-weight:700;">Featured this week</h3>
-
-    <div class="card-grid">
-      <div class="card"><h3>Running Shoes</h3><p>Lightweight mesh, cushioned sole</p><div class="price">$124</div></div>
-      <div class="card"><h3>Oxford Shirt</h3><p>100% cotton, regular fit</p><div class="price">$65</div></div>
-      <div class="card"><h3>Canvas Tote</h3><p>Waxed canvas, brass hardware</p><div class="price">$48</div></div>
-      <div class="card"><h3>Chelsea Boot</h3><p>Full-grain leather, elastic gusset</p><div class="price">$195</div></div>
+    <div class="card">
+      <h3>Arctic Drift</h3>
+      <p>Crisp whites, glacier blues, and pale greys. Tailored pieces built for cool seasons.</p>
+      <div class="price">From $74</div>
+    </div>
+    <div class="card">
+      <h3>Midnight Garden</h3>
+      <p>Deep botanical greens and inky navy. Flowing fabrics with a relaxed silhouette.</p>
+      <div class="price">From $65</div>
+    </div>
+    <div class="card">
+      <h3>Raw Earth</h3>
+      <p>Undyed cotton, clay, and sand. Minimal wardrobe essentials with zero compromise.</p>
+      <div class="price">From $49</div>
     </div>
   </div>
-</main>
 
+  <h2 class="section-h2">About our collections</h2>
+
+  <p class="body-text">
+    Each Lumino collection is built around a single creative brief — a mood, a place, or a palette.
+    We design every piece to work within its collection and across your whole wardrobe, so nothing
+    sits unworn. Fabrics are chosen first; silhouettes follow.
+  </p>
+
+  <p class="body-text">
+    Limited edition collections are produced in small runs. When a size sells out, we do not
+    restock that exact piece. Archive collections are occasionally revisited in new colourways,
+    but the originals are gone for good.
+  </p>
+
+  <!-- VIOLATION: .ghost-cta:focus { outline:none; box-shadow:none } — no visible focus indicator replacement -->
+  <a href="shop-all.html" class="ghost-cta">Shop all collections</a>
+
+</div>
+
+<!-- VIOLATION: nav with no aria-label (landmark-unique — same role as site-nav above, no distinguishing label) -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <p>&copy; 2025 Lumino Ltd.</p>
+    <span>&copy; 2025 Lumino Fashion Ltd.</span>
     <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="sustainability.html">Sustainability</a>
+      <a href="careers.html">Careers</a>
+      <a href="press.html">Press</a>
+      <a href="contact.html">Contact</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
-      <a href="faq.html">FAQ</a>
     </nav>
   </div>
 </footer>

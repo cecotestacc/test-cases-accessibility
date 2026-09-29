@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- VIOLATION: user-scalable=no prevents users from zooming (WCAG 1.4.4) -->
+  <!-- VIOLATION: user-scalable=no + maximum-scale=1.0 prevents user zoom (WCAG 1.4.4) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <title>FAQ — Lumino</title>
+  <title>Brands — Lumino</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
@@ -77,7 +77,7 @@
     .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .quick-view-btn { background: #1d4ed8; color: #fff; border: none; padding: 9px 16px; border-radius: 5px; font-size: 0.8125rem; cursor: pointer; font-family: inherit; }
 
-    /* ── QA Info Panel ── (copy verbatim, do not modify) */
+    /* QA Info Panel */
     .qa-panel { font-family: system-ui,-apple-system,sans-serif; background: #0f172a; color: #e2e8f0; border-left: 4px solid #818cf8; padding: 16px 20px; margin: 0 0 24px; font-size: 0.875rem; line-height: 1.6; }
     .qa-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
     .qa-case-num { background: #818cf8; color: #0f172a; font-weight: 700; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; }
@@ -97,64 +97,108 @@
 </head>
 <body>
 
+<!-- VIOLATION: nav.site-nav has no aria-label (landmark-unique) and is sticky (focus-not-obscured) -->
+<nav class="site-nav">
+  <a href="home.html" class="logo">Lumino</a>
+  <a href="shop-all.html">Shop All</a>
+  <a href="new-arrivals.html">New Arrivals</a>
+  <a href="brands.html">Brands</a>
+  <a href="sale.html">Sale</a>
+</nav>
+
+<!-- VIOLATION: height:40px + overflow:hidden + line-height:1.2 clips second line when text spacing is increased (WCAG 1.4.12) -->
+<div id="promo-bar">
+  <span class="promo-line">Brand spotlight: new arrivals from Patagonia, Norse Projects, and Folk.</span>
+  <span class="promo-line">Free shipping on all brand partner items over $60 this week</span>
+</div>
+
 <div class="qa-panel">
   <div class="qa-panel-header">
-    <span class="qa-case-num">Case #21</span>
-    <span class="qa-rule-id">shared-components / faq</span>
+    <span class="qa-case-num">Case #19</span>
+    <span class="qa-rule-id">shared-components / brands</span>
   </div>
   <dl>
     <dt>WCAG criteria</dt>
-    <dd>
-      1.4.4 Resize Text — AA |
-      2.4.1 Bypass Blocks — A |
-      1.3.6 Identify Purpose — AAA
-    </dd>
+    <dd>Multiple — see Issues below</dd>
     <dt>Elements with errors</dt>
-    <dd>
-      <code>&lt;meta name="viewport"&gt;</code>,
-      <code>nav.site-nav</code> (no aria-label),
-      <code>nav.footer-nav</code> (no aria-label)
-    </dd>
+    <dd><code>meta[name=viewport]</code>, <code>nav.site-nav</code>, <code>#promo-bar</code>, <code>.cookie-btn</code>, <code>h3.section-title</code>, <code>.ghost-cta</code>, <code>nav.footer-nav</code></dd>
     <dt>Issues</dt>
     <dd><ul>
-      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>user-scalable=no, maximum-scale=1.0</code> prevents users from zooming the page, blocking text resize for low-vision users.</li>
-      <li><span class="qa-error-tag">ERROR 2.4.1 / landmark-unique</span> <code>nav.site-nav</code> has no <code>aria-label</code>; with a second unlabelled <code>nav.footer-nav</code>, screen readers cannot distinguish the two navigation landmarks.</li>
-      <li><span class="qa-error-tag">ERROR 2.4.1 / landmark-unique</span> <code>nav.footer-nav</code> has no <code>aria-label</code>, creating a duplicate unlabelled navigation landmark alongside <code>nav.site-nav</code>.</li>
+      <li><span class="qa-error-tag">ERROR 1.4.4</span> <code>meta[name=viewport]</code> sets <code>user-scalable=no</code> and <code>maximum-scale=1.0</code> — prevents user zoom (Resize Text, Level AA)</li>
+      <li><span class="qa-error-tag">ERROR 1.3.6</span> <code>nav.site-nav</code> has no <code>aria-label</code> — indistinguishable from <code>nav.footer-nav</code> (Identify Purpose, Level AAA / landmark-unique)</li>
+      <li><span class="qa-error-tag">ERROR 1.4.12</span> <code>#promo-bar</code> clips content at <code>height:40px; overflow:hidden</code> with <code>line-height:1.2</code> — second line lost when text spacing is overridden (Text Spacing, Level AA)</li>
+      <li><span class="qa-error-tag">ERROR 1.4.3</span> <code>.cookie-btn</code> uses <code>#ffffff</code> text on <code>#93c5fd</code> background — contrast ratio approx 2.2:1, fails minimum 4.5:1 (Contrast Minimum, Level AA)</li>
+      <li><span class="qa-error-tag">ERROR 1.3.1</span> <code>h3.section-title</code> "Featured picks" follows <code>h1</code> with no intervening <code>h2</code> — heading level skipped (Info and Relationships, Level A)</li>
+      <li><span class="qa-error-tag">ERROR 2.4.11</span> <code>.ghost-cta</code> suppresses all focus indicators via <code>outline:none; box-shadow:none</code> with no replacement (Focus Appearance, Level AA)</li>
+      <li><span class="qa-error-tag">ERROR 1.3.6</span> <code>nav.footer-nav</code> has no <code>aria-label</code> — indistinguishable from <code>nav.site-nav</code> (Identify Purpose, Level AAA / landmark-unique)</li>
     </ul></dd>
   </dl>
 </div>
 
-<!-- VIOLATION: nav has no aria-label — landmark-unique violation; sticky positioning causes focus-not-obscured risk -->
-<nav class="site-nav">
-  <a href="/" class="logo">Lumino</a>
-  <a href="/home">Home</a>
-  <a href="/shop">Shop</a>
-  <a href="/blog">Blog</a>
-  <a href="/help">Help</a>
-  <a href="/account">Account</a>
-</nav>
-
 <div class="page-hero">
-  <h1>Frequently Asked Questions</h1>
-  <p class="lead">Can't find what you need? Email <a href="mailto:help@lumino.com">help@lumino.com</a> and we'll reply within one business day.</p>
+  <h1>Our Brands</h1>
+  <p class="lead">Curated partner brands that share our commitment to quality and sustainability.</p>
 </div>
 
 <div class="content">
-  <h2 class="section-h2">Orders &amp; Delivery</h2>
-  <p class="body-text"><strong>How long does delivery take?</strong> Standard 3–5 days. Next-day on orders placed before 2pm.</p>
-  <p class="body-text"><strong>Can I change my order?</strong> Changes are possible within one hour of placing the order via live chat.</p>
-  <h2 class="section-h2" style="margin-top:24px;">Returns</h2>
-  <p class="body-text"><strong>What is the returns policy?</strong> Free returns within 30 days. Items must be unworn with original tags.</p>
+
+  <!-- VIOLATION: h3 directly after h1 — heading level skipped (no h2 between them) -->
+  <h3 class="section-title">Featured picks</h3>
+
+  <div class="card-grid">
+    <div class="card">
+      <!-- Note: these inner h3s are within the card-grid context; the structural violation
+           is the h3.section-title above appearing before any h2 on the page -->
+      <h3>Patagonia Nano Puff Jacket</h3>
+      <p>Lightweight insulation, recycled materials, lifetime guarantee.</p>
+      <p class="price">$229.00</p>
+      <button class="quick-view-btn" type="button">Quick view</button>
+    </div>
+    <div class="card">
+      <h3>Norse Projects Carsten Oxford</h3>
+      <p>Classic relaxed-fit Oxford in premium washed cotton.</p>
+      <p class="price">$175.00</p>
+      <button class="quick-view-btn" type="button">Quick view</button>
+    </div>
+    <div class="card">
+      <h3>Folk Assembly Chore Coat</h3>
+      <p>Waxed canvas utility jacket built for all-weather wear.</p>
+      <p class="price">$310.00</p>
+      <button class="quick-view-btn" type="button">Quick view</button>
+    </div>
+    <div class="card">
+      <h3>Patagonia Torrentshell 3L</h3>
+      <p>Waterproof shell with Fair Trade Certified stitching.</p>
+      <p class="price">$179.00</p>
+      <button class="quick-view-btn" type="button">Quick view</button>
+    </div>
+  </div>
+
+  <h2 class="section-h2">About our brand partners</h2>
+  <p class="body-text">Every brand in the Lumino portfolio is evaluated against strict environmental and ethical sourcing criteria. We visit supplier facilities, review audit reports, and hold ongoing partnerships that prioritise transparency at every step of the supply chain.</p>
+  <p class="body-text">Our current roster spans outerwear, lifestyle apparel, and performance gear — chosen because they lead their respective categories in both design and responsibility.</p>
+
+  <!-- VIOLATION: focus-visible suppressed — .ghost-cta removes outline and box-shadow on :focus and :focus-visible with no replacement -->
+  <a href="shop-all.html" class="ghost-cta">Browse all brand items</a>
+
+</div>
+
+<!-- VIOLATION: cookie-btn has white text on #93c5fd — approx 2.2:1 contrast ratio, fails WCAG 1.4.3 -->
+<div id="cookie-banner" role="region" aria-label="Cookie consent">
+  <p>We use cookies to personalise content and analyse traffic. See our <a href="#" style="color:#93c5fd;">cookie policy</a>.</p>
+  <button class="cookie-btn" type="button">Accept all</button>
+  <button class="cookie-dismiss" type="button">Dismiss</button>
 </div>
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>&copy; 2025 Lumino</span>
-    <!-- VIOLATION: nav has no aria-label — landmark-unique violation -->
+    <p>&copy; 2025 Lumino. All rights reserved.</p>
+    <!-- VIOLATION: nav.footer-nav has no aria-label — indistinguishable from nav.site-nav -->
     <nav class="footer-nav">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/faq">FAQ</a>
+      <a href="home.html">Home</a>
+      <a href="shop-all.html">Shop</a>
+      <a href="brands.html">Brands</a>
+      <a href="sale.html">Sale</a>
     </nav>
   </div>
 </footer>
