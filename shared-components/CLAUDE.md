@@ -117,18 +117,26 @@ White text on a vivid blue-to-pink gradient — contrast below threshold at port
 /* NO :focus equivalent — hover-only violation */
 ```
 ```html
-<button class="tooltip-btn" aria-controls="nonexistent-id-X">…</button>
+<button class="tooltip-btn" aria-controls="tooltip-panel">…</button>
 ```
-`aria-controls` referencing a non-existent element ID → ARIA violation (Critical).
+`aria-controls="tooltip-panel"` references an element that does not exist in the DOM → ARIA violation (Critical). **All tooltip buttons on all pages must use the exact same `aria-controls` value (`tooltip-panel`).** If different pages use different ID values (e.g. `NONEXISTENT-ID-1` vs `nonexistent-id-1` vs `tooltip-info-1`), axe generates different attribute-value selectors for each, preventing the portal from grouping them into one shared component.
+
 No `:focus` equivalent of the hover CSS → hover-only, not-dismissible, not-persistent violations (behavioral scan).
 
 ### `#toast-region` — live region with content (WCAG 4.1.3, High)
-```html
-<div id="toast-region" role="status" aria-live="polite" aria-atomic="true">
-  Message already present on load
-</div>
+```js
+(function() {
+  var toast = document.createElement('div');
+  toast.id = 'toast-region';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('aria-atomic', 'true');
+  toast.style.cssText = 'position:fixed;top:80px;right:20px;...';
+  toast.textContent = '✓ Item added to your bag';
+  document.body.appendChild(toast);
+})();
 ```
-Content must be in the DOM at page load — do not make it dynamically injected.
+The region must be **JS-injected and already contain text at creation time**. The behavioral rule fires when a live region is created with content already in it (rather than being empty when created and filled later). Do NOT use a static `<div id="toast-region">` in the HTML — static content is not detected by the live-region-with-content rule.
 
 ### `#product-modal` — modal lifecycle (WCAG 2.4.3, Critical)
 ```js
@@ -176,13 +184,17 @@ Empty element with `role="img"` and no `aria-label` or `aria-labelledby`.
 
 ### `.newsletter-input` — label violation (WCAG 1.3.1, Critical) / no violation
 ```html
-<!-- Pages 1–5 — VIOLATION: no label -->
-<input type="email" class="newsletter-input" placeholder="…">
+<!-- Pages 1–5 — VIOLATION: no accessible name at all -->
+<input type="email" class="newsletter-input">
 
 <!-- Pages 16–18 — NO violation: aria-label present -->
-<input type="email" class="newsletter-input" aria-label="Email address for newsletter" placeholder="…">
+<input type="email" class="newsletter-input" aria-label="Email address for newsletter" placeholder="Your email address">
 ```
-This split is intentional. The portal should report `.newsletter-input` on **5 pages** (violations only), not 8 (element existence). Do not add `aria-label` to the violation pages or remove it from the pass pages.
+This split is intentional. The portal should report `.newsletter-input` on **5 pages** (violations only), not 8 (element existence).
+
+**Critical:** Do NOT add a `placeholder` attribute to the violation-page inputs. axe-core accepts `placeholder` as a sufficient accessible name, so adding `placeholder` — even without `aria-label` — will suppress the `label` violation. The violation pages must have **no placeholder, no aria-label, no title, and no associated `<label>` element**. Only then does the `label` rule fire.
+
+Do not add `aria-label` to the violation pages or remove it from the pass pages.
 
 ---
 
@@ -247,10 +259,27 @@ Do not add `summary.html`, `expected-results.html`, `test-coverage.html`, `READM
 - **No external dependencies.** No CDN links, no external JS or CSS. Everything self-contained.
 - **No frameworks.** Plain HTML, CSS, and vanilla JS only.
 - **One `<h1>` per page.** Always present; page title must be descriptive.
-- **No QA panels.** Do not add `<div class="qa-panel">` or any of its CSS classes.
+- **Every page must have a `<main>` element** wrapping the primary content. Omitting `<main>` causes the `landmark-one-main` rule to fire on that page, adding it to the "Whole page" shared component and inflating unintended violation counts. 17 of 25 pages were missing `<main>` after the initial workflow agent run — this is a known source of noise.
+- **No `<h2>` elements between `<h1>` and `<h3 class="section-title">`.** Any h2 appearing before the section-title h3 satisfies axe's heading-order rule and prevents the intentional violation from firing. Remove any unintentional h2 elements (e.g. section headings added by agents) on pages 1–20.
+- **No QA panels.** Do not add `<div class="qa-panel">` or any of its CSS classes. Do not use workflow agents to create or edit pages — they ignore this rule and add QA panels automatically.
 - **No case numbers.** Do not add `Case #N` badges.
 - **Inline styles for one-off adjustments only.** Structural styling goes in the `<style>` block.
 - **Preserve the shared CSS block.** All violation CSS must remain in every page's `<style>` tag even if the page doesn't use that component (the CSS alone does not trigger violations).
+
+---
+
+## Unintended violations — known noise sources
+
+The scan will always contain violations beyond the 16 engineered components. These are expected and should not be treated as failures. Do not try to fix them unless they interfere with the engineered component metrics.
+
+| Noise source | Root cause | Affects |
+|---|---|---|
+| AAA colour contrast (`color-contrast-enhanced`) | Most text colours pass AA but fail AAA 7:1 threshold | Card text, footer text, nav links, promo line text |
+| Reflow at 320px (`reflow`) | Sticky nav + cookie banner cause horizontal scroll at narrow widths | Nav links, some content elements |
+| Focus not obscured — cookie banner (`focus-obscured`) | Fixed `#cookie-banner` at bottom of viewport covers elements when tabbing near bottom | `#cookie-banner`, footer nav links |
+| Focus visible on nav links | Browser default focus ring doesn't meet AAA 2.4.13 contrast threshold | All `nav.site-nav` links |
+| Missing main landmark (`landmark-one-main`) | Pages without `<main>` element | "Whole page" component, any page missing `<main>` |
+| Content outside landmarks (`region`) | Content divs not wrapped in `<main>` | `.page-hero`, `.content`, `.section-title`, etc. |
 
 ---
 
@@ -262,10 +291,11 @@ When the user pastes shared-components portal output and asks you to verify it, 
 
 ### Step 0 — Locate and parse the JSON
 
-- File pattern: `scan-run-raw-YYYY-MM-DD_HH-MM-SS.json` in the user's Downloads folder.
+- File pattern: `scan-run-raw-YYYY-MM-DD_HH-MM-SS.json` in the user's Downloads folder. Use the most recent file that matches the scan run date shown in the portal.
 - Top-level keys: `runUuid`, `scannedUrls`, `urls` (array), `details`.
-- `urls` contains entries for both `MOBILE` and `DESKTOP` devices — **identify which device the portal is currently showing** before you start (the portal URL includes `device=desktop` or `device=mobile`).
-- Build the grouping from that device's entries only.
+- `urls` contains entries for both `MOBILE` and `DESKTOP` devices — **identify which device the portal is currently showing** before you start. The portal URL contains `device=desktop` or `device=mobile`; if not visible, ask the user.
+- Build the grouping from that device's entries only. Filter: `[u for u in data['urls'] if u['device'] == 'DESKTOP']` or `'MOBILE'`.
+- **Reuse `generate_verification_report.py`** if it exists in this folder — it already contains the correct parsing logic and threshold implementation. Update it for the new run date rather than writing from scratch.
 
 ---
 
@@ -286,7 +316,7 @@ for page in url_list:
 Then group by selector alone to get per-component entries.
 
 **Special case — "Whole page" component:**  
-Issues with no specific element (e.g. "Document should have one main landmark") produce an **empty or null selector**. Do not filter these out. Collect them under the label `"Whole page"`. The portal shows them as a separate entry with the label "no single element to point at".
+Issues with no single responsible element (e.g. "Document should have one main landmark") use `html` as the selector in the JSON — **not an empty string**. Do not filter out the `html` selector. The portal shows this as a separate entry labelled "Whole page / no single element to point at". The `landmark-one-main` rule (rule ID in JSON) maps to this entry. Compute its metrics exactly as for any other component.
 
 ---
 
@@ -321,8 +351,8 @@ For each component in the pasted portal text, check all of the following:
 
 | Portal field | What to verify against JSON |
 |---|---|
-| **Selector** | Exact CSS selector string matches the `target[0]` value in the JSON nodes |
-| **Location description** | "at the top of the document" vs "in [parent selector]" — derived from `target` array; if `target` has >1 element the last item is the parent context |
+| **Selector** | Exact CSS selector string matches `node['target'][0]` in the JSON. For the "Whole page" entry the selector is `html`. |
+| **Location description** | Derived from the `target` array in the JSON node: if `len(target) == 1` → "at the top of the document"; if `len(target) > 1` → "in [target[-1]]" (the parent context is the last element). For `html` selector → "no single element to point at". |
 | **Pages affected — count** | Matches computed `pages_affected` using the threshold logic above |
 | **Pages affected — denominator** | Always equals the total scanned pages for this run (e.g. 25) |
 | **Pages affected — %** | `round(pages_affected / total_pages × 100)` — tolerance ±1pp for rounding |
@@ -335,10 +365,10 @@ For each component in the pasted portal text, check all of the following:
 
 | Portal field | What to verify against JSON |
 |---|---|
-| **Severity label** | Critical / High / Medium / Low — maps from axe `impact`: `critical`→Critical, `serious`→High, `moderate`→Medium, `minor`→Low |
-| **Issue type name** | Human-readable description from `violation.description` in the JSON |
-| **"Deep Scan" badge** | Present if the rule is a QualiBooth behavioral check (not a standard axe-core rule). Known behavioral rules: `focus-obscured`, `reflow`, `text-spacing/clipped`, `modal-lifecycle/*`, `focus-visible` (Deep Scan version), `role-img-alt` (when behavioral). Absent for standard axe rules: `color-contrast`, `landmark-unique`, `heading-order`, `meta-viewport`, `aria-*`, `region`, `empty-heading`. |
-| **WCAG level** | AA, AAA, or A — derived from the `helpUrl` or rule metadata. Verify it matches what the portal displays. |
+| **Severity label** | Critical / High / Medium / Low — **QualiBooth's severity scale is NOT a 1:1 mapping from axe `impact`**. Use the JSON `impact` field as a starting point only. Known deviations from axe impact: `meta-viewport` (axe `critical` → portal **Medium**); `role-img-alt` (axe `critical` → portal **High**); `focus-visible` AAA version (axe `serious` → portal **Low**); `focus-visible` AA version (axe `serious` → portal **High**); `focus-obscured` AA (axe `serious` → portal **High**); `focus-obscured` AAA (axe `serious` → portal **Medium**). The safest approach is to verify severity against the portal directly rather than computing it from the JSON. |
+| **Issue type name** | The portal shows a human-readable rule name that may differ from the JSON `description` field. The JSON `id` field is the authoritative identifier. Use `violation['description']` as a cross-check — it will be close but not always identical to the portal label. |
+| **"Deep Scan" badge** | Present if the rule requires QualiBooth's behavioral scanner. Known Deep Scan rules from this test set: `focus-obscured`, `reflow`, `text-spacing/clipped`, `modal-lifecycle/not-dismissible`, `modal-lifecycle/focus-not-moved`, `modal-lifecycle/background-not-inert`, `focus-visible` (the AAA/Deep Scan version). Known standard axe rules (no badge): `color-contrast`, `color-contrast-enhanced`, `landmark-unique`, `heading-order`, `meta-viewport`, `aria-allowed-attr`, `aria-valid-attr-value`, `region`, `empty-heading`, `role-img-alt`, `landmark-one-main`. |
+| **WCAG level** | AA, AAA, or A — verify against what the portal displays. The JSON `helpUrl` contains the WCAG level in its path (e.g. `…/wcag2aa/…` = AA, `…/wcag2aaa/…` = AAA, `…/wcag21a/…` = A). |
 | **Occurrences count** | Matches `count` for this (selector, rule_id, impact) group |
 | **Pages count** | Matches `len(pages)` for this group |
 
@@ -355,7 +385,7 @@ For each component in the pasted portal text, check all of the following:
 |---|---|
 | **Total component count** | Portal says "N shared elements" at the top — compare against count of selectors with `pages_affected >= 2` (using threshold logic) plus any 1-page components where all sub-issues have <2 pages |
 | **Component ordering** | Portal orders by `issues_here` DESC — verify first few and last few match |
-| **"Whole page" entry** | Verify page count, issues count, issue type name, severity, occurrences against the empty-selector group in the JSON |
+| **"Whole page" entry** | Verify page count, issues count, issue type name, severity, occurrences against the `html` selector group in the JSON. Rule ID: `landmark-one-main`, impact: `medium`. The portal shows this as a distinct entry separate from element-based components. |
 | **Device** | Confirm the JSON device used matches the portal's device tab |
 
 ---
@@ -382,7 +412,7 @@ Document these when they appear; do not report them as portal bugs:
 4. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
 5. **Share rounding** — portal rounds share% to the nearest integer; differences of ±1pp are expected.
 6. **Component count gap** — portal shows approximately 2 fewer components than a naive union-of-pages computation, because of the per-rule 2-page threshold (behaviour #2 above).
-7. **Severity label mapping** — axe `serious` maps to portal `High`; axe `moderate` maps to portal `Medium`. Never use axe impact names in the report — always convert.
+7. **Severity label mapping is not 1:1** — QualiBooth assigns severity independently of axe `impact`. Confirmed deviations: `meta-viewport` (axe `critical` → portal **Medium**); `role-img-alt` (axe `critical` → portal **High**); `focus-visible` AAA (axe `serious` → portal **Low**); `focus-visible` AA (axe `serious` → portal **High**); `focus-obscured` AA (axe `serious` → portal **High**); `focus-obscured` AAA (axe `serious` → portal **Medium**). Always read severity from the portal display, not from the JSON impact field.
 8. **Issue name vs description** — the portal displays a human-readable rule name (e.g. "Document should have one main landmark") which may differ from the JSON `description` field (e.g. "Ensure the document has a main landmark"). Both refer to the same rule; the JSON `id` field is the authoritative identifier.
 
 ---
@@ -391,9 +421,13 @@ Document these when they appear; do not report them as portal bugs:
 
 - Do not modify violation CSS (heights, overflow, colours, line-heights) without updating expected results.
 - Do not add `aria-label` to `.newsletter-input` on pages 1–5 or remove it from pages 16–18 — this breaks the "element present but no violation" scenario.
+- Do not add a `placeholder` attribute to `.newsletter-input` on violation pages (1–5) — axe-core accepts placeholder as a sufficient accessible name and the `label` rule will not fire.
 - Do not add `#toast-region` to pages 1–5 or 12–25 — it belongs only on pages 6–11.
+- Do not convert `#toast-region` back to a static HTML `<div>` — it must be JS-injected with content at creation time for the live-region rule to fire.
 - Do not add `#product-modal` to pages outside 6–10.
-- Do not remove the `aria-controls="nonexistent-id-X"` attributes from `.tooltip-btn` — they are the ARIA violation mechanism.
+- Do not change `aria-controls` on `.tooltip-btn` to anything other than `tooltip-panel` — every tooltip button on every tooltip page must use the same value so the portal groups them as one component.
 - Do not fix the `closeModal()` JS to restore focus — the focus loss is intentional.
 - Do not change `user-scalable=no` in the viewport meta — it is the viewport-scaling violation.
 - Do not add `aria-label` to `nav.site-nav` or `nav.footer-nav` — the missing label is the landmark-unique violation.
+- Do not add any `<h2>` element between `<h1>` and `<h3 class="section-title">` on pages 1–20 — any h2 present before the section-title h3 makes the heading order valid and suppresses the intentional heading-order violation.
+- Do not use workflow agents (the Agent or Workflow tools) to create or bulk-edit pages in this folder — agents ignore the no-QA-panel rule and insert QA panels, case numbers, and other forbidden markup. Write pages directly using the Write/Edit tools.
