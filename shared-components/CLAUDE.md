@@ -254,6 +254,133 @@ Do not add `summary.html`, `expected-results.html`, `test-coverage.html`, `READM
 
 ---
 
+## Verification checklist — comparing portal data against raw JSON export
+
+When the user pastes shared-components portal output and asks you to verify it, the raw JSON export in the Downloads folder is the source of truth. Every number visible in the portal UI must match the JSON. Work through this checklist in order.
+
+---
+
+### Step 0 — Locate and parse the JSON
+
+- File pattern: `scan-run-raw-YYYY-MM-DD_HH-MM-SS.json` in the user's Downloads folder.
+- Top-level keys: `runUuid`, `scannedUrls`, `urls` (array), `details`.
+- `urls` contains entries for both `MOBILE` and `DESKTOP` devices — **identify which device the portal is currently showing** before you start (the portal URL includes `device=desktop` or `device=mobile`).
+- Build the grouping from that device's entries only.
+
+---
+
+### Step 1 — Build the component model
+
+Group violations by `(selector, rule_id, impact)`:
+
+```python
+for page in url_list:
+    slug = page['url'].split('shared-components/')[-1]
+    for violation in page['violations']:
+        for node in violation['nodes']:
+            sel = node['target'][0]   # CSS selector
+            key = (sel, violation['id'], violation['impact'])
+            # accumulate pages (set) and count (int)
+```
+
+Then group by selector alone to get per-component entries.
+
+**Special case — "Whole page" component:**  
+Issues with no specific element (e.g. "Document should have one main landmark") produce an **empty or null selector**. Do not filter these out. Collect them under the label `"Whole page"`. The portal shows them as a separate entry with the label "no single element to point at".
+
+---
+
+### Step 2 — Apply the portal display threshold
+
+For each component (grouped by selector):
+
+1. Identify sub-issues (rule_id + impact pairs) that appear on **2+ pages** → these are **shown**.
+2. Sub-issues that appear on only **1 page** → **hidden**, UNLESS all sub-issues for this component have only 1 page (in that case show all; a component is never left empty).
+3. Compute from **shown sub-issues only**:
+   - `pages_affected` = union of pages across all shown sub-issues
+   - `issues_here` = sum of occurrence counts across all shown sub-issues
+   - `issue_types` = count of distinct shown sub-issues
+
+---
+
+### Step 3 — Compute run-level totals
+
+- `total_violations` = sum of all occurrence counts across all selectors (including the "Whole page" group, using the correct device).
+- `share_of_run` for each component = `issues_here / total_violations × 100`, rounded to nearest integer.
+
+---
+
+### Step 4 — Verify every metric for every component
+
+For each component in the pasted portal text, check all of the following:
+
+#### Component-level (the header block)
+
+| Portal field | What to verify against JSON |
+|---|---|
+| **Selector** | Exact CSS selector string matches the `target[0]` value in the JSON nodes |
+| **Location description** | "at the top of the document" vs "in [parent selector]" — derived from `target` array; if `target` has >1 element the last item is the parent context |
+| **Pages affected — count** | Matches computed `pages_affected` using the threshold logic above |
+| **Pages affected — denominator** | Always equals the total scanned pages for this run (e.g. 25) |
+| **Pages affected — %** | `round(pages_affected / total_pages × 100)` — tolerance ±1pp for rounding |
+| **Issues here** | Matches computed `issues_here` (shown sub-issues only) |
+| **Share of run %** | `round(issues_here / total_violations × 100)` — tolerance ±1pp |
+| **Issue types count** | Matches count of shown sub-issues |
+| **"By severity" page breakdown** | The numbers shown before "N issue types" are the page counts per shown sub-issue, ordered critical → high → medium → low |
+
+#### Per issue-type (each entry under "Issues found on this component")
+
+| Portal field | What to verify against JSON |
+|---|---|
+| **Severity label** | Critical / High / Medium / Low — maps from axe `impact`: `critical`→Critical, `serious`→High, `moderate`→Medium, `minor`→Low |
+| **Issue type name** | Human-readable description from `violation.description` in the JSON |
+| **"Deep Scan" badge** | Present if the rule is a QualiBooth behavioral check (not a standard axe-core rule). Known behavioral rules: `focus-obscured`, `reflow`, `text-spacing/clipped`, `modal-lifecycle/*`, `focus-visible` (Deep Scan version), `role-img-alt` (when behavioral). Absent for standard axe rules: `color-contrast`, `landmark-unique`, `heading-order`, `meta-viewport`, `aria-*`, `region`, `empty-heading`. |
+| **WCAG level** | AA, AAA, or A — derived from the `helpUrl` or rule metadata. Verify it matches what the portal displays. |
+| **Occurrences count** | Matches `count` for this (selector, rule_id, impact) group |
+| **Pages count** | Matches `len(pages)` for this group |
+
+#### Hidden sub-issues (must NOT appear in portal)
+
+- Any (rule_id, impact) with only 1 page **and** at least one sibling sub-issue with 2+ pages must be absent from the portal display.
+- Verify the portal does not show these, and that they are excluded from the issues count and type count.
+
+---
+
+### Step 5 — Verify run-level data
+
+| Check | How |
+|---|---|
+| **Total component count** | Portal says "N shared elements" at the top — compare against count of selectors with `pages_affected >= 2` (using threshold logic) plus any 1-page components where all sub-issues have <2 pages |
+| **Component ordering** | Portal orders by `issues_here` DESC — verify first few and last few match |
+| **"Whole page" entry** | Verify page count, issues count, issue type name, severity, occurrences against the empty-selector group in the JSON |
+| **Device** | Confirm the JSON device used matches the portal's device tab |
+
+---
+
+### Step 6 — Report format
+
+After completing all checks, write results as an HTML report using the dark-theme format (see `.claude/report-html-format.md`). Save it as `verification-report-YYYY-MM-DD.html` in this folder. The report must include:
+
+1. A summary: total checked, passed, failed.
+2. A table of all verified components with PASS/FAIL per metric.
+3. A separate section for any discrepancies found, with: portal value shown, JSON value computed, difference, and root cause assessment (portal bug vs script error vs known threshold behaviour).
+4. A note documenting the portal threshold behaviour (hidden sub-issues).
+5. The generator Python script saved alongside the HTML as `generate_verification_report.py`.
+
+---
+
+### Known portal behaviours (not bugs)
+
+Document these when they appear; do not report them as portal bugs:
+
+1. **Sub-issue threshold** — issue types with <2 pages are hidden when other sub-issues have 2+ pages.
+2. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
+3. **Share rounding** — portal rounds share% to the nearest integer; differences of ±1pp are expected.
+4. **Component count gap** — the portal may show slightly fewer components than the JSON computation (typically ±5) due to internal selector deduplication or merging logic.
+5. **Severity label mapping** — axe `serious` maps to portal `High`; axe `moderate` maps to portal `Medium`. Never use axe impact names in the report — always convert.
+
+---
+
 ## What NOT to do
 
 - Do not modify violation CSS (heights, overflow, colours, line-heights) without updating expected results.
