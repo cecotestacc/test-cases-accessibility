@@ -363,17 +363,28 @@ Issues with no single responsible element (e.g. "Document should have one main l
 
 ### Step 2 — Apply the portal display threshold
 
-The threshold is applied per **(selector + rule_id)** pair, not on the union across all rules for a selector.
+There are **two levels** of threshold logic:
 
-For each component (grouped by selector):
+#### Level 1 — Whether a component appears in the list at all
 
-1. Identify sub-issues (rule_id + impact pairs) that appear on **2+ pages** → these are **shown**.
-2. Sub-issues that appear on only **1 page** → **hidden**, UNLESS all sub-issues for this component have only 1 page (in that case show all; a component is never left empty).
-3. **Component-level exclusion**: if NO sub-issue for a selector fires on 2+ pages, AND all sub-issues fire on different single pages (union gives 2+ pages but no individual rule reaches 2), the component is **excluded from the list entirely**. This is different from case 2: case 2 is "every rule fires on the same 1 page"; this case is "each rule fires on a different 1 page, union is 2+ but per-rule it is always 1".
-4. Compute from **shown sub-issues only**:
-   - `pages_affected` = union of pages across all shown sub-issues
-   - `issues_here` = sum of occurrence counts across all shown sub-issues
-   - `issue_types` = count of distinct shown sub-issues
+A component (grouped by selector) is shown in the portal **only if at least one (selector + rule_id) pair fires on 2 or more pages**. This is the selector × rule combination — not just the selector appearing somewhere, and not a union across multiple rules.
+
+- `(selector, rule_id)` fires on 1 page only → component is **excluded** (even if a different rule fires on a second page, giving a union of 2 pages)
+- `(selector, rule_id)` fires on 2+ pages → component **appears** in the list
+
+This rule explains why `html > body > main > div > div:nth-of-type(2) > button` and `h2` were absent from the portal despite having a 2-page union — each individual rule only fired on 1 page.
+
+#### Level 2 — Which sub-issues are shown within an appearing component
+
+Once a component passes Level 1 and appears in the list:
+
+1. Sub-issues (rule_id + impact) that fire on **2+ pages** → **shown**
+2. Sub-issues that fire on **1 page** → **hidden**, UNLESS all sub-issues for this component have only 1 page (in that case show all; never leave a component empty)
+
+Compute from **shown sub-issues only**:
+- `pages_affected` = union of pages across all shown sub-issues
+- `issues_here` = sum of occurrence counts across all shown sub-issues
+- `issue_types` = count of distinct shown sub-issues
 
 ---
 
@@ -384,25 +395,55 @@ For each component (grouped by selector):
 
 ---
 
-### Step 4 — Verify every metric for EVERY shared component
+### Step 4 — Verify in BOTH directions
 
-**All metrics must be verified for all components — not just the ones pasted.** The six key metrics to check per component are:
+The pasted text IS the complete portal output — the portal shows fewer components than the raw JSON because it applies the Level 1 threshold. The pasted subset is not cherry-picked; it represents everything the portal chose to display.
+
+Verification must therefore run in two directions:
+
+#### Direction A — Pasted portal → JSON (accuracy check)
+
+For every component in the pasted text, verify all six metrics against the JSON:
 
 1. **Pages affected** (count and %)
-2. **Issues here** (total violation count, threshold-adjusted)
-3. **% of all issues / Share of run** (issues_here / total_violations × 100)
+2. **Issues here** (threshold-adjusted total)
+3. **% of all issues / Share of run** (`issues_here / total_violations × 100`, ±1pp)
 4. **Issue types** (count of shown sub-issues)
-5. **X occurrences across X pages** (per each issue type within the component)
-6. **By-severity page breakdown** (the numbers shown before "N issue types")
+5. **X occurrences across X pages** (per each issue type listed)
+6. **By-severity page breakdown** (the numbers before "N issue types")
 
-If the user pastes only a subset of the portal output, do not silently skip the rest. Instead:
+This catches portal values that are wrong (wrong counts, wrong percentages, wrong issue types shown).
 
-1. Compute all components from the JSON (using the generator script) and produce the full report.
-2. Explicitly state how many components were in the pasted text vs the total in the portal.
-3. For components NOT in the pasted text: show the JSON-computed values and note they are unverified against the portal display.
-4. Ask the user if they want to paste the remaining components for a complete check, or accept the JSON-computed values as the baseline.
+#### Direction B — JSON → pasted portal (completeness check)
 
-Only mark verification as complete when all components have been checked — either by comparing pasted portal text or by explicit user acceptance of the JSON-computed values.
+From the JSON, compute every component that **should** appear in the portal using the Level 1 rule: any `(selector, rule_id)` that fires on 2+ pages → the selector must appear in the pasted text.
+
+For each JSON-computed component that is NOT in the pasted text, flag it as:
+
+> **MISSING FROM PORTAL** — selector `X` has rule `Y` firing on N pages (≥2). Portal does not show this component.
+
+This catches portal components that are silently dropped — a potential portal bug.
+
+#### How to implement Direction B
+
+```python
+# Compute all selectors where at least one (selector, rule_id) fires on 2+ pages
+should_appear = set()
+for (sel, rid, impact), c in combos.items():
+    if len(c['pages']) >= 2:
+        should_appear.add(sel)
+
+# Compare against selectors in the pasted text
+pasted_selectors = {c['selector'] for c in parsed_portal_data}
+
+missing = should_appear - pasted_selectors
+extra   = pasted_selectors - should_appear  # should not happen normally
+
+for sel in missing:
+    print(f"MISSING FROM PORTAL: {sel}")
+```
+
+Report the count: "Portal shows N components, JSON says M should appear, X are missing."
 
 For each component in the pasted portal text, check all of the following:
 
@@ -442,7 +483,7 @@ For each component in the pasted portal text, check all of the following:
 
 | Check | How |
 |---|---|
-| **Total component count** | Portal says "N shared elements" at the top — compare against count of selectors with `pages_affected >= 2` (using threshold logic) plus any 1-page components where all sub-issues have <2 pages |
+| **Total component count** | Portal says "N shared elements" at the top — compare against count of distinct selectors where at least one `(selector, rule_id)` fires on 2+ pages. This is the Level 1 threshold count. Should match the portal total (expect ≤2 gap from selector-merging differences). |
 | **Component ordering** | Portal orders by `issues_here` DESC — verify first few and last few match |
 | **"Whole page" entry** | Verify page count, issues count, issue type name, severity, occurrences against the `html` selector group in the JSON. Rule ID: `landmark-one-main`, impact: `medium`. The portal shows this as a distinct entry separate from element-based components. |
 | **Device** | Confirm the JSON device used matches the portal's device tab |
@@ -466,7 +507,7 @@ After completing all checks, write results as an HTML report using the dark-them
 Document these when they appear; do not report them as portal bugs:
 
 1. **Sub-issue threshold** — issue types with <2 pages are hidden when other sub-issues have 2+ pages.
-2. **Component excluded when no rule reaches 2 pages** — if a selector has multiple rules each firing on a different single page (union = 2+ pages, but no individual rule hits 2), the component is excluded from the list entirely. Example: selector `h2` with `region` on page A and `empty-heading` on page B → excluded.
+2. **Component excluded when no single rule reaches 2 pages** — the portal's Level 1 threshold is per `(selector, rule_id)`, not a union of pages across rules. A selector where rule A fires on page X and rule B fires on page Y (union = 2 pages, but no rule fires on 2+ pages individually) is excluded entirely. Example: selector `h2` with `region` on one page and `empty-heading` on a different page → excluded. This is NOT a bug — it is the defined display rule.
 3. **"Whole Page" component** — page-level issues (e.g. "Document should have one main landmark") use selector `html` in the JSON and appear in the portal as "Whole page / no single element to point at". Do not filter out the `html` selector when building components.
 4. **"by severity" numbers** — the small numbers in the component header before "N issue types" are the per-sub-issue page counts in severity order.
 5. **Share rounding** — portal rounds share% to the nearest integer; differences of ±1pp are expected.
