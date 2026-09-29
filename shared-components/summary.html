@@ -55,19 +55,19 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
 
   <div class="report-header">
     <h1>Shared Components Test Set <span class="vs">v2 · Comprehensive</span></h1>
-    <div class="meta">Folder: <code style="color:#a5b4fc;background:transparent;padding:0">shared-components/</code> &nbsp;·&nbsp; 25 pages &nbsp;·&nbsp; 12 shared components &nbsp;·&nbsp; All 14 issue types covered &nbsp;·&nbsp; Lumino fictional e-commerce site &nbsp;·&nbsp; 2025-09-29</div>
+    <div class="meta">Folder: <code style="color:#a5b4fc;background:transparent;padding:0">shared-components/</code> &nbsp;·&nbsp; 25 pages &nbsp;·&nbsp; 16 shared components &nbsp;·&nbsp; All 17 issue types covered &nbsp;·&nbsp; Lumino fictional e-commerce site &nbsp;·&nbsp; 2025-09-29</div>
   </div>
 
   <div class="tldr">
-    <strong>TL;DR:</strong> 25 HTML pages simulating a realistic e-commerce site ("Lumino"). 12 shared components are engineered with specific accessibility violations covering all 14 issue types detected by QualiBooth. Component page coverage ranges from 100% (universal) to 20% (product-specific), enabling full regression testing of every metric in the Shared Components portal view.
+    <strong>TL;DR:</strong> 25 HTML pages simulating a realistic e-commerce site ("Lumino"). 16 shared components are engineered with specific accessibility violations covering 17 distinct issue types. Component page coverage ranges from 100% (universal) to 4% (1-page minimum), enabling full regression testing of every metric and edge case in the Shared Components portal view. Four gap-coverage components were added to test Low severity, 1- and 2-page minimums, and the "element present but no violation" scenario.
   </div>
 
   <h2>Coverage Statistics</h2>
   <div class="metrics">
     <div class="metric blue"><div class="num">25</div><div class="label">Total pages in scan</div></div>
-    <div class="metric tp"><div class="num">12</div><div class="label">Shared components</div></div>
-    <div class="metric amber"><div class="num">14</div><div class="label">Issue types covered</div></div>
-    <div class="metric pct"><div class="num">~231</div><div class="label">Expected total violations</div></div>
+    <div class="metric tp"><div class="num">16</div><div class="label">Shared components</div></div>
+    <div class="metric amber"><div class="num">17</div><div class="label">Issue types covered</div></div>
+    <div class="metric pct"><div class="num">~239</div><div class="label">Expected total violations</div></div>
   </div>
 
   <h2>Component Architecture</h2>
@@ -84,29 +84,34 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       </tr>
     </thead>
     <tbody>
-      <tr><td><code>meta[name="viewport"]</code></td><td>25/25</td><td>100%</td><td>1 — Viewport scaling <span class="badge badge-red">Critical</span></td><td>25</td><td>10.8%</td></tr>
-      <tr><td><code>nav.site-nav</code></td><td>25/25</td><td>100%</td><td>2 — Landmark unique <span class="badge badge-amber">Moderate</span> + Focus not obscured <span class="badge badge-amber">High</span></td><td>50</td><td>21.6%</td></tr>
-      <tr><td><code>nav.footer-nav</code></td><td>25/25</td><td>100%</td><td>1 — Landmark unique <span class="badge badge-amber">Moderate</span></td><td>25</td><td>10.8%</td></tr>
-      <tr><td><code>#promo-bar</code></td><td>15/25</td><td>60%</td><td>1 — Text spacing clipped <span class="badge badge-amber">High</span></td><td>15</td><td>6.5%</td></tr>
-      <tr><td><code>.cookie-btn</code></td><td>20/25</td><td>80%</td><td>1 — Colour contrast <span class="badge badge-red">Critical</span></td><td>20</td><td>8.7%</td></tr>
-      <tr><td><code>.hero-section</code></td><td>10/25</td><td>40%</td><td>1 — Text contrast over gradient <span class="badge badge-amber">High</span></td><td>10</td><td>4.3%</td></tr>
-      <tr><td><code>.tooltip-btn</code></td><td>8/25</td><td>32%</td><td>4 — Hover only <span class="badge badge-amber">High</span> + Not dismissible <span class="badge badge-amber">High</span> + Not persistent <span class="badge badge-amber">High</span> + ARIA <span class="badge badge-red">Critical</span></td><td>32</td><td>13.9%</td></tr>
-      <tr><td><code>#toast-region</code></td><td>6/25</td><td>24%</td><td>1 — Live region with content <span class="badge badge-amber">High</span></td><td>6</td><td>2.6%</td></tr>
-      <tr><td><code>#product-modal</code></td><td>5/25</td><td>20%</td><td>1 — Modal lifecycle <span class="badge badge-red">Critical</span></td><td>5</td><td>2.2%</td></tr>
-      <tr><td><code>.modal-close</code></td><td>5/25</td><td>20%</td><td>1 — Focus visible <span class="badge badge-amber">High</span></td><td>5</td><td>2.2%</td></tr>
-      <tr><td><code>h3.section-title</code></td><td>20/25</td><td>80%</td><td>1 — Heading order <span class="badge badge-amber">Moderate</span></td><td>20</td><td>8.7%</td></tr>
-      <tr><td><code>.ghost-cta</code></td><td>18/25</td><td>72%</td><td>1 — Focus visible <span class="badge badge-amber">High</span></td><td>18</td><td>7.8%</td></tr>
+      <tr><td><code>meta[name="viewport"]</code></td><td>25/25</td><td>100%</td><td>1 — Viewport scaling <span class="badge badge-amber">Medium</span></td><td>25</td><td>10.5%</td></tr>
+      <tr><td><code>nav.site-nav</code></td><td>25/25</td><td>100%</td><td>2 — Landmark unique <span class="badge badge-amber">Moderate</span> + Focus not obscured <span class="badge badge-amber">High</span></td><td>50 *</td><td>20.9% *</td></tr>
+      <tr><td><code>nav.footer-nav</code></td><td>25/25</td><td>100%</td><td>1 — Landmark unique <span class="badge badge-amber">Moderate</span></td><td>25</td><td>10.5%</td></tr>
+      <tr><td><code>#promo-bar</code></td><td>15/25</td><td>60%</td><td>1 — Text spacing clipped <span class="badge badge-amber">High</span></td><td>15</td><td>6.3%</td></tr>
+      <tr><td><code>.cookie-btn</code></td><td>20/25</td><td>80%</td><td>1 — Colour contrast <span class="badge badge-amber">High</span></td><td>20</td><td>8.4%</td></tr>
+      <tr><td><code>.hero-section</code></td><td>10/25</td><td>40%</td><td>1 — Text contrast over gradient <span class="badge badge-amber">High</span></td><td>10</td><td>4.2%</td></tr>
+      <tr><td><code>.tooltip-btn</code></td><td>8/25</td><td>32%</td><td>4 — Hover only <span class="badge badge-amber">High</span> + Not dismissible <span class="badge badge-amber">High</span> + Not persistent <span class="badge badge-amber">High</span> + ARIA <span class="badge badge-red">Critical</span></td><td>32</td><td>13.4%</td></tr>
+      <tr><td><code>#toast-region</code></td><td>6/25</td><td>24%</td><td>1 — Live region with content <span class="badge badge-amber">High</span></td><td>6</td><td>2.5%</td></tr>
+      <tr><td><code>#product-modal</code></td><td>5/25</td><td>20%</td><td>1 — Modal lifecycle <span class="badge badge-red">Critical</span></td><td>5</td><td>2.1%</td></tr>
+      <tr><td><code>.modal-close</code></td><td>5/25</td><td>20%</td><td>1 — Focus visible <span class="badge badge-amber">High</span></td><td>5</td><td>2.1%</td></tr>
+      <tr><td><code>h3.section-title</code></td><td>20/25</td><td>80%</td><td>1 — Heading order <span class="badge badge-amber">Moderate</span></td><td>20</td><td>8.4%</td></tr>
+      <tr><td><code>.ghost-cta</code></td><td>18/25</td><td>72%</td><td>1 — Focus visible <span class="badge badge-amber">High</span></td><td>18</td><td>7.5%</td></tr>
+      <tr><td><code>h2.section-divider</code></td><td>3/25</td><td>12%</td><td>1 — Empty heading <span class="badge badge-green">Low</span></td><td>3</td><td>1.3%</td></tr>
+      <tr><td><code>.flash-sale-chip</code></td><td>2/25</td><td>8%</td><td>1 — Role img no accessible name <span class="badge badge-amber">High</span></td><td>2</td><td>0.8%</td></tr>
+      <tr><td><code>#featured-promo</code></td><td>1/25</td><td>4%</td><td>1 — ARIA attribute not allowed <span class="badge badge-red">Critical</span></td><td>1</td><td>0.4%</td></tr>
+      <tr><td><code>.newsletter-input</code></td><td>5/25 †</td><td>20%</td><td>1 — Input without accessible label <span class="badge badge-red">Critical</span></td><td>5</td><td>2.1%</td></tr>
     </tbody>
   </table>
 
-  <h2>Issue Types Covered (All 14)</h2>
+  <h2>Issue Types Covered (All 17)</h2>
+  <p style="font-size:0.8rem;color:#94a3b8;margin-bottom:1rem;">* nav.site-nav issue count is 50 with full behavioral scan (25 landmark + 25 focus-not-obscured) or 25 with axe-core only. Share % uses 25 (axe-core baseline). † .newsletter-input exists on 8 pages but violations fire on 5 only — portal shows 5/25.</p>
 
   <table>
     <thead><tr><th>Issue type</th><th>WCAG</th><th>Severity</th><th>Component where engineered</th></tr></thead>
     <tbody>
       <tr><td>Viewport scaling disabled</td><td>1.4.4</td><td><span class="badge badge-red">Critical</span></td><td><code>meta[name="viewport"]</code> — <code>user-scalable=no, maximum-scale=1.0</code></td></tr>
       <tr><td>Colour contrast</td><td>1.4.3</td><td><span class="badge badge-red">Critical</span></td><td><code>.cookie-btn</code> — #fff on #93c5fd ≈ 2.2:1</td></tr>
-      <tr><td>ARIA attributes unsupported</td><td>4.1.2</td><td><span class="badge badge-red">Critical</span></td><td><code>.tooltip-btn</code> — <code>aria-controls</code> references non-existent element</td></tr>
+      <tr><td>ARIA attributes unsupported / not allowed</td><td>4.1.2</td><td><span class="badge badge-red">Critical</span></td><td><code>.tooltip-btn</code> — <code>aria-controls="tooltip-panel"</code> references non-existent element; <code>#featured-promo</code> — <code>aria-checked</code> not permitted on <code>&lt;section&gt;</code></td></tr>
       <tr><td>Modal lifecycle focus not restored</td><td>2.4.3</td><td><span class="badge badge-red">Critical</span></td><td><code>#product-modal</code> — <code>closeModal()</code> does not return focus to trigger</td></tr>
       <tr><td>Landmark unique</td><td>1.3.6</td><td><span class="badge badge-amber">Moderate</span></td><td><code>nav.site-nav</code> and <code>nav.footer-nav</code> — two unlabelled nav landmarks per page</td></tr>
       <tr><td>Focus not obscured</td><td>2.4.11</td><td><span class="badge badge-amber">High</span></td><td><code>nav.site-nav</code> — <code>position:sticky; top:0; z-index:100</code></td></tr>
@@ -115,9 +120,12 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       <tr><td>Hover/focus content — hover only</td><td>1.4.13</td><td><span class="badge badge-amber">High</span></td><td><code>.tooltip-btn</code> — tooltip visible on :hover, not on :focus</td></tr>
       <tr><td>Hover/focus content — not dismissible</td><td>1.4.13</td><td><span class="badge badge-amber">High</span></td><td><code>.tooltip-btn</code> — no Escape key handler to dismiss tooltip</td></tr>
       <tr><td>Hover/focus content — not persistent</td><td>1.4.13</td><td><span class="badge badge-amber">High</span></td><td><code>.tooltip-btn</code> — CSS :hover only, tooltip disappears when pointer leaves trigger</td></tr>
-      <tr><td>Live region created with content</td><td>4.1.3</td><td><span class="badge badge-amber">High</span></td><td><code>#toast-region</code> — <code>aria-live="polite"</code> with content already in DOM on load</td></tr>
+      <tr><td>Live region created with content</td><td>4.1.3</td><td><span class="badge badge-amber">High</span></td><td><code>#toast-region</code> — JS creates the region and immediately populates it; scanner detects content present at instantiation</td></tr>
       <tr><td>Focus visible</td><td>2.4.7</td><td><span class="badge badge-amber">High</span></td><td><code>.ghost-cta</code> and <code>.modal-close</code> — <code>outline:none</code> with no replacement</td></tr>
       <tr><td>Heading order</td><td>1.3.1</td><td><span class="badge badge-amber">Moderate</span></td><td><code>h3.section-title</code> — h3 directly after h1 with no h2</td></tr>
+      <tr><td>Empty heading</td><td>2.4.6</td><td><span class="badge badge-green">Low</span></td><td><code>h2.section-divider</code> — visually decorative h2 with no text content (pages: home, blog, faq)</td></tr>
+      <tr><td>Image role without accessible name</td><td>1.1.1</td><td><span class="badge badge-amber">High</span></td><td><code>.flash-sale-chip</code> — <code>role="img"</code> with no <code>aria-label</code> (pages: sale, new-arrivals)</td></tr>
+      <tr><td>Input without accessible label</td><td>1.3.1</td><td><span class="badge badge-red">Critical</span></td><td><code>.newsletter-input</code> — no <code>aria-label</code>, <code>&lt;label&gt;</code>, or <code>placeholder</code> on violation pages (home, shop-all, sale, new-arrivals, trending)</td></tr>
     </tbody>
   </table>
 
@@ -156,8 +164,28 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     </tbody>
   </table>
 
+  <h2>Gap Coverage Components — Page Assignments</h2>
+  <p style="font-size:0.82rem;color:#94a3b8;margin-bottom:1rem;">These four components were added to cover the Low-severity, 1/2-page minimum, and element-present-but-no-violation scenarios. ✓ = violation fires. P = element present, no violation.</p>
+
+  <table>
+    <thead>
+      <tr><th>Page</th><th><code>h2.section-divider</code></th><th><code>#featured-promo</code></th><th><code>.flash-sale-chip</code></th><th><code>.newsletter-input</code></th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>home.html</code></td><td>✓ Low</td><td>✓ Critical</td><td></td><td>✓ Critical</td></tr>
+      <tr><td><code>shop-all.html</code></td><td></td><td></td><td></td><td>✓ Critical</td></tr>
+      <tr><td><code>sale.html</code></td><td></td><td></td><td>✓ High</td><td>✓ Critical</td></tr>
+      <tr><td><code>new-arrivals.html</code></td><td></td><td></td><td>✓ High</td><td>✓ Critical</td></tr>
+      <tr><td><code>trending.html</code></td><td></td><td></td><td></td><td>✓ Critical</td></tr>
+      <tr><td><code>blog.html</code></td><td>✓ Low</td><td></td><td></td><td style="color:#5eead4;">P — no violation</td></tr>
+      <tr><td><code>blog-post-performance.html</code></td><td></td><td></td><td></td><td style="color:#5eead4;">P — no violation</td></tr>
+      <tr><td><code>blog-post-sustainability.html</code></td><td></td><td></td><td></td><td style="color:#5eead4;">P — no violation</td></tr>
+      <tr><td><code>faq.html</code></td><td>✓ Low</td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+
   <p style="font-size:0.75rem;color:#64748b;margin-top:1.5rem;text-align:center;">
-    shared-components test set v2 · QualiBooth shared-element grouping feature · 2025-09-29
+    shared-components test set v2 + gap scenarios · QualiBooth shared-element grouping feature · 2025-09-29
   </p>
 
 </div>

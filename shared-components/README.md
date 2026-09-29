@@ -81,6 +81,15 @@ The pages simulate a fictional e-commerce site called **Lumino**. Every accessib
 
 Universal on all 25 pages: `meta[name="viewport"]` (violation), `nav.site-nav` (violation), `nav.footer-nav` (violation).
 
+**Gap-coverage components** (not in the table above):
+
+| Component | Pages with violation | Pages with element, no violation |
+|---|---|---|
+| `h2.section-divider` (Low severity) | home, blog, faq | — |
+| `#featured-promo` (1-page minimum) | home only | — |
+| `.flash-sale-chip` (2-page minimum) | sale, new-arrivals | — |
+| `.newsletter-input` (element present, no violation test) | home, shop-all, sale, new-arrivals, trending | blog, blog-post-performance, blog-post-sustainability |
+
 ---
 
 ## GitHub Pages base URL

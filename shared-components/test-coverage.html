@@ -165,12 +165,12 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
     <div class="score-card green">
       <div class="check-name">Issue types per component</div>
       <div class="score-line"><span class="badge badge-green">✓ 1, 2, 4 types tested</span></div>
-      <div class="note">1 type (12 components), 2 types (nav.site-nav), 4 types (.tooltip-btn).</div>
+      <div class="note">1 type (14 components), 2 types (nav.site-nav), 4 types (.tooltip-btn).</div>
     </div>
     <div class="score-card green">
       <div class="check-name">Issue type names + severities</div>
-      <div class="score-line"><span class="badge badge-green">✓ All 14 types covered</span></div>
-      <div class="note">Every issue type visible in the real portal (based on portal HTML analysis) has a matching component.</div>
+      <div class="score-line"><span class="badge badge-green">✓ All 17 types covered</span></div>
+      <div class="note">Every issue type visible in the real portal has a matching component. 3 new types added: empty-heading (Low), role-img-alt, input label.</div>
     </div>
     <div class="score-card green">
       <div class="check-name">Occurrences across X pages</div>
@@ -414,15 +414,15 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
   </div>
 
   <!-- ═══ ISSUE TYPES ════════════════════════════════════════════════════════ -->
-  <h2>All 14 accessibility issue types</h2>
+  <h2>All 17 accessibility issue types</h2>
 
   <table>
     <thead>
       <tr><th>Issue type</th><th>WCAG</th><th>Severity</th><th>Scan layer</th><th>Component</th></tr>
     </thead>
     <tbody>
-      <tr><td>Viewport scaling disabled</td><td>1.4.4</td><td><span class="sev sev-critical">Critical</span></td><td>axe-core</td><td><code>meta[name="viewport"]</code></td></tr>
-      <tr><td>Colour contrast</td><td>1.4.3</td><td><span class="sev sev-critical">Critical</span></td><td>axe-core</td><td><code>.cookie-btn</code></td></tr>
+      <tr><td>Viewport scaling disabled</td><td>1.4.4</td><td><span class="sev sev-medium">Medium</span></td><td>axe-core</td><td><code>meta[name="viewport"]</code></td></tr>
+      <tr><td>Colour contrast</td><td>1.4.3</td><td><span class="sev sev-high">High</span></td><td>axe-core</td><td><code>.cookie-btn</code></td></tr>
       <tr><td>ARIA attributes unsupported / invalid</td><td>4.1.2</td><td><span class="sev sev-critical">Critical</span></td><td>axe-core</td><td><code>.tooltip-btn</code>, <code>#featured-promo</code></td></tr>
       <tr><td>Modal lifecycle focus not restored</td><td>2.4.3</td><td><span class="sev sev-critical">Critical</span></td><td>behavioral</td><td><code>#product-modal</code></td></tr>
       <tr><td>Text spacing clipped</td><td>1.4.12</td><td><span class="sev sev-high">High</span></td><td>behavioral</td><td><code>#promo-bar</code></td></tr>
@@ -435,6 +435,9 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       <tr><td>Focus visible</td><td>2.4.7</td><td><span class="sev sev-high">High</span></td><td>axe-core</td><td><code>.modal-close</code>, <code>.ghost-cta</code></td></tr>
       <tr><td>Landmark unique</td><td>1.3.6</td><td><span class="sev sev-moderate">Moderate</span></td><td>axe-core</td><td><code>nav.site-nav</code>, <code>nav.footer-nav</code></td></tr>
       <tr><td>Heading order</td><td>1.3.1</td><td><span class="sev sev-moderate">Moderate</span></td><td>axe-core</td><td><code>h3.section-title</code></td></tr>
+      <tr><td>Empty heading</td><td>2.4.6</td><td><span class="sev sev-low">Low</span></td><td>axe-core</td><td><code>h2.section-divider</code></td></tr>
+      <tr><td>Image role without accessible name</td><td>1.1.1</td><td><span class="sev sev-high">High</span></td><td>axe-core</td><td><code>.flash-sale-chip</code></td></tr>
+      <tr><td>Input without accessible label</td><td>1.3.1</td><td><span class="sev sev-critical">Critical</span></td><td>axe-core</td><td><code>.newsletter-input</code> (violation pages only)</td></tr>
     </tbody>
   </table>
 
@@ -574,7 +577,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       <tr><td><code>.hero-section</code></td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: gradient luminance computation</td></tr>
       <tr><td><code>.tooltip-btn</code> (ARIA)</td><td class="hit">✓</td><td class="hit">✓</td><td>Standard axe rule: aria-valid-attr-value</td></tr>
       <tr><td><code>.tooltip-btn</code> (hover/focus 3×)</td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: CSS/JS interaction simulation</td></tr>
-      <tr><td><code>#toast-region</code></td><td class="hit">✓</td><td class="hit">✓</td><td>axe check: aria-live region content at load</td></tr>
+      <tr><td><code>#toast-region</code></td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: region JS-created with content at instantiation (static HTML not detected)</td></tr>
       <tr><td><code>#product-modal</code></td><td class="miss">—</td><td class="hit">✓</td><td>Behavioral: focus-return analysis on modal close</td></tr>
       <tr><td><code>.modal-close</code></td><td class="hit">✓</td><td class="hit">✓</td><td>axe rule: focus-visible / scrollable-region</td></tr>
       <tr><td><code>h3.section-title</code></td><td class="hit">✓</td><td class="hit">✓</td><td>Standard axe rule: heading-order</td></tr>
@@ -585,7 +588,7 @@ ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
       <tr><td><code>.newsletter-input</code></td><td class="hit">✓</td><td class="hit">✓</td><td>Standard axe rule: label</td></tr>
     </tbody>
   </table>
-  <p style="font-size:0.75rem;color:#64748b;margin-bottom:1.5rem;">axe-core only: 13/16 components fire. Full behavioral: all 16 fire. The 3 behavioral-only components (nav focus-not-obscured, hero gradient, modal lifecycle, tooltip hover/focus) require QualiBooth's deep scan mode.</p>
+  <p style="font-size:0.75rem;color:#64748b;margin-bottom:1.5rem;">axe-core only: 13/16 components have at least one axe-core rule firing (.hero-section, #product-modal, and #toast-region are behavioral-only). Full behavioral: all 16 fire. Behavioral-only rules require QualiBooth's deep scan mode.</p>
 
   <!-- ═══ KEY REGRESSION ASSERTIONS ══════════════════════════════════════════ -->
   <h2>Key regression assertions</h2>
