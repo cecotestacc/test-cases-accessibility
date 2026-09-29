@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shirt Collection — Lumino</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
+.site-nav { background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 56px; }
+.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
+.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
+.site-nav a:hover { color: #fff; }
+#marquee-message { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
+.marquee-line { display: block; line-height: 1.2; }
+.page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
+.page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
+.page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
+.content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+p { color: #475569; line-height: 1.7; margin-bottom: 16px; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
+.card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
+.card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
+.card .price { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; margin-top: 10px; }
+.site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
+.footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+.subscribe-btn { background: #e2e8f0; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Main navigation">
+  <a href="home.html" class="logo">Lumino</a>
+  <a href="home.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="blog.html">Blog</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">Help</a>
+</nav>
+
+<div id="marquee-message" aria-label="Site announcements">
+  <span class="marquee-line">Buy 2, get 1 free on all shirts this week! Mix and match styles.</span>
+  <span class="marquee-line">Offer ends Sunday midnight — don't miss out on this limited deal</span>
+</div>
+
+<main>
+  <div class="page-hero">
+    <h1>Shirt Collection</h1>
+    <p class="lead">Classic cuts and contemporary silhouettes in ethically sourced fabrics. Whether you're dressing for the office or the weekend, we have a shirt for it.</p>
+  </div>
+  <div class="content">
+    <h2>Casual &amp; T-Shirts</h2>
+    <div class="card-grid">
+      <div class="card"><h3>Linen Blend Tee</h3><p>Relaxed silhouette, GOTS certified linen-cotton</p><div class="price">$42</div></div>
+      <div class="card"><h3>Graphic Print Tee</h3><p>Organic cotton, oversized drop shoulder</p><div class="price">$38</div></div>
+      <div class="card"><h3>Striped Breton</h3><p>100% cotton, classic maritime stripe</p><div class="price">$48</div></div>
+      <div class="card"><h3>Pocket Tee</h3><p>Heavyweight cotton, boxy fit, chest pocket</p><div class="price">$36</div></div>
+    </div>
+    <h2>Formal &amp; Smart</h2>
+    <div class="card-grid">
+      <div class="card"><h3>Oxford Button-Down</h3><p>100% cotton, regular fit, button-down collar</p><div class="price">$65</div></div>
+      <div class="card"><h3>Linen Shirt</h3><p>Breathable pure linen, slim fit</p><div class="price">$72</div></div>
+      <div class="card"><h3>Merino Polo</h3><p>Fine-gauge knit, 3-button placket, slim fit</p><div class="price">$98</div></div>
+      <div class="card"><h3>Chambray Work Shirt</h3><p>Washed chambray, relaxed, two chest pockets</p><div class="price">$58</div></div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p>&copy; 2025 Lumino Ltd. All rights reserved.</p>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="sitemap.html">Sitemap</a>
+    </nav>
+    <button class="subscribe-btn">Subscribe to Newsletter</button>
+  </div>
+</footer>
+
+</body>
+</html>

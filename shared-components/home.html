@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumino — Your Online Fashion Destination</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; background: #f1f5f9; }
+.site-nav { background: #0f172a; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 56px; }
+.site-nav .logo { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-right: auto; }
+.site-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.875rem; }
+.site-nav a:hover { color: #fff; }
+/* #marquee-message — WCAG 1.4.12 violation: fixed height + overflow:hidden causes text-spacing overlap */
+#marquee-message { background: #1d4ed8; color: #fff; height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px; }
+.marquee-line { display: block; line-height: 1.2; }
+.page-hero { background: #fff; padding: 48px 24px 32px; border-bottom: 1px solid #e2e8f0; }
+.page-hero h1 { font-size: 1.875rem; color: #0f172a; margin-bottom: 12px; }
+.page-hero .lead { color: #475569; max-width: 640px; font-size: 1.0625rem; line-height: 1.6; }
+.content { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+h2 { font-size: 1.125rem; color: #1e293b; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+p { color: #475569; line-height: 1.7; margin-bottom: 16px; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
+.card h3 { font-size: 0.9375rem; color: #0f172a; margin-bottom: 6px; }
+.card p { font-size: 0.8125rem; color: #64748b; margin: 0; }
+.btn-primary { display: inline-block; background: #1d4ed8; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 600; }
+.site-footer { background: #0f172a; color: #94a3b8; padding: 28px 24px; margin-top: 48px; }
+.footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+/* .subscribe-btn — WCAG 1.4.3 violation: white text on #e2e8f0 ≈ 1.2:1 contrast ratio */
+.subscribe-btn { background: #e2e8f0; color: #ffffff; border: none; padding: 9px 18px; border-radius: 5px; font-size: 0.875rem; cursor: pointer; font-family: inherit; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Main navigation">
+  <a href="home.html" class="logo">Lumino</a>
+  <a href="home.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="blog.html">Blog</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">Help</a>
+</nav>
+
+<div id="marquee-message" aria-label="Site announcements">
+  <span class="marquee-line">Summer Sale: Up to 40% off selected items — this weekend only!</span>
+  <span class="marquee-line">Free shipping on orders over $75 · New arrivals every Monday</span>
+</div>
+
+<main>
+  <div class="page-hero">
+    <h1>Welcome to Lumino</h1>
+    <p class="lead">Discover curated fashion for every occasion. From everyday essentials to statement pieces, we bring you quality you can trust at prices you'll love.</p>
+  </div>
+  <div class="content">
+    <h2>Shop by Category</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Shoes</h3>
+        <p>Sneakers, boots, sandals and more for every season.</p>
+      </div>
+      <div class="card">
+        <h3>Shirts</h3>
+        <p>Classic fits and contemporary cuts in premium fabrics.</p>
+      </div>
+      <div class="card">
+        <h3>Accessories</h3>
+        <p>Belts, bags, hats and jewellery to complete your look.</p>
+      </div>
+      <div class="card">
+        <h3>Outerwear</h3>
+        <p>Jackets and coats crafted for style and warmth.</p>
+      </div>
+    </div>
+    <h2>Why Lumino</h2>
+    <p>We work directly with ethical manufacturers to bring you fashion that feels good and does good. Every purchase supports fair-wage workers and sustainable supply chains across 14 countries.</p>
+    <p>With free returns, expert sizing advice, and a loyalty programme that rewards every purchase, shopping with Lumino is designed to be effortless from browse to doorstep.</p>
+    <a href="products.html" class="btn-primary">Shop All Products</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; 2025 Lumino Ltd. All rights reserved.</p>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="sitemap.html">Sitemap</a>
+    </nav>
+    <button class="subscribe-btn">Subscribe to Newsletter</button>
+  </div>
+</footer>
+
+</body>
+</html>

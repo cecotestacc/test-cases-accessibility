@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shared Components Test Set — Summary</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; font-size: 0.9375rem; line-height: 1.65; padding: 2rem 1rem 4rem; }
+.page { max-width: 980px; margin: 0 auto; }
+.report-header { border-left: 4px solid #818cf8; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: #1e293b; border-radius: 0 6px 6px 0; }
+.report-header h1 { font-size: 1.35rem; color: #a5b4fc; font-weight: 700; margin-bottom: 0.25rem; }
+.report-header .meta { font-size: 0.8rem; color: #94a3b8; }
+.tldr { background: #1e293b; border-left: 3px solid #818cf8; border-radius: 0 6px 6px 0; padding: 0.9rem 1.1rem; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1.5rem; }
+.tldr strong { color: #a5b4fc; }
+h2 { font-size: 1.05rem; color: #7dd3fc; font-weight: 700; margin: 2.5rem 0 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; }
+h3 { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.metric { background: #1e293b; border-radius: 6px; padding: 0.8rem 1rem; border-top: 3px solid; text-align: center; }
+.metric .num { font-size: 2rem; font-weight: 800; line-height: 1; }
+.metric .label { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
+.metric.tp { border-color: #22c55e; } .metric.tp .num { color: #86efac; }
+.metric.fp { border-color: #ef4444; } .metric.fp .num { color: #fca5a5; }
+.metric.blue { border-color: #3b82f6; } .metric.blue .num { color: #93c5fd; }
+.metric.pct { border-color: #818cf8; } .metric.pct .num { color: #a5b4fc; font-size: 1.4rem; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.badge-green { background: #14532d; color: #86efac; }
+.badge-red { background: #7f1d1d; color: #fca5a5; }
+.badge-blue { background: #1e3a5f; color: #93c5fd; }
+.badge-amber { background: #78350f; color: #fde68a; }
+.badge-gray { background: #334155; color: #94a3b8; }
+.finding { background: #1e293b; border-radius: 6px; margin-bottom: 1rem; overflow: hidden; }
+.finding-header { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 700; flex-wrap: wrap; }
+.finding-header.red { background: #7f1d1d22; border-bottom: 1px solid #ef444433; color: #fca5a5; }
+.finding-header.amber { background: #78350f22; border-bottom: 1px solid #f59e0b33; color: #fde68a; }
+.finding-header.blue { background: #1e3a5f22; border-bottom: 1px solid #3b82f633; color: #93c5fd; }
+.finding-header.gray { background: #1e293b; border-bottom: 1px solid #33415566; color: #94a3b8; }
+.finding-body { padding: 0.75rem 1rem; font-size: 0.82rem; color: #cbd5e1; }
+.finding-body p { margin-bottom: 0.5rem; }
+.insight-box { background: #0f172a; border-left: 3px solid #f59e0b; border-radius: 0 4px 4px 0; padding: 0.6rem 0.8rem; margin: 0.5rem 0; font-size: 0.8rem; color: #fde68a; }
+.insight-box.blue { border-color: #3b82f6; color: #93c5fd; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem; }
+th { background: #1e293b; color: #7dd3fc; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; border-bottom: 1px solid #334155; }
+td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e293b44; }
+.verdict-hit { color: #86efac; font-weight: 700; }
+.verdict-miss { color: #fca5a5; font-weight: 700; }
+code { background: #0f172a; color: #f9a8d4; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 0.8rem; }
+ul { padding-left: 1.2rem; }
+ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="report-header">
+    <h1>Shared Components Test Set — Summary</h1>
+    <div class="meta">Folder: <code style="color:#a5b4fc;background:transparent;padding:0">shared-components/</code> &nbsp;·&nbsp; 20 pages &nbsp;·&nbsp; Lumino fictional e-commerce site &nbsp;·&nbsp; Created 2025-09-29</div>
+  </div>
+
+  <div class="tldr">
+    <strong>TL;DR:</strong> 20 HTML pages simulating a fictional e-commerce site ("Lumino"). 15 pages carry <code>#marquee-message</code> with a deliberate WCAG 1.4.12 text-spacing violation (fixed height + <code>overflow:hidden</code> with tight line-height). All 20 pages carry a <code>.subscribe-btn</code> with a deliberate WCAG 1.4.3 colour-contrast violation. Together, these produce two predictable shared-component groups for verifying QualiBooth's shared-element grouping feature.
+  </div>
+
+  <h2>Scope &amp; Purpose</h2>
+  <p style="font-size:0.82rem;color:#cbd5e1;margin-bottom:1rem;">This test set was created to validate QualiBooth's <strong>shared components</strong> feature — the portal capability that groups accessibility issues by CSS selector across all pages in a scan run, showing per-selector page counts, issue counts, issue types, and share-of-run percentages. The pages are realistic enough to resemble a real site crawl while keeping violation counts fully predictable for regression testing.</p>
+
+  <h2>Page Inventory</h2>
+
+  <div class="metrics">
+    <div class="metric tp"><div class="num">20</div><div class="label">Total pages</div></div>
+    <div class="metric red"><div class="num">15</div><div class="label">Pages with #marquee-message violation</div></div>
+    <div class="metric blue"><div class="num">5</div><div class="label">Pages without #marquee-message</div></div>
+    <div class="metric pct"><div class="num">75%</div><div class="label">Marquee page coverage</div></div>
+  </div>
+
+  <h3>Pages WITH <code>#marquee-message</code> (violation present)</h3>
+  <table>
+    <thead><tr><th>File</th><th>Page title</th><th>Marquee announcement text (line 1)</th></tr></thead>
+    <tbody>
+      <tr><td><code>home.html</code></td><td>Welcome to Lumino</td><td>Summer Sale: Up to 40% off selected items — this weekend only!</td></tr>
+      <tr><td><code>about.html</code></td><td>About Lumino</td><td>We're hiring! Open roles in design, engineering, and marketing.</td></tr>
+      <tr><td><code>products.html</code></td><td>All Products</td><td>New collection just dropped! Shop the latest summer styles now.</td></tr>
+      <tr><td><code>product-shoes.html</code></td><td>Shoe Collection</td><td>Limited edition sneakers — only 50 pairs remaining. Sizes 7–12.</td></tr>
+      <tr><td><code>product-shirts.html</code></td><td>Shirt Collection</td><td>Buy 2, get 1 free on all shirts this week! Mix and match styles.</td></tr>
+      <tr><td><code>product-accessories.html</code></td><td>Accessories</td><td>Accessories from $9.99 — belts, hats, bags and more in stock now.</td></tr>
+      <tr><td><code>blog.html</code></td><td>Lumino Blog</td><td>New post: The summer fashion trends you need to know about now.</td></tr>
+      <tr><td><code>blog-summer-trends.html</code></td><td>Summer Fashion Trends 2025</td><td>Trending: Pastels, oversized silhouettes, and retro prints this season.</td></tr>
+      <tr><td><code>blog-company-update.html</code></td><td>Q3 2025 Company Update</td><td>Big news: We're opening 3 new stores in Q4 this year!</td></tr>
+      <tr><td><code>blog-sustainability.html</code></td><td>Sustainability at Lumino 2025</td><td>Our 2025 sustainability report is now available — read the highlights.</td></tr>
+      <tr><td><code>services.html</code></td><td>Our Services</td><td>Personal shopping service now available in all Lumino locations.</td></tr>
+      <tr><td><code>portfolio.html</code></td><td>Portfolio</td><td>Explore our 2025 lookbook — 200+ curated summer styles available now.</td></tr>
+      <tr><td><code>testimonials.html</code></td><td>Customer Testimonials</td><td>Rated 4.8 out of 5 from over 12,000 verified customer reviews!</td></tr>
+      <tr><td><code>events.html</code></td><td>Upcoming Events</td><td>Summer Showcase — July 15–20 at all Lumino locations. RSVP now!</td></tr>
+      <tr><td><code>news.html</code></td><td>Latest News</td><td>Breaking: Partnership with leading eco-materials supplier announced.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pages WITHOUT <code>#marquee-message</code> (no marquee element)</h3>
+  <table>
+    <thead><tr><th>File</th><th>Page title</th><th>Reason for exclusion</th></tr></thead>
+    <tbody>
+      <tr><td><code>faq.html</code></td><td>FAQ</td><td>Support/help pages excluded from announcement banner in this site's design</td></tr>
+      <tr><td><code>careers.html</code></td><td>Careers at Lumino</td><td>HR pages excluded</td></tr>
+      <tr><td><code>privacy.html</code></td><td>Privacy Policy</td><td>Legal pages excluded</td></tr>
+      <tr><td><code>terms.html</code></td><td>Terms of Service</td><td>Legal pages excluded</td></tr>
+      <tr><td><code>sitemap.html</code></td><td>Site Map</td><td>Utility pages excluded</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Violations Engineered</h2>
+
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Violation 1: #marquee-message — Text Spacing Overlap</span>
+      <span class="badge badge-red">WCAG 1.4.12 AA</span>
+      <span class="badge badge-blue">15 pages</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Mechanism:</strong> The <code>#marquee-message</code> element has <code>height: 40px; overflow: hidden; padding: 4px 20px 0; font-size: 14px;</code>. Inside it, two <code>.marquee-line</code> spans are rendered as blocks with <code>line-height: 1.2</code>.</p>
+      <p><strong>Normal state:</strong> Two lines × (14px × 1.2 line-height) = 33.6px content + 4px top padding = 37.6px total scrollHeight &lt; 40px clientHeight → no overflow.</p>
+      <p><strong>After text-spacing override</strong> (axe-core applies <code>line-height: 1.5em !important</code>): Two lines × (14px × 1.5) = 42px + 4px = 46px scrollHeight &gt; 40px clientHeight → <strong>content clipped → violation reported on <code>#marquee-message</code></strong>.</p>
+      <div class="insight-box">Expected: 1 violation per page · 15 total violations across 15 pages · Selector: <code>#marquee-message</code> · Rule: text-spacing (axe-core)</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header amber">
+      <span>Violation 2: .subscribe-btn — Colour Contrast</span>
+      <span class="badge badge-amber">WCAG 1.4.3 AA</span>
+      <span class="badge badge-blue">20 pages (all)</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>Mechanism:</strong> Footer <code>&lt;button class="subscribe-btn"&gt;</code> has <code>color: #ffffff</code> (white text) on <code>background: #e2e8f0</code> (very light gray). Calculated contrast ratio ≈ 1.22:1 — well below the 4.5:1 required for normal text.</p>
+      <p>This violation appears on all 20 pages, providing the "other issues" needed to make the <code>#marquee-message</code> share-of-run percentage non-trivial and testable.</p>
+      <div class="insight-box blue">Expected: 1 violation per page · 20 total violations · Selector: likely <code>.subscribe-btn</code> · Rule: color-contrast (axe-core)</div>
+    </div>
+  </div>
+
+  <h2>Design Decisions</h2>
+  <ul>
+    <li><strong>Realistic page content</strong> — pages simulate a genuine e-commerce site ("Lumino") so the scan resembles a real crawl rather than a synthetic test harness.</li>
+    <li><strong>Intentional exclusions</strong> — FAQ, Careers, Privacy, Terms, and Sitemap pages deliberately omit <code>#marquee-message</code>, simulating the real-world pattern where announcement banners appear only on marketing/content pages.</li>
+    <li><strong>Two distinct violation types</strong> — text-spacing on <code>#marquee-message</code> and colour-contrast on <code>.subscribe-btn</code> produce two independent shared-component groups, enabling full regression coverage of the grouping feature.</li>
+    <li><strong>No unintended violations</strong> — all other colours, contrast ratios, alt attributes, ARIA labels, and heading structure are verified to meet WCAG AA so that only the two engineered violations appear in scan results.</li>
+    <li><strong>No QA panel overlay</strong> — unlike <code>behaviour-feature/</code> test cases, these pages omit the QA panel to keep the DOM clean and avoid introducing additional axe-core findings.</li>
+  </ul>
+
+  <h2>QualiBooth Setup</h2>
+  <table>
+    <thead><tr><th>Property</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Organisation</td><td>testSharedComponent</td></tr>
+      <tr><td>Project / site</td><td>cecotestacc.github.io</td></tr>
+      <tr><td>Scan config</td><td>SharedComponents-tests</td></tr>
+      <tr><td>Base URL</td><td><code>https://cecotestacc.github.io/test-cases-accessibility/shared-components/</code></td></tr>
+      <tr><td>URLs added</td><td>20 (all pages except summary.html and expected-results.html)</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:0.75rem;color:#64748b;margin-top:1.5rem;text-align:center;">
+    shared-components test set · QualiBooth shared-element grouping feature · Created 2025-09-29
+  </p>
+
+</div>
+</body>
+</html>
