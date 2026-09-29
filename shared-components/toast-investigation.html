@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investigation: #toast-region Live-Region Rule · 2026-09-29</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; font-size: 0.9375rem; line-height: 1.65; padding: 2rem 1rem 4rem; }
+.page { max-width: 980px; margin: 0 auto; }
+.report-header { border-left: 4px solid #818cf8; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: #1e293b; border-radius: 0 6px 6px 0; }
+.report-header h1 { font-size: 1.35rem; color: #a5b4fc; font-weight: 700; margin-bottom: 0.25rem; }
+.report-header .meta { font-size: 0.8rem; color: #94a3b8; }
+.vs { display: inline-block; background: #334155; color: #93c5fd; font-size: 0.72rem; padding: 1px 8px; border-radius: 20px; margin-left: 0.5rem; }
+.tldr { background: #1e293b; border-left: 3px solid #818cf8; border-radius: 0 6px 6px 0; padding: 0.9rem 1.1rem; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1.5rem; }
+.tldr strong { color: #a5b4fc; }
+h2 { font-size: 1.05rem; color: #7dd3fc; font-weight: 700; margin: 2.5rem 0 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; }
+h3 { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.metric { background: #1e293b; border-radius: 6px; padding: 0.8rem 1rem; border-top: 3px solid; text-align: center; }
+.metric .num { font-size: 2rem; font-weight: 800; line-height: 1; }
+.metric .label { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
+.metric.red  { border-color: #ef4444; } .metric.red  .num { color: #fca5a5; }
+.metric.green{ border-color: #22c55e; } .metric.green .num { color: #86efac; }
+.metric.amber{ border-color: #f59e0b; } .metric.amber .num { color: #fde68a; }
+.metric.blue { border-color: #3b82f6; } .metric.blue .num { color: #93c5fd; }
+.metric.teal { border-color: #14b8a6; } .metric.teal .num { color: #5eead4; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.badge-red   { background: #7f1d1d; color: #fca5a5; }
+.badge-green { background: #14532d; color: #86efac; }
+.badge-amber { background: #78350f; color: #fde68a; }
+.badge-blue  { background: #1e3a5f; color: #93c5fd; }
+.finding { background: #1e293b; border-radius: 6px; margin-bottom: 1rem; overflow: hidden; }
+.finding-header { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 700; flex-wrap: wrap; }
+.finding-header.red   { background: #7f1d1d22; border-bottom: 1px solid #ef444433; color: #fca5a5; }
+.finding-header.amber { background: #78350f22; border-bottom: 1px solid #f59e0b33; color: #fde68a; }
+.finding-header.green { background: #14532d22; border-bottom: 1px solid #22c55e33; color: #86efac; }
+.finding-header.blue  { background: #1e3a5f22; border-bottom: 1px solid #3b82f633; color: #93c5fd; }
+.finding-header.teal  { background: #134e4a22; border-bottom: 1px solid #14b8a633; color: #5eead4; }
+.finding-body { padding: 0.75rem 1rem; font-size: 0.82rem; color: #cbd5e1; }
+.finding-body p { margin-bottom: 0.5rem; }
+.finding-body p:last-child { margin-bottom: 0; }
+.insight-box { background: #0f172a; border-left: 3px solid #f59e0b; border-radius: 0 4px 4px 0; padding: 0.6rem 0.8rem; margin: 0.5rem 0; font-size: 0.8rem; color: #fde68a; }
+.insight-box.green { border-color: #22c55e; color: #86efac; }
+.insight-box.red   { border-color: #ef4444; color: #fca5a5; }
+.insight-box.blue  { border-color: #3b82f6; color: #93c5fd; }
+.insight-box.teal  { border-color: #14b8a6; color: #5eead4; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem; }
+th { background: #1e293b; color: #7dd3fc; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; border-bottom: 1px solid #334155; }
+td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e293b44; }
+.hit  { color: #86efac; font-weight: 700; }
+.miss { color: #fca5a5; font-weight: 700; }
+code { background: #0f172a; color: #f9a8d4; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 0.8rem; }
+pre { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 1rem; font-size: 0.8rem; color: #cbd5e1; overflow-x: auto; margin: 0.5rem 0; }
+ul { padding-left: 1.2rem; }
+ul li { margin-bottom: 0.3rem; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="report-header">
+    <h1>Investigation: #toast-region Live-Region Rule <span class="vs">2026-09-29</span></h1>
+    <div class="meta">Three scan runs analysed · DESKTOP device · runUuids: 15a89e92, ca4f2b7b-prev, ca4f2b7b</div>
+  </div>
+
+  <div class="tldr">
+    <strong>TL;DR:</strong> The <code>live-region-with-content</code> rule does not exist in the QualiBooth raw JSON export format — confirmed across all 3 scan runs. It cannot be tested via the exported data. The rule may be portal-UI-only or require conditions our implementation doesn't meet. Separately, the hover-focus behavioral check IS working but fires only on <code>trending.html</code> because its tooltips sit outside a <code>&lt;main&gt;</code> element — a structural difference from the other 7 tooltip pages.
+  </div>
+
+  <h2>Summary</h2>
+  <div class="metrics">
+    <div class="metric red"><div class="num">0</div><div class="label">Runs with live-region rule in JSON (of 3)</div></div>
+    <div class="metric red"><div class="num">23</div><div class="label">Total unique rule IDs in export (no live-region)</div></div>
+    <div class="metric green"><div class="num">1</div><div class="label">Pages where hover-focus fires (trending.html)</div></div>
+    <div class="metric amber"><div class="num">7</div><div class="label">Tooltip pages where hover-focus does NOT fire</div></div>
+  </div>
+
+  <h2>Finding 1 — live-region-with-content is NOT in the JSON export</h2>
+
+  <div class="finding">
+    <div class="finding-header red">
+      <span>Definitive: rule never appears in any raw JSON export</span>
+      <span class="badge badge-red">Cannot test via JSON</span>
+    </div>
+    <div class="finding-body">
+      <p>All 23 unique rule IDs found across all 3 scan runs were examined. Zero contain "live", "announce", or "dynamic". The complete list:</p>
+      <pre>aria-allowed-attr · aria-valid-attr-value · color-contrast · color-contrast-enhanced
+contrast-image · empty-heading · focus-obscured · focus-visible · heading-order
+hover-focus-content/hover-only · hover-focus-content/not-dismissible
+hover-focus-content/not-hoverable · label · landmark-one-main · landmark-unique
+meta-viewport · modal-lifecycle/background-not-inert · modal-lifecycle/focus-not-moved
+modal-lifecycle/not-dismissible · reflow · region · role-img-alt · text-spacing/clipped</pre>
+      <p>No <code>live-region-with-content</code>, <code>live-region</code>, or equivalent rule appears in any export.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header amber">
+      <span>Why: the rule's output is not written to the raw JSON export</span>
+    </div>
+    <div class="finding-body">
+      <p>The <code>live-region-with-content</code> issue type was observed in the portal HTML analysis of a real site (Puma-like) at the start of this project. However, QualiBooth's raw JSON export only captures a subset of its behavioral scan results. The live-region check may be:</p>
+      <ul>
+        <li><strong>Portal-UI computed only</strong> — calculated server-side and shown in the portal but not written to the export file.</li>
+        <li><strong>Not implemented in the current scanner version</strong> — the rule may have been present in a different version of the scanner.</li>
+        <li><strong>Requires runtime observation the export format doesn't capture</strong> — live-region monitoring requires observing MutationObserver events during real interaction; the export format may only record static scan results.</li>
+      </ul>
+      <div class="insight-box red">The rule cannot be verified via regression testing with the JSON export. Expected-results.html should not include a baseline for <code>#toast-region live-region-with-content</code>.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header blue">
+      <span>What #toast-region DOES show in the export</span>
+    </div>
+    <div class="finding-body">
+      <p>Across all 3 runs, <code>#toast-region</code> consistently appears with <code>focus-obscured</code> (Medium, AAA) on 2 pages with 6 occurrences. This is because the fixed-positioned toast element overlaps keyboard-focused content at the top-right of the viewport — a genuine accessibility issue, but not the intended live-region violation.</p>
+      <div class="insight-box blue">The current baseline for <code>#toast-region</code> is: 2/25 pages · 6 issues · Medium (AAA) focus-obscured. Accept this as the stable regression value.</div>
+    </div>
+  </div>
+
+  <h2>Finding 2 — hover-focus fires on trending.html only (structural cause identified)</h2>
+
+  <div class="finding">
+    <div class="finding-header teal">
+      <span>hover-focus behavioral check IS working — but placement-dependent</span>
+      <span class="badge badge-green">Rule is functional</span>
+    </div>
+    <div class="finding-body">
+      <p>The hover-focus check fires correctly on <code>trending.html</code>. Three sub-rules were detected:</p>
+      <ul>
+        <li><code>hover-focus-content/hover-only</code> (High) — tooltip visible on :hover, not on :focus</li>
+        <li><code>hover-focus-content/not-dismissible</code> (Medium) — no Escape key handler</li>
+        <li><code>hover-focus-content/not-hoverable</code> (Medium) — tooltip disappears when pointer moves to it</li>
+      </ul>
+      <div class="insight-box teal">This confirms the behavioral scanner CAN detect hover-focus violations. The rule IS implemented and working.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header amber">
+      <span>Root cause: tooltips inside &lt;main&gt; are not reached by the hover-focus scanner</span>
+    </div>
+    <div class="finding-body">
+      <p><strong>trending.html (fires):</strong></p>
+      <pre>body &gt; nav · div#promo-bar · div#cookie-banner · div.hero-section · div.page-hero
+&gt; div.content &gt; [tooltips here]   ← tooltips are direct children of a body-level div</pre>
+
+      <p><strong>home.html (does not fire):</strong></p>
+      <pre>body &gt; nav · div#promo-bar · div#cookie-banner
+&gt; MAIN &gt; div.hero-section · div.page-hero · div.content
+                              &gt; [tooltips here]   ← tooltips inside &lt;main&gt;</pre>
+
+      <p>The hover-focus behavioral scanner appears to simulate hover interactions only on elements that are accessible without entering a <code>&lt;main&gt;</code> landmark. On pages where the tooltip section is wrapped in <code>&lt;main&gt;</code> (home, shop-all, sale, new-arrivals, product pages), the scanner does not reach the tooltips. On trending.html (no <code>&lt;main&gt;</code> wrapper), the scanner can interact with them.</p>
+      <div class="insight-box">This is consistent with the page landmark structure: 17 of 25 pages are missing <code>&lt;main&gt;</code>. The hover-focus scanner behaves differently based on landmark presence.</div>
+    </div>
+  </div>
+
+  <h2>All 23 rule IDs — scan depth reference</h2>
+
+  <table>
+    <thead>
+      <tr><th>Rule ID</th><th>Impact</th><th>Pages (run 3)</th><th>Type</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>aria-allowed-attr</code></td><td>Critical</td><td>1</td><td>axe-core</td></tr>
+      <tr><td><code>aria-valid-attr-value</code></td><td>Critical</td><td>8</td><td>axe-core</td></tr>
+      <tr><td><code>color-contrast</code></td><td>High</td><td>21</td><td>axe-core</td></tr>
+      <tr><td><code>color-contrast-enhanced</code></td><td>High</td><td>25</td><td>axe-core (AAA)</td></tr>
+      <tr><td><code>contrast-image</code></td><td>High</td><td>11</td><td>behavioral</td></tr>
+      <tr><td><code>empty-heading</code></td><td>Low</td><td>3</td><td>axe-core</td></tr>
+      <tr><td><code>focus-obscured</code></td><td>High / Medium</td><td>17</td><td>behavioral</td></tr>
+      <tr><td><code>focus-visible</code></td><td>High / Low</td><td>24</td><td>behavioral</td></tr>
+      <tr><td><code>heading-order</code></td><td>Medium</td><td>17</td><td>axe-core</td></tr>
+      <tr><td><code>hover-focus-content/hover-only</code></td><td>High</td><td class="hit">1</td><td>behavioral ← fires on trending.html only</td></tr>
+      <tr><td><code>hover-focus-content/not-dismissible</code></td><td>Medium</td><td class="hit">1</td><td>behavioral ← fires on trending.html only</td></tr>
+      <tr><td><code>hover-focus-content/not-hoverable</code></td><td>Medium</td><td class="hit">1</td><td>behavioral ← fires on trending.html only</td></tr>
+      <tr><td><code>label</code></td><td>Critical</td><td>5</td><td>axe-core</td></tr>
+      <tr><td><code>landmark-one-main</code></td><td>Medium</td><td>17</td><td>axe-core</td></tr>
+      <tr><td><code>landmark-unique</code></td><td>Medium</td><td>25</td><td>axe-core</td></tr>
+      <tr><td><code>meta-viewport</code></td><td>Medium</td><td>25</td><td>axe-core</td></tr>
+      <tr><td><code>modal-lifecycle/background-not-inert</code></td><td>High</td><td>4</td><td>behavioral</td></tr>
+      <tr><td><code>modal-lifecycle/focus-not-moved</code></td><td>High</td><td>4</td><td>behavioral</td></tr>
+      <tr><td><code>modal-lifecycle/not-dismissible</code></td><td>Critical</td><td>4</td><td>behavioral</td></tr>
+      <tr><td><code>reflow</code></td><td>High</td><td>23</td><td>behavioral</td></tr>
+      <tr><td><code>region</code></td><td>Medium</td><td>24</td><td>axe-core</td></tr>
+      <tr><td><code>role-img-alt</code></td><td>High</td><td>2</td><td>axe-core</td></tr>
+      <tr><td><code>text-spacing/clipped</code></td><td>High</td><td>14</td><td>behavioral</td></tr>
+      <tr class="error"><td><code>live-region-with-content</code></td><td class="miss">—</td><td class="miss">ABSENT</td><td class="miss">Not in export format</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Recommendations</h2>
+
+  <div class="finding">
+    <div class="finding-header red">
+      <span>1. Remove live-region-with-content from test targets</span>
+    </div>
+    <div class="finding-body">
+      <p>The rule is not in the JSON export. Update <code>expected-results.html</code> and <code>test-coverage.html</code> to remove <code>#toast-region</code> as a tested component for live-region violations. The current baseline (<code>#toast-region</code> → focus-obscured, 2 pages, Medium AAA) is the correct regression value.</p>
+      <p>The <code>#toast-region</code> page inventory can remain — it still tests the focus-not-obscured behavioral check and exercises the fixed-position element pattern.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header teal">
+      <span>2. Fix hover-focus to cover 2+ pages (make it a real shared component)</span>
+    </div>
+    <div class="finding-body">
+      <p>The hover-focus check works on <code>trending.html</code> because its tooltips are outside <code>&lt;main&gt;</code>. To get hover-focus rules to fire on 2+ pages (making them appear as shared components in the portal), either:</p>
+      <ul>
+        <li><strong>Option A:</strong> Move the tooltip section on one more page to be outside <code>&lt;main&gt;</code> — e.g., add tooltips to <code>trending.html</code>'s sister page <code>sale.html</code> using the same non-<code>&lt;main&gt;</code> structure. But sale.html already has tooltips inside <code>&lt;main&gt;</code>.</li>
+        <li><strong>Option B:</strong> On all 8 tooltip pages, move the tooltip section to BEFORE the <code>&lt;main&gt;</code> element — between the page-hero and <code>&lt;main&gt;</code>. This makes them consistently outside <code>&lt;main&gt;</code> and reachable by the hover-focus scanner.</li>
+        <li><strong>Option C:</strong> Accept the current state — hover-focus fires on 1 page, which is below the 2-page threshold for shared component display.</li>
+      </ul>
+      <div class="insight-box teal">Option B is the most thorough fix: move tooltip sections before &lt;main&gt; on all 8 tooltip pages. Expected result: hover-focus fires on 8 pages → appears as 3 shared components (hover-only High 8pg, not-dismissible Medium 8pg, not-hoverable Medium 8pg).</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header blue">
+      <span>3. Update CLAUDE.md with live-region finding</span>
+    </div>
+    <div class="finding-body">
+      <p>Document in CLAUDE.md that <code>live-region-with-content</code> is not exported to the raw JSON and cannot be verified via the standard verification workflow. Add a note to the scan depth matrix marking it as "not in export format".</p>
+    </div>
+  </div>
+
+  <p style="font-size:0.75rem;color:#64748b;margin-top:1.5rem;text-align:center;">
+    Toast investigation · 3 runs analysed · 2026-09-29
+  </p>
+
+</div>
+</body>
+</html>

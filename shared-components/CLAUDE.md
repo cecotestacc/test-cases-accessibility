@@ -502,6 +502,20 @@ After completing all checks, write results as an HTML report using the dark-them
 
 ---
 
+### Rule IDs that do NOT appear in the raw JSON export
+
+The following issue types are visible in the portal UI but are **not written to the raw JSON export file** (`scan-run-raw-*.json`). They cannot be verified using the standard JSON-based verification workflow:
+
+| Issue type | Portal label | Why absent from JSON |
+|---|---|---|
+| Live region created with content | "Live region created with content" | Not part of the export schema. Confirmed absent across all 3 scan runs of this test set. The rule may be portal-UI computed or require conditions our implementation doesn't meet. |
+
+For all other rules, the JSON export is the source of truth.
+
+### hover-focus detection is placement-sensitive
+
+The `hover-focus-content/*` behavioral rules only fire when the tooltip element is **outside a `<main>` landmark**. Pages that wrap content in `<main>` are not reached by the hover scanner. On `trending.html` (no `<main>` wrapper), all 3 hover-focus sub-rules fire. On the other 7 tooltip pages (tooltips inside `<main>`), they do not fire. This means hover-focus currently fires on only 1 page — below the 2-page threshold for shared component display.
+
 ### Known portal behaviours (not bugs)
 
 Document these when they appear; do not report them as portal bugs:
